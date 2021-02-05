@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{0c834e21-1222-4c55-8a61-7d0fe2e6976e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{6d4c41e6-8de1-4711-87ee-5a10363be376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{c7f9a69c-1720-476f-a830-9dd8274022c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{bd31d17f-af27-4609-b452-10cc96c19d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{aa469611-43a4-41e5-bd9a-bea6d26b8248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precomp">
+      <UniqueIdentifier>{3b3cf8b7-3db5-4b3b-ab1c-9a5ca164890f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{23e9250f-62ae-409a-91ac-693ee6581a8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{363dd98a-7afb-4a9a-8e6e-ebcbac4bea51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{5aa17e20-9618-4a87-9eae-c92a6364144d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{b42599dc-4e75-4ff8-adf6-0313c0183184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{b8422457-d983-4cff-ab0f-116d4c58212b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{013f6247-4460-4df5-a1fd-3fea3a9eab20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{cae99a2f-c29c-4bc3-bdd2-9128ac2b4072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internal">
+      <UniqueIdentifier>{67d53049-2ec4-426a-bf53-96e4de0a4992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IGame">
+      <UniqueIdentifier>{5335ee2f-fc6c-40c9-b34c-aec5740b3b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NamedObject">
+      <UniqueIdentifier>{b101e816-9166-4d30-9c0e-ff853fb27e36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh\FileBuffer">
+      <UniqueIdentifier>{51b541df-6bb3-4b27-9cc3-096f7e263cf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\HLSLTypes">
+      <UniqueIdentifier>{793b333b-9b1a-40cb-9c8d-05535c29318a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ShaderVariableTypes">
+      <UniqueIdentifier>{61d91aab-f68a-4b78-8a20-f2385c0db2e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererInit.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Internal.cpp">
+      <Filter>Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererForward.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="NamedObject.cpp">
+      <Filter>NamedObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshFromFile.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FileBuffer.cpp">
+      <Filter>Mesh\FileBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererProperties.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneProperties.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderVariables.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Precomp.h">
+      <Filter>Precomp</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Internal.h">
+      <Filter>Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="IGame.h">
+      <Filter>IGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="NamedObject.h">
+      <Filter>NamedObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FileBuffer.h">
+      <Filter>Mesh\FileBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Renderer\HLSLTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUStructs.h">
+      <Filter>Renderer\HLSLTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="_ShaderVariableTypes.h">
+      <Filter>Shader\ShaderVariableTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUarray.h">
+      <Filter>Renderer\HLSLTypes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="White.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Debug.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Header.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="Material.inl">
+      <Filter>Material</Filter>
+    </None>
+  </ItemGroup>
+</Project>

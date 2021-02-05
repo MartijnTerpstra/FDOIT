@@ -1,0 +1,523 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="AOITGeometryPS.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="FDOITGeometryPS.hlsl">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="DDPInitPS.hlsl">
+      <Filter>Renderer\nVidia%27s Dual Depth Peeling\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="DDPMergePS.hlsl">
+      <Filter>Renderer\nVidia%27s Dual Depth Peeling\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="DDPPeelingPS.hlsl">
+      <Filter>Renderer\nVidia%27s Dual Depth Peeling\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="QuadVS.hlsl">
+      <Filter>Renderer\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Renderer\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="White.hlsl">
+      <Filter>Renderer\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticAlpha.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticDepth.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticColor.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="SimpleBlender.hlsl">
+      <Filter>Renderer\PlainAlphaBlending\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="FDOITResolve16.hlsl">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="FDOITResolve8.hlsl">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="FDOITResolve32.hlsl">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="FDOITResolve4.hlsl">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve8.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve16.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve32.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve4.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve4C.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve8C.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve16C.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="AOITResolve32C.hlsl">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve1C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve2C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve3C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve4C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve5C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve6C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve7C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve8C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve9C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve10C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve11C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve12C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve13C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve14C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve15C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve16C.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve1.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve2.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve3.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve4.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve5.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve6.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve7.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve8.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve9.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve10.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve11.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve12.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve13.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve14.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve15.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="StochasticResolve16.hlsl">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="HQGeometryPS.hlsl">
+      <Filter>Renderer\RenderHQ\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HQResolvePS.hlsl">
+      <Filter>Renderer\RenderHQ\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="CombineComparePS.hlsl">
+      <Filter>Renderer\RenderHQ\HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="FileBuffer.cpp">
+      <Filter>FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneProperties.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererForward.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererInit.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererProperties.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Internal.cpp">
+      <Filter>Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshFromFile.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderVariables.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="NamedObject.cpp">
+      <Filter>NamedObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderBase.cpp">
+      <Filter>Renderer\RenderBase</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDDP.cpp">
+      <Filter>Renderer\nVidia%27s Dual Depth Peeling</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPlain.cpp">
+      <Filter>Renderer\PlainAlphaBlending</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderFDOIT.cpp">
+      <Filter>Renderer\Fixed Depth OIT</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAOIT.cpp">
+      <Filter>Renderer\Intel%27s Adaptive OIT</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Mesh\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStochastic.cpp">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency</Filter>
+    </ClCompile>
+    <ClCompile Include="Timings.cpp">
+      <Filter>Timings</Filter>
+    </ClCompile>
+    <ClCompile Include="Query.cpp">
+      <Filter>Timings</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryInfo.cpp">
+      <Filter>Timings</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderHQ.cpp">
+      <Filter>Renderer\RenderHQ</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererGUI.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>GPUTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="FileBuffer.h">
+      <Filter>FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="IGame.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Internal.h">
+      <Filter>Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUarray.h">
+      <Filter>GPUTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUStructs.h">
+      <Filter>GPUTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderVariableTypes.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="NamedObject.h">
+      <Filter>NamedObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Precomp.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderBase.h">
+      <Filter>Renderer\RenderBase</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDDP.h">
+      <Filter>Renderer\nVidia%27s Dual Depth Peeling</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPlain.h">
+      <Filter>Renderer\PlainAlphaBlending</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderFDOIT.h">
+      <Filter>Renderer\Fixed Depth OIT</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAOIT.h">
+      <Filter>Renderer\Intel%27s Adaptive OIT</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11enums.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Mesh\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStochastic.h">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>GPUTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Timings.h">
+      <Filter>Timings</Filter>
+    </ClInclude>
+    <ClInclude Include="Query.h">
+      <Filter>Timings</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryInfo.h">
+      <Filter>Timings</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderHQ.h">
+      <Filter>Renderer\RenderHQ</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Material.inl">
+      <Filter>Material</Filter>
+    </None>
+    <None Include="AOIT.hlsli">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL</Filter>
+    </None>
+    <None Include="AOITFragmentList.hlsli">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL</Filter>
+    </None>
+    <None Include="FDOIT.hlsli">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </None>
+    <None Include="Header.hlsli">
+      <Filter>Renderer\HLSL</Filter>
+    </None>
+    <None Include="Shading.hlsli">
+      <Filter>Renderer\HLSL</Filter>
+    </None>
+    <None Include="Stochastic.hlsli">
+      <Filter>Renderer\NVidia%27s Stochastic Transparency\HLSL</Filter>
+    </None>
+    <None Include="FDOITResolvePS.hlsli">
+      <Filter>Renderer\Fixed Depth OIT\HLSL</Filter>
+    </None>
+    <None Include="AOITResolve.hlsli">
+      <Filter>Renderer\Intel%27s Adaptive OIT\HLSL</Filter>
+    </None>
+    <None Include="HQ.hlsli">
+      <Filter>Renderer\RenderHQ\HLSL</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{ae31663a-7693-4db4-8616-b5392016e510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{96e383f0-ab1c-4e58-b4b3-485761b9c139}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GPUTypes">
+      <UniqueIdentifier>{780b4875-f747-4208-a471-4706473c6888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{3e18d47c-6138-478a-9e27-8dfb6eeb5f2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileIO">
+      <UniqueIdentifier>{f60424e9-af3a-4feb-a116-f635af9c96cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{3940bf47-95cc-43d6-859e-f87f342da189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{abb795f7-25f2-4ee5-ad0e-2038c5065488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{76fd7d05-e800-4170-8912-17b98e1ab8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internal">
+      <UniqueIdentifier>{af7a9f8e-5cbf-4d73-b645-98051bc945c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{ea836416-3bb5-4cc6-82c4-dd4e8927221c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{96bb26af-938c-4063-b818-e0295adc64df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{d4000be7-679a-498f-9b78-bcf0b6051881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{84975862-99bb-4856-b9ef-07c993bc85c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NamedObject">
+      <UniqueIdentifier>{149f317a-1f70-492c-a500-15860de7ecbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{63598c92-def9-43a2-88af-db23bf5e6029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\RenderBase">
+      <UniqueIdentifier>{e5323321-f89a-4784-b87c-d577c84387b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\PlainAlphaBlending">
+      <UniqueIdentifier>{c0a2fe5b-bf17-46bf-a3b5-2e65959b31d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Fixed Depth OIT">
+      <UniqueIdentifier>{bcfb533c-b46e-448c-8eff-cc35c882a311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Intel%27s Adaptive OIT">
+      <UniqueIdentifier>{fc33f7e8-be1b-43ab-aae9-7ba2d5f41c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{b561e0c0-4d56-4d7a-a6a0-1b52c3f2d405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timings">
+      <UniqueIdentifier>{7643e77f-c528-427f-b259-eaa949b5c728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Intel%27s Adaptive OIT\HLSL">
+      <UniqueIdentifier>{5a327db0-20b3-4f8f-96cb-1cf53fe7292c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Fixed Depth OIT\HLSL">
+      <UniqueIdentifier>{c0581da3-65fd-45f6-87c0-e9a047e969bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\HLSL">
+      <UniqueIdentifier>{673c5bd3-cdcf-429b-89c0-f9816a8dc11c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\PlainAlphaBlending\HLSL">
+      <UniqueIdentifier>{20faf124-fea8-48b8-be0b-96de171e30b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve C">
+      <UniqueIdentifier>{6b4e270e-0a0f-49be-bdce-3e8f5997cc12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Intel%27s Adaptive OIT\HLSL\AOITResolve">
+      <UniqueIdentifier>{c896f805-ae42-4613-b2ca-85b0cb1c8a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\NVidia%27s Stochastic Transparency">
+      <UniqueIdentifier>{911de722-7937-4f32-8f0e-82e089212030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\NVidia%27s Stochastic Transparency\HLSL">
+      <UniqueIdentifier>{9cc432d1-2e0a-4207-9997-bc666e0f0953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve">
+      <UniqueIdentifier>{81362198-8507-469d-ac3b-634c1ba70295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\NVidia%27s Stochastic Transparency\HLSL\Resolve C">
+      <UniqueIdentifier>{3768712b-f101-4db8-9e5e-09476acf267b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\RenderHQ">
+      <UniqueIdentifier>{e6cb83c0-6cf3-45b4-87aa-3664662ef024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\RenderHQ\HLSL">
+      <UniqueIdentifier>{1465396c-0c6b-45ae-b143-ded4c5e14b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh\Particles">
+      <UniqueIdentifier>{7d5ea9b8-4eb1-4f91-92c0-c217aa9c2542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\nVidia%27s Dual Depth Peeling">
+      <UniqueIdentifier>{61863f96-db32-40bb-a90d-7658b5d3023c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\nVidia%27s Dual Depth Peeling\HLSL">
+      <UniqueIdentifier>{a42195ce-7082-4871-bc1f-e5a2c9290018}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
