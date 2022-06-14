@@ -32,83 +32,83 @@
 
 using namespace Demo;
 
-shared_ptr<Camera> Scene::_camera() const
+shared_ptr<Camera> Scene::camera() const
 {
 	return shared_ptr<Camera>(m_Camera);
 }
 
-shared_ptr<Mesh> Scene::_meshes(size_t idx) const
+shared_ptr<Mesh> Scene::mesh(size_t idx) const
 {
 	return m_Meshes[idx].first;
 }
 
-shared_ptr<Mesh> Scene::_meshes(const string& name) const
+shared_ptr<Mesh> Scene::mesh(const string& name) const
 {
-	foreach(const auto& it, m_Meshes)
+	for(const auto& it : m_Meshes)
 	{
-		if(it.first->name == name)
+		if(it.first->name() == name)
 		{
 			return it.first;
 		}
 	}
 
-	return null;
+	return nullptr;
 }
 
-shared_ptr<Light> Scene::_lights(size_t idx) const
+void Scene::meshMatrix(size_t idx, const matrix& mat)
 {
-	return m_Lights[idx].first;
+	m_Meshes[idx].second = mat;
 }
 
-shared_ptr<Light> Scene::_lights(const string& name) const
-{
-	foreach(const auto& it, m_Lights)
-	{
-		if(it.first->name == name)
-		{
-			return it.first;
-		}
-	}
-
-	return null;
-}
-
-uint Scene::_meshCount() const
+uint Scene::meshCount() const
 {
 	return m_Meshes.size();
 }
 
-uint Scene::_lightCount() const
+shared_ptr<Light> Scene::light(size_t idx) const
 {
-	return m_Lights.size();
+	return m_Lights[idx].first;
 }
 
-uint Scene::_pointLightCount() const
+shared_ptr<Light> Scene::light(const string& name) const
 {
-	return m_NumLights[POINT_LIGHT];
+	for(const auto& it : m_Lights)
+	{
+		if(it.first->name() == name)
+		{
+			return it.first;
+		}
+	}
+
+	return nullptr;
 }
 
-uint Scene::_spotLightCount() const
-{
-	return m_NumLights[SPOT_LIGHT];
-}
-
-uint Scene::_directionalLightCount() const
-{
-	return m_NumLights[DIRECTIONAL_LIGHT];
-}
-
-matrix Scene::_lightMatrices(size_t idx) const
+matrix Scene::lightMatrix(size_t idx) const
 {
 	return m_Lights[idx].second;
 }
 
-void Scene::_lightMatrices(size_t idx, const matrix& mat)
+void Scene::lightMatrix(size_t idx, const matrix& mat)
 {
 	m_Lights[idx].second = mat;
 }
 
-void Scene::_meshMatrices(size_t idx, const matrix& mat)
+uint Scene::lightCount() const
 {
-	m_Meshes[idx].second = mat;
+	return m_Lights.size();
+}
+
+uint Scene::pointLightCount() const
+{
+	return m_NumLights[POINT_LIGHT];
+}
+
+uint Scene::spotLightCount() const
+{
+	return m_NumLights[SPOT_LIGHT];
+}
+
+uint Scene::directionalLightCount() const
+{
+	return m_NumLights[DIRECTIONAL_LIGHT];
 }

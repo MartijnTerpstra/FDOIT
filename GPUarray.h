@@ -39,7 +39,7 @@ class GPUarray
 public:
 	GPUarray()
 		: m_elemCount(0),
-		m_data(null),
+		m_data(nullptr),
 		m_isDirty(false),
 		m_capacity(0),
 		m_successfulRead(true)
@@ -50,7 +50,7 @@ public:
 	{
 	}
 
-	void Init(const com_ptr<ID3D11Device>& device, mst::flag<D3D11_BIND_FLAG> bindFlags, mst::flag<GPUarrayFlags> flags = null)
+	void Init(const com_ptr<ID3D11Device>& device, mst::flag<D3D11_BIND_FLAG> bindFlags, mst::flag<GPUarrayFlags> flags = nullptr)
 	{
 		// resize array
 		m_device = device;
@@ -61,7 +61,7 @@ public:
 
 	void PSSetShaderResource(uint bufferSlot)
 	{
-		CHECK_IF(m_SRV == null, "not set as SRV");
+		MST_ASSERT(m_SRV, "not set as SRV");
 		
 		Update();
 
@@ -70,7 +70,7 @@ public:
 
 	void CSSetShaderResource(uint bufferSlot)
 	{
-		CHECK_IF(m_SRV == null, "not set as SRV");
+		MST_ASSERT(m_SRV, "not set as SRV");
 		
 		Update();
 
@@ -79,7 +79,7 @@ public:
 
 	void CSSetUnorderedAccessViews(uint bufferSlot)
 	{
-		CHECK_IF(m_UAV == null, "not set as UAV");
+		MST_ASSERT(m_UAV, "not set as UAV");
 
 		Update();
 
@@ -89,35 +89,29 @@ public:
 
 	const com_ptr<ID3D11UnorderedAccessView>& GetUAV()
 	{
-		CHECK_IF(m_UAV == null, "bad call: no UAV available");
+		MST_ASSERT(m_UAV, "bad call: no UAV available");
 		return m_UAV;
 	}
 
 	void Memset(UINT value)
 	{
-		CHECK_IF(m_UAV == null, "cannot fill this object");
+		MST_ASSERT(m_UAV, "cannot fill this object");
 		UINT values[4] = { value, value, value, value };
 		m_context->ClearUnorderedAccessViewUint(m_UAV.get(), values);
 	}
 
 	void Memset(INT value)
 	{
-		CHECK_IF(m_UAV == null, "cannot fill this object");
+		MST_ASSERT(m_UAV, "cannot fill this object");
 		UINT values[4] = { value, value, value, value };
 		m_context->ClearUnorderedAccessViewUint(m_UAV.get(), values);
 	}
 
 	void Memset(FLOAT value)
 	{
-		CHECK_IF(m_UAV == null, "cannot fill this object");
+		MST_ASSERT(m_UAV, "cannot fill this object");
 		FLOAT values[4] = { value, value, value, value };
 		m_context->ClearUnorderedAccessViewFloat(m_UAV.get(), values);
-	}
-
-	void Memset(const float4& color)
-	{
-		CHECK_IF(m_RTV == null, "cannot fill this object");
-		m_context->ClearRenderTargetView(m_RTV.get(), color.data());
 	}
 
 	uint GetElemCount() const
@@ -148,7 +142,7 @@ public:
 
 	bool LoadFromGPU(bool waitForBuffer = false)
 	{
-		CHECK_IF(m_data == null, "no memory to load from gpu, unset GPUARR_NO_CPU");
+		MST_ASSERT(m_data, "no memory to load from gpu, unset GPUARR_NO_CPU");
 
 		if(!m_readBuffer)
 		{
@@ -157,7 +151,7 @@ public:
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 			desc.Usage = D3D11_USAGE_STAGING;
 
-			m_device->CreateBuffer(&desc, null, mst::initialize(m_readBuffer));
+			m_device->CreateBuffer(&desc, nullptr, mst::initialize(m_readBuffer));
 		}
 
 		if(m_successfulRead || waitForBuffer)
@@ -196,7 +190,7 @@ public:
 
 	void Fill(UINT value)
 	{
-		CHECK_IF(m_UAV == null, "cannot fill this object");
+		MST_ASSERT(m_UAV, "cannot fill this object");
 		UINT values[4] = { value, value, value, value };
 		m_context->ClearUnorderedAccessViewUint(m_UAV.get(), values);
 	}
@@ -206,7 +200,7 @@ public:
 		m_isDirty = true;
 		if(m_elemCount >= m_capacity)
 		{
-			Realloc(max(m_capacity, 1) * 2);
+			Realloc(std::max(m_capacity, 1) * 2);
 		}
 		m_data[m_elemCount++] = object;
 	}
@@ -261,7 +255,7 @@ private:
 		}
 		else
 		{
-			m_data = null;
+			m_data = nullptr;
 			m_isDirty = false;
 		}
 
@@ -281,13 +275,12 @@ private:
 		desc.StructureByteStride = sizeof(T);
 		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 
-		HRESULT hr = m_device->CreateBuffer(&desc, null, mst::initialize(m_buffer));
+		HRESULT hr = m_device->CreateBuffer(&desc, nullptr, mst::initialize(m_buffer));
 
 		if(FAILED(hr))
 		{
-			Renderer::Get().window->fullScreen = false;
-			_MST_BREAK;
-			throw "unable to resize GPUarray: Buffer creation failed";
+			Renderer::Get().window()->fullScreen(false);
+			MST_FATAL_ERROR("unable to resize GPUarray: Buffer creation failed");
 		}
 
 		if(desc.BindFlags & D3D11_BIND_UNORDERED_ACCESS)
@@ -311,7 +304,7 @@ private:
 		}
 		if(desc.BindFlags & D3D11_BIND_SHADER_RESOURCE)
 		{
-			hr = m_device->CreateShaderResourceView(m_buffer.get(), null, mst::initialize(m_SRV));
+			hr = m_device->CreateShaderResourceView(m_buffer.get(), nullptr, mst::initialize(m_SRV));
 			
 			if(FAILED(hr))
 			{
@@ -327,7 +320,7 @@ private:
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 			desc.Usage = D3D11_USAGE_STAGING;
 
-			hr = m_device->CreateBuffer(&desc, null, mst::initialize(m_readBuffer));
+			hr = m_device->CreateBuffer(&desc, nullptr, mst::initialize(m_readBuffer));
 
 			if(FAILED(hr))
 			{

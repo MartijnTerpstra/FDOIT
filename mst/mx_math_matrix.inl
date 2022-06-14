@@ -1,521 +1,960 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-template<typename _Value_type, size_t _Columns> template<typename _xValue_type>
-inline matrix<_Value_type, _Columns, 1>::matrix(const matrix<_xValue_type, _Columns, 1>& _Other)
+namespace mst {
+namespace math {
+
+template<typename _Value_type, size_t _Columns>
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 1>::matrix(
+	const matrix<_xValue_type, _Columns, 1>& _Other) noexcept
 {
-	_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
+	this->_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 1>::matrix(_Value_type initVal)
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 1>::matrix(_Value_type initVal) noexcept
 {
-	_Data[0] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[0] = vector<_Value_type, _Columns>(initVal);
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 1>::matrix(const vector<_Value_type, _Columns>& _Row0)
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 1>::matrix(
+	const vector<_Value_type, _Columns>& _Row0) noexcept
 {
-	_Data[0] = _Row0;
-}
-
-template<typename _Value_type, size_t _Columns> template<typename _xValue_type>
-inline matrix<_Value_type, _Columns, 2>::matrix(const matrix<_xValue_type, _Columns, 2>& _Other)
-{
-	_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
-	_Data[1] = vector<_Value_type, _Columns>(_Other._Data[1]);
+	this->_Data[0] = _Row0;
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 2>::matrix(_Value_type initVal)
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 2>::matrix(
+	const matrix<_xValue_type, _Columns, 2>& _Other) noexcept
 {
-	_Data[0] = vector<_Value_type, _Columns>(initVal);
-	_Data[1] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
+	this->_Data[1] = vector<_Value_type, _Columns>(_Other._Data[1]);
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 2>::matrix(const vector<_Value_type, _Columns>& _Row0,
-												const vector<_Value_type, _Columns>& _Row1)
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 2>::matrix(_Value_type initVal) noexcept
 {
-	_Data[0] = _Row0;
-	_Data[1] = _Row1;
-}
-
-template<typename _Value_type, size_t _Columns> template<typename _xValue_type>
-inline matrix<_Value_type, _Columns, 3>::matrix(const matrix<_xValue_type, _Columns, 3>& _Other)
-{
-	_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
-	_Data[1] = vector<_Value_type, _Columns>(_Other._Data[1]);
-	_Data[2] = vector<_Value_type, _Columns>(_Other._Data[2]);
+	this->_Data[0] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[1] = vector<_Value_type, _Columns>(initVal);
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 3>::matrix(_Value_type initVal)
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 2>::matrix(
+	const vector<_Value_type, _Columns>& _Row0, const vector<_Value_type, _Columns>& _Row1) noexcept
 {
-	_Data[0] = vector<_Value_type, _Columns>(initVal);
-	_Data[1] = vector<_Value_type, _Columns>(initVal);
-	_Data[2] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[0] = _Row0;
+	this->_Data[1] = _Row1;
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 3>::matrix(const vector<_Value_type, _Columns>& _Row0,
-												const vector<_Value_type, _Columns>& _Row1,
-												const vector<_Value_type, _Columns>& _Row2)
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 3>::matrix(
+	const matrix<_xValue_type, _Columns, 3>& _Other) noexcept
 {
-	_Data[0] = _Row0;
-	_Data[1] = _Row1;
-	_Data[2] = _Row2;
-}
-
-template<typename _Value_type, size_t _Columns> template<typename _xValue_type>
-inline matrix<_Value_type, _Columns, 4>::matrix(const matrix<_xValue_type, _Columns, 4>& _Other)
-{
-	_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
-	_Data[1] = vector<_Value_type, _Columns>(_Other._Data[1]);
-	_Data[2] = vector<_Value_type, _Columns>(_Other._Data[2]);
-	_Data[3] = vector<_Value_type, _Columns>(_Other._Data[3]);
+	this->_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
+	this->_Data[1] = vector<_Value_type, _Columns>(_Other._Data[1]);
+	this->_Data[2] = vector<_Value_type, _Columns>(_Other._Data[2]);
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 4>::matrix(_Value_type initVal)
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 3>::matrix(_Value_type initVal) noexcept
 {
-	_Data[0] = vector<_Value_type, _Columns>(initVal);
-	_Data[1] = vector<_Value_type, _Columns>(initVal);
-	_Data[2] = vector<_Value_type, _Columns>(initVal);
-	_Data[3] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[0] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[1] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[2] = vector<_Value_type, _Columns>(initVal);
 }
 
 template<typename _Value_type, size_t _Columns>
-inline matrix<_Value_type, _Columns, 4>::matrix(const vector<_Value_type, _Columns>& _Row0,
-												const vector<_Value_type, _Columns>& _Row1,
-												const vector<_Value_type, _Columns>& _Row2,
-												const vector<_Value_type, _Columns>& _Row3)
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 3>::matrix(
+	const vector<_Value_type, _Columns>& _Row0, const vector<_Value_type, _Columns>& _Row1,
+	const vector<_Value_type, _Columns>& _Row2) noexcept
 {
-	_Data[0] = _Row0;
-	_Data[1] = _Row1;
-	_Data[2] = _Row2;
-	_Data[3] = _Row3;
-}
-
-template<typename _Value_type> template<typename _xValue_type>
-inline matrix<_Value_type, 4, 4>::matrix(const matrix<_xValue_type, 4, 4>& _Other)
-{
-	_Data[0] = vector<_Value_type, 4>(_Other._Data[0]);
-	_Data[1] = vector<_Value_type, 4>(_Other._Data[1]);
-	_Data[2] = vector<_Value_type, 4>(_Other._Data[2]);
-	_Data[3] = vector<_Value_type, 4>(_Other._Data[3]);
+	this->_Data[0] = _Row0;
+	this->_Data[1] = _Row1;
+	this->_Data[2] = _Row2;
 }
 
 template<typename _Value_type>
-inline matrix<_Value_type, 4, 4>::matrix(const vector4_type& _Row0,
-										 const vector4_type& _Row1,
-										 const vector4_type& _Row2,
-										 const vector4_type& _Row3)
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 3, 3>::matrix(
+	const matrix<_xValue_type, 3, 3>& _Other) noexcept
 {
-	_Data[0] = _Row0;
-	_Data[1] = _Row1;
-	_Data[2] = _Row2;
-	_Data[3] = _Row3;
+	this->_Data[0] = vector<_Value_type, 3>(_Other._Data[0]);
+	this->_Data[1] = vector<_Value_type, 3>(_Other._Data[1]);
+	this->_Data[2] = vector<_Value_type, 3>(_Other._Data[2]);
 }
 
 template<typename _Value_type>
-inline matrix<_Value_type, 4, 4>::matrix(const vector3_type& _Position)
+_MST_CONSTEXPR17 matrix<_Value_type, 3, 3>::matrix(_Value_type initVal) noexcept
 {
-	*this = identity;
-	position = _Position;
+	this->_Data[0] = vector<_Value_type, 3>(initVal);
+	this->_Data[1] = vector<_Value_type, 3>(initVal);
+	this->_Data[2] = vector<_Value_type, 3>(initVal);
 }
 
 template<typename _Value_type>
-inline matrix<_Value_type, 4, 4>::matrix(const vector3_type& _Position, const quaternion<_Value_type>& _Orientation)
+_MST_CONSTEXPR17 matrix<_Value_type, 3, 3>::matrix(const vector<_Value_type, 3>& _Row0,
+	const vector<_Value_type, 3>& _Row1, const vector<_Value_type, 3>& _Row2) noexcept
 {
-	_Data[3] = vector<_Value_type, 4>(0, 0, 0, 1);
-	_position(_Position);
-	set_orientation(_Orientation);
+	this->_Data[0] = _Row0;
+	this->_Data[1] = _Row1;
+	this->_Data[2] = _Row2;
 }
 
 template<typename _Value_type>
-inline void matrix<_Value_type, 4, 4>::set_orientation(const quaternion<_Value_type>& _Orientation)
+template<typename _Ty>
+_MST_CONSTEXPR17 matrix<_Value_type, 3, 3>::matrix(const quaternion<_Value_type>& _Orientation,
+	typename std::enable_if<std::is_signed<_Ty>::value &&
+							std::is_floating_point<_Ty>::value>::type*) noexcept
 {
-	_Data[0][0] = 1 - 2 * (_Orientation.y * _Orientation.y + _Orientation.z * _Orientation.z);
-	_Data[0][1] = 2 * (_Orientation.x * _Orientation.y - _Orientation.w * _Orientation.z);
-	_Data[0][2] = 2 * (_Orientation.x * _Orientation.z + _Orientation.w * _Orientation.y);
-	_Data[1][0] = 2 * (_Orientation.x * _Orientation.y + _Orientation.w * _Orientation.z);
-	_Data[1][1] = 1 - 2 * (_Orientation.x * _Orientation.x + _Orientation.z * _Orientation.z);
-	_Data[1][2] = 2 * (_Orientation.y * _Orientation.z - _Orientation.w * _Orientation.x);
-	_Data[2][0] = 2 * (_Orientation.x * _Orientation.z - _Orientation.w * _Orientation.y);
-	_Data[2][1] = 2 * (_Orientation.y * _Orientation.z + _Orientation.w * _Orientation.x);
-	_Data[2][2] = 1 - 2 * (_Orientation.x * _Orientation.x + _Orientation.y * _Orientation.y);
+	this->set_orientation(_Orientation);
 }
 
 template<typename _Value_type>
-inline matrix<_Value_type, 4, 4> matrix<_Value_type, 4, 4>::create_projection(const clip_space<_Value_type>& _Clipspace, const radians<_Value_type>& _Fov, _Value_type width, _Value_type height, _Value_type _NearDepth, _Value_type _FarDepth)
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 3>::matrix(
+	const matrix<_xValue_type, 4, 3>& _Other) noexcept
 {
-	return create_projection(_Clipspace, _Fov, width / height, _NearDepth, _FarDepth);
+	this->_Data[0] = vector<_Value_type, 4>(_Other._Data[0]);
+	this->_Data[1] = vector<_Value_type, 4>(_Other._Data[1]);
+	this->_Data[2] = vector<_Value_type, 4>(_Other._Data[2]);
 }
 
 template<typename _Value_type>
-inline matrix<_Value_type, 4, 4> matrix<_Value_type, 4, 4>::create_projection(const clip_space<_Value_type>& _Clipspace, const radians<_Value_type>& _Fov, _Value_type _Aspect, _Value_type _NearDepth, _Value_type _FarDepth)
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 3>::matrix(_Value_type initVal) noexcept
 {
-	long double sine, cotangent, deltaZ;
-	long double radians = (_Fov / 2).count();
-	long double aspect = _Aspect;
+	this->_Data[0] = vector<_Value_type, 4>(initVal);
+	this->_Data[1] = vector<_Value_type, 4>(initVal);
+	this->_Data[2] = vector<_Value_type, 4>(initVal);
+}
 
-	deltaZ = _FarDepth - _NearDepth;
-	sine = sin(radians);
-	cotangent = cos(radians) / sine;
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 3>::matrix(const vector<_Value_type, 4>& _Row0,
+	const vector<_Value_type, 4>& _Row1, const vector<_Value_type, 4>& _Row2) noexcept
+{
+	this->_Data[0] = _Row0;
+	this->_Data[1] = _Row1;
+	this->_Data[2] = _Row2;
+}
+
+template<typename _Value_type>
+template<typename _Ty>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 3>::matrix(const vector<_Value_type, 3>& _Position,
+	typename std::enable_if<std::is_signed<_Ty>::value &&
+							std::is_floating_point<_Ty>::value>::type*) noexcept
+{
+	*this = this->identity;
+	this->set_position(_Position);
+}
+
+template<typename _Value_type>
+template<typename _Ty>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 3>::matrix(const vector<_Value_type, 3>& _Position,
+	const quaternion<_Value_type>& _Orientation,
+	typename std::enable_if<std::is_signed<_Ty>::value &&
+							std::is_floating_point<_Ty>::value>::type*) noexcept
+{
+	this->set_position(_Position);
+	this->set_orientation(_Orientation);
+}
+
+template<typename _Value_type, size_t _Columns>
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 4>::matrix(
+	const matrix<_xValue_type, _Columns, 4>& _Other) noexcept
+{
+	this->_Data[0] = vector<_Value_type, _Columns>(_Other._Data[0]);
+	this->_Data[1] = vector<_Value_type, _Columns>(_Other._Data[1]);
+	this->_Data[2] = vector<_Value_type, _Columns>(_Other._Data[2]);
+	this->_Data[3] = vector<_Value_type, _Columns>(_Other._Data[3]);
+}
+
+template<typename _Value_type, size_t _Columns>
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 4>::matrix(_Value_type initVal) noexcept
+{
+	this->_Data[0] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[1] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[2] = vector<_Value_type, _Columns>(initVal);
+	this->_Data[3] = vector<_Value_type, _Columns>(initVal);
+}
+
+template<typename _Value_type, size_t _Columns>
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, 4>::matrix(
+	const ::mst::math::vector<_Value_type, _Columns>& _Row0,
+	const ::mst::math::vector<_Value_type, _Columns>& _Row1,
+	const ::mst::math::vector<_Value_type, _Columns>& _Row2,
+	const ::mst::math::vector<_Value_type, _Columns>& _Row3) noexcept
+{
+	this->_Data[0] = _Row0;
+	this->_Data[1] = _Row1;
+	this->_Data[2] = _Row2;
+	this->_Data[3] = _Row3;
+}
+
+template<typename _Value_type>
+template<typename _xValue_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4>::matrix(
+	const matrix<_xValue_type, 4, 4>& _Other) noexcept
+{
+	this->_Data[0] = vector<_Value_type, 4>(_Other._Data[0]);
+	this->_Data[1] = vector<_Value_type, 4>(_Other._Data[1]);
+	this->_Data[2] = vector<_Value_type, 4>(_Other._Data[2]);
+	this->_Data[3] = vector<_Value_type, 4>(_Other._Data[3]);
+}
+
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4>::matrix(_Value_type initVal) noexcept
+{
+	this->_Data[0] = vector<_Value_type, 4>(initVal);
+	this->_Data[1] = vector<_Value_type, 4>(initVal);
+	this->_Data[2] = vector<_Value_type, 4>(initVal);
+	this->_Data[3] = vector<_Value_type, 4>(initVal);
+}
+
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4>::matrix(
+	const matrix<_Value_type, 4, 3>& _Row012, vector<_Value_type, 4>& _Row3) noexcept
+{
+	this->_Data[0] = _Row012._Data[0];
+	this->_Data[1] = _Row012._Data[1];
+	this->_Data[2] = _Row012._Data[2];
+	this->_Data[3] = _Row3;
+}
+
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4>::matrix(const vector<_Value_type, 4>& _Row0,
+	const vector<_Value_type, 4>& _Row1, const vector<_Value_type, 4>& _Row2,
+	const vector<_Value_type, 4>& _Row3) noexcept
+{
+	this->_Data[0] = _Row0;
+	this->_Data[1] = _Row1;
+	this->_Data[2] = _Row2;
+	this->_Data[3] = _Row3;
+}
+
+template<typename _Value_type>
+template<typename _Ty>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4>::matrix(const vector<_Value_type, 3>& _Position,
+	typename std::enable_if<std::is_signed<_Ty>::value &&
+							std::is_floating_point<_Ty>::value>::type*) noexcept
+{
+	*this = this->identity;
+	this->set_position(_Position);
+}
+
+template<typename _Value_type>
+template<typename _Ty>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4>::matrix(const vector<_Value_type, 3>& _Position,
+	const quaternion<_Value_type>& _Orientation,
+	typename std::enable_if<std::is_signed<_Ty>::value &&
+							std::is_floating_point<_Ty>::value>::type*) noexcept
+{
+	this->_Data[3] = vector<_Value_type, 4>(0, 0, 0, 1);
+	this->set_position(_Position);
+	this->set_orientation(_Orientation);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 void
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::set_orientation(
+	const quaternion<_Value_type>& _Orientation) noexcept
+{
+	this->_Data[0][0] = 1 - 2 * (_Orientation.y * _Orientation.y + _Orientation.z * _Orientation.z);
+	this->_Data[0][1] = 2 * (_Orientation.x * _Orientation.y - _Orientation.w * _Orientation.z);
+	this->_Data[0][2] = 2 * (_Orientation.x * _Orientation.z + _Orientation.w * _Orientation.y);
+	this->_Data[1][0] = 2 * (_Orientation.x * _Orientation.y + _Orientation.w * _Orientation.z);
+	this->_Data[1][1] = 1 - 2 * (_Orientation.x * _Orientation.x + _Orientation.z * _Orientation.z);
+	this->_Data[1][2] = 2 * (_Orientation.y * _Orientation.z - _Orientation.w * _Orientation.x);
+	this->_Data[2][0] = 2 * (_Orientation.x * _Orientation.z - _Orientation.w * _Orientation.y);
+	this->_Data[2][1] = 2 * (_Orientation.y * _Orientation.z + _Orientation.w * _Orientation.x);
+	this->_Data[2][2] = 1 - 2 * (_Orientation.x * _Orientation.x + _Orientation.y * _Orientation.y);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 void _Details::_Math_matrix_positional<_Value_type, _Columns, _Rows>::lookat(
+	const vector<_Value_type, 3>& _Position, const vector<_Value_type, 3>& _Upvector) noexcept
+{
+	vector<_Value_type, 3> normalized_z = (_Position - get_position()).normalize();
+
+	vector<_Value_type, 3> normalized_x = _Upvector.cross(normalized_z).normalize();
+
+	vector<_Value_type, 3> normalized_y = normalized_z.cross(normalized_x).normalize();
+
+	this->_Data[0][0] = normalized_x[0], this->_Data[1][0] = normalized_x[1],
+	this->_Data[2][0] = normalized_x[2];
+	this->_Data[0][1] = normalized_y[0], this->_Data[1][1] = normalized_y[1],
+	this->_Data[2][1] = normalized_y[2];
+	this->_Data[0][2] = normalized_z[0], this->_Data[1][2] = normalized_z[1],
+	this->_Data[2][2] = normalized_z[2];
+}
+
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4> matrix<_Value_type, 4, 4>::create_perspective(
+	const radians<_Value_type>& _Fov, _Value_type _Width, _Value_type _Height,
+	_Value_type _NearDepth, _Value_type _FarDepth) noexcept
+{
+	return create_perspective(_Fov, _Width / _Height, _NearDepth, _FarDepth);
+}
+
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4> matrix<_Value_type, 4, 4>::create_perspective(
+	const radians<_Value_type>& _Fov, _Value_type _Aspect, _Value_type _NearDepth,
+	_Value_type _FarDepth) noexcept
+{
+	const radians<long double> halfRadians = radians<long double>(_Fov) / 2;
+	const long double aspect = _Aspect;
+
+	const long double deltaZ = _FarDepth - _NearDepth;
+	const long double sine = sin(halfRadians);
+	const long double cotangent = cos(halfRadians) / sine;
 
 	matrix<_Value_type, 4, 4> retval = matrix<_Value_type, 4, 4>::zero;
 
 	/* First row */
-	retval[0].x = (_Value_type)(cotangent / aspect);
+	retval[0].x = _Value_type(cotangent / aspect);
 
 	/* Second row */
-	retval[1].y = (_Value_type)cotangent;
+	retval[1].y = _Value_type(cotangent);
 
 	/* Third row */
-	retval[2].z = (_Value_type)((_FarDepth) / deltaZ);
-	retval[2].w = (_Value_type)(-_NearDepth * _FarDepth / deltaZ);
+	retval[2].z = _Value_type((_FarDepth) / deltaZ);
+	retval[2].w = _Value_type(-_NearDepth * _FarDepth / deltaZ);
 
 	/* Fourth row */
-	retval[3].z = (_Value_type)1;
+	retval[3].z = _Value_type(1);
 
 	return retval;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline const _Value_type* _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::data() const
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4> matrix<_Value_type, 4, 4>::create_orthographic(
+	const aabb<_Value_type, 2>& _Aabb, _Value_type _NearDepth, _Value_type _FarDepth) noexcept
 {
-	return _Data[0].data();
+	matrix<_Value_type, 4, 4> retval = matrix<_Value_type, 4, 4>::zero;
+
+	const ::mst::math::vector<_Value_type, 2> aabb_pos = (_Aabb.max + _Aabb.min) / _Value_type(2);
+	const ::mst::math::vector<_Value_type, 2> aabb_extent =
+		(_Aabb.max - _Aabb.min) / _Value_type(2);
+
+
+	retval[0][0] = _Value_type(1) / aabb_extent.x;
+	retval[1][1] = _Value_type(1) / aabb_extent.y;
+	retval[2][2] = _Value_type(-1) / (_FarDepth - _NearDepth);
+	retval[0][3] = (-aabb_pos.x) / (aabb_extent.x);
+	retval[1][3] = (-aabb_pos.y) / (aabb_extent.y);
+	retval[2][3] = _NearDepth / (_FarDepth - _NearDepth);
+	retval[3][3] = _Value_type(1);
+
+	return retval;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline _Value_type* _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::data()
+template<typename _Value_type>
+_MST_CONSTEXPR17 matrix<_Value_type, 4, 4> matrix<_Value_type, 4, 4>::create_orthographic(
+	const aabb<_Value_type, 3>& _Aabb) noexcept
 {
-	return _Data[0].data();
+	matrix<_Value_type, 4, 4> retval = matrix<_Value_type, 4, 4>::zero;
+
+	const ::mst::math::vector<_Value_type, 2> aabb_pos =
+		(swizzle::xy(_Aabb.max) + swizzle::xy(_Aabb.min)) / _Value_type(2);
+	const ::mst::math::vector<_Value_type, 2> aabb_extent =
+		(swizzle::xy(_Aabb.max) - swizzle::xy(_Aabb.min)) / _Value_type(2);
+
+
+	retval[0][0] = _Value_type(1) / aabb_extent.x;
+	retval[1][1] = _Value_type(1) / aabb_extent.y;
+	retval[2][2] = _Value_type(1) / (_Aabb.max.z - _Aabb.min.z);
+	retval[0][3] = (-aabb_pos.x) / (aabb_extent.x);
+	retval[1][3] = (-aabb_pos.y) / (aabb_extent.y);
+	retval[2][3] = -_Aabb.min.z / (_Aabb.max.z - _Aabb.min.z);
+	retval[3][3] = _Value_type(1);
+
+	return retval;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline vector<_Value_type, _Columns>& _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::operator[](size_t _Idx)
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 _Value_type*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::data() noexcept
 {
-	CHECK_ARR_RANGE(_Idx, _Rows, "index out of range");
-	return _Data[_Idx];
+	return this->_Data[0].data();
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline const vector<_Value_type, _Columns>& _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::operator[](size_t _Idx) const
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr const _Value_type*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::data() const noexcept
 {
-	CHECK_ARR_RANGE(_Idx, _Rows, "index out of range");
-	return _Data[_Idx];
+	return this->_Data[0].data();
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline typename matrix<_Value_type, _Rows, _Columns> _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::_transpose() const
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr size_t _Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::size() const noexcept
+{
+	return _Columns * _Rows;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 vector<_Value_type, _Columns>&
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::operator[](size_t _Idx) noexcept
+{
+	MST_ASSERT(_Idx < _Rows, "index out of range");
+	return this->_Data[_Idx];
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr const vector<_Value_type, _Columns>&
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::operator[](size_t _Idx) const noexcept
+{
+	MST_ASSERT(_Idx < _Rows, "index out of range");
+	return this->_Data[_Idx];
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+vector<_Value_type, _Columns>*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::begin() noexcept
+{
+	return this->_Data;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+const vector<_Value_type, _Columns>*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::begin() const noexcept
+{
+	return this->_Data;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+const vector<_Value_type, _Columns>*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::cbegin() const noexcept
+{
+	return this->_Data;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+vector<_Value_type, _Columns>*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::end() noexcept
+{
+	return this->_Data + _Rows;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+const vector<_Value_type, _Columns>*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::end() const noexcept
+{
+	return this->_Data + _Rows;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+const vector<_Value_type, _Columns>*
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::cend() const noexcept
+{
+	return this->_Data + _Rows;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+inline matrix<_Value_type, _Rows, _Columns>
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::get_transpose() const noexcept
 {
 	matrix<_Value_type, _Rows, _Columns> retval;
-	for(size_t i = 0; i < _Rows; ++i) for(size_t j = 0; j < _Columns; ++j)
-	{
-		retval[j][i] = _Data[i][j];
-	}
+	for(size_t i = 0; i < _Rows; ++i)
+		for(size_t j = 0; j < _Columns; ++j)
+		{
+			retval[j][i] = this->_Data[i][j];
+		}
 	return retval;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline vector<_Value_type, _Rows> _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::_columns(size_t _Index) const
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 vector<_Value_type, _Columns>
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::get_row(size_t _Index) const noexcept
+{
+	row_type retval;
+
+	for(size_t i = 0; i < _Columns; ++i)
+	{
+		retval[i] = this->_Data[_Index][_Columns];
+	}
+
+	return retval;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 vector<_Value_type, _Rows>
+_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::get_column(size_t _Index) const noexcept
 {
 	column_type retval;
 
 	for(size_t i = 0; i < _Rows; ++i)
 	{
-		retval[i] = _Data[i][_Index];
+		retval[i] = this->_Data[i][_Index];
 	}
 
 	return retval;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-inline void _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::_columns(size_t _Index, const vector<_Value_type, _Rows>& _Column)
-{
-	for(size_t i = 0; i < _Rows; ++i)
-	{
-		_Data[i][_Index] = _Column[i];
-	}
-}
-
-template<typename _Value_type, size_t _Columns, size_t _Rows>
-inline matrix<_Value_type, _Columns - 1, _Rows - 1> _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, true>::get_minor(size_t _Column, size_t _Row) const
+template<typename _Value_type, size_t _ColumnsAndRows>
+_MST_CONSTEXPR17 matrix<_Value_type, _ColumnsAndRows - 1, _ColumnsAndRows - 1>
+_Details::_Math_matrix_square<_Value_type, _ColumnsAndRows>::get_minor(
+	size_t _Column, size_t _Row) const noexcept
 {
 	// indicate which col and row is being copied to dest
-	size_t colCount=0,rowCount=0;
+	size_t cCount = 0, rCount = 0;
 
-	size_t order = _Columns;
+	size_t order = _ColumnsAndRows;
 
-	matrix<_Value_type, _Columns - 1, _Rows - 1> retval;
- 
-	for(size_t i = 0; i < order; i++ )
+	matrix<_Value_type, _ColumnsAndRows - 1, _ColumnsAndRows - 1> retval =
+		matrix<_Value_type, _ColumnsAndRows - 1, _ColumnsAndRows - 1>::zero;
+
+	for(size_t i = 0; i < order; i++)
 	{
-		if( i != _Row )
+		if(i != _Row)
 		{
-			colCount = 0;
-			for(size_t j = 0; j < order; j++ )
+			cCount = 0;
+			for(size_t j = 0; j < order; j++)
 			{
 				// when j is not the element
-				if( j != _Column )
+				if(j != _Column)
 				{
-					retval[rowCount][colCount] = _Data[i][j];
-					colCount++;
+					retval[rCount][cCount] = this->_Data[i][j];
+					++cCount;
 				}
 			}
 
-			++rowCount;
-
+			++rCount;
 		}
 	}
 
 	return retval;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows>
-inline _Value_type _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, true>::_determinant() const
+template<typename _Value_type, size_t _ColumnsAndRows>
+_MST_CONSTEXPR17 _Value_type
+_Details::_Math_matrix_square<_Value_type, _ColumnsAndRows>::get_determinant() const noexcept
 {
 	// the determinant value
 	_Value_type det = 0;
 
-	size_t order = _Columns;
- 
+	size_t order = _ColumnsAndRows;
+
 	// allocate the cofactor matrix
-	matrix<_Value_type, _Columns - 1, _Columns - 1> minor;
- 
-	for(size_t i = 0; i < order; i++ )
+	matrix<_Value_type, _ColumnsAndRows - 1, _ColumnsAndRows - 1> minor;
+
+	for(size_t i = 0; i < order; i++)
 	{
 		// get minor of element (0,i)
-		//GetMinor( mat, minor, 0, i );
-		minor = get_minor(i,0);
+		// GetMinor( mat, minor, 0, i );
+		minor = get_minor(i, 0);
 		// the recusion is here!
- 
-		det += (i%2==1?-1:1) * _Data[0][i] * minor.determinant;
-		//det += pow( -1.0, i ) * mat[0][i] * CalcDeterminant( minor,order-1 );
+
+		det += (i % 2 == 1 ? -1 : 1) * this->_Data[0][i] * minor.get_determinant();
+		// det += pow( -1.0, i ) * mat[0][i] * CalcDeterminant( minor,order-1 );
 	}
- 
+
 	return det;
 }
 
 template<typename _Value_type>
-inline _Value_type _Details::_Math_matrix_base<_Value_type, 1, 1, true>::_determinant() const
+constexpr _Value_type
+_Details::_Math_matrix_square<_Value_type, 1>::get_determinant() const noexcept
 {
-	return _Data[0][0];
+	return this->_Data[0][0];
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows>
-inline matrix<_Value_type, _Columns, _Rows> _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, true>::_inverse() const
+template<typename _Value_type, size_t _ColumnsAndRows>
+inline matrix<_Value_type, _ColumnsAndRows, _ColumnsAndRows>
+_Details::_Math_matrix_square<_Value_type, _ColumnsAndRows>::get_inverse() const noexcept
 {
 	// get the determinant
-	const _Value_type det = 1/determinant;
+	const _Value_type det = 1 / get_determinant();
 
-	const size_t order = _Columns;
+	const size_t order = _ColumnsAndRows;
 
-	matrix<_Value_type, _Columns, _Rows> retval;
- 
-	matrix<_Value_type, _Columns - 1, _Rows - 1> minor;
- 
-	for(size_t j=0;j<order;j++)
+	matrix<_Value_type, _ColumnsAndRows, _ColumnsAndRows> retval;
+
+	matrix<_Value_type, _ColumnsAndRows - 1, _ColumnsAndRows - 1> minor;
+
+	for(size_t j = 0; j < order; j++)
 	{
-		for(size_t i=0;i<order;i++)
+		for(size_t i = 0; i < order; i++)
 		{
 			// get the co-factor (matrix) of A(j,i)
-			minor = get_minor(i,j);
-			retval[i][j] = det*minor.determinant;
-			if( (i+j)%2 == 1)
+			minor = get_minor(i, j);
+			retval[i][j] = det * minor.get_determinant();
+			if((i + j) % 2 == 1)
 				retval[i][j] = -retval[i][j];
 		}
 	}
- 
+
 	// release memory
-	//delete [] minor[0];
+	// delete [] minor[0];
 
 	return retval;
 }
 
 template<typename _Value_type>
-inline matrix<_Value_type, 1, 1> _Details::_Math_matrix_base<_Value_type, 1, 1, true>::_inverse() const
+constexpr typename _Details::_Math_matrix_square<_Value_type, 1>::_Matrix_t
+_Details::_Math_matrix_square<_Value_type, 1>::get_inverse() const noexcept
 {
-	return matrix<_Value_type, 1, 1>(1/_Data[0][0]);
+	return matrix<_Value_type, 1, 1>(1 / this->_Data[0][0]);
 }
 
 template<typename _Value_type, size_t _RowsColumns, size_t _Rows>
-inline vector<_Value_type, _Rows> operator * (
-	const matrix<_Value_type, _RowsColumns, _Rows>& _Left,
-	const vector<_Value_type, _RowsColumns>& _Right)
+_MST_CONSTEXPR17 vector<_Value_type, _Rows> operator*(
+	const vector<_Value_type, _RowsColumns>& _Left,
+	const matrix<_Value_type, _RowsColumns, _Rows>& _Right) noexcept
 {
 	vector<_Value_type, _Rows> retval = vector<_Value_type, _Rows>::zero;
-	
-	for(int x = 0; x < _Rows; ++x) for(int i = 0; i < _RowsColumns; ++i)
-	{
-		retval[x] += _Left[x][i] *
-			_Right[i];
-	}
+
+	for(size_t x = 0; x < _Rows; ++x)
+		for(size_t i = 0; i < _RowsColumns; ++i)
+		{
+			retval[x] += _Left[i] * _Right[i][x];
+		}
 
 	return retval;
 }
 
 template<typename _Value_type, size_t _Columns, size_t _RowsColumns, size_t _Rows>
-inline matrix<_Value_type, _Columns, _Rows> operator * (
+_MST_CONSTEXPR17 matrix<_Value_type, _Columns, _Rows> operator*(
 	const matrix<_Value_type, _Columns, _RowsColumns>& _Left,
-	const matrix<_Value_type, _RowsColumns, _Rows>& _Right)
+	const matrix<_Value_type, _RowsColumns, _Rows>& _Right) noexcept
 {
 	matrix<_Value_type, _Columns, _Rows> retval = matrix<_Value_type, _Columns, _Rows>::zero;
-	
-	for(int x = 0; x < _Rows; ++x) for(int y = 0; y < _Columns; ++y) for(int i = 0; i < _RowsColumns; ++i)
+
+	for(size_t x = 0; x < _Rows; ++x)
+		for(size_t y = 0; y < _Columns; ++y)
+			for(size_t i = 0; i < _RowsColumns; ++i)
+			{
+				retval[x][y] += _Left[x][i] * _Right[i][y];
+			}
+
+	return retval;
+}
+
+#if !_MST_MATH_SIMD_ENABLED
+
+template<typename _Value_type>
+constexpr matrix<_Value_type, 4, 3> operator*(
+	const matrix<_Value_type, 4, 3>& _Left, const matrix<_Value_type, 4, 3>& _Right) noexcept
+{
+	matrix<_Value_type, 4, 3> retval = matrix<_Value_type, 4, 3>::zero;
+
+	for(int x = 0; x < 3; ++x)
 	{
-		retval[x][y] += _Left[i][y] * 
-			_Right[x][i];
+		for(int y = 0; y < 4; ++y)
+			for(int i = 0; i < 3; ++i)
+			{
+				retval[x][y] += _Left[x][i] * _Right[i][y];
+			}
+		retval[x][3] += _Left[x][3];
 	}
 
 	return retval;
 }
 
-template<typename _Value_type, size_t _Size>
-inline matrix<_Value_type, _Size, _Size> operator * (
-	const matrix<_Value_type, _Size, _Size>& _Left,
-	const matrix<_Value_type, _Size, _Size>& _Right)
-{
-	//_Math_matrix_base<_Value_type, _Size, _Size> mat = matrix<_Value_type, _Size, _Size>::zero;
-	matrix<_Value_type, _Size, _Size> retval = matrix<_Value_type, _Size, _Size>::zero;
+#endif
 
-	for(int x = 0; x < _Size; ++x) for(int i = 0; i < _Size; ++i) for(int y = 0; y < _Size; ++y)
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 bool operator==(const matrix<_Value_type, _Columns, _Rows>& _Left,
+	const matrix<_Value_type, _Columns, _Rows>& _Right) noexcept
+{
+	for(size_t x = 0; x < _Rows; ++x)
 	{
-		retval[x][y] += _Left[i][y] * 
-			_Right[x][i];
+		if(_Left[x] != _Right[x])
+			return false;
 	}
 
-	return retval;
+	return true;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 bool operator!=(const matrix<_Value_type, _Columns, _Rows>& _Left,
+	const matrix<_Value_type, _Columns, _Rows>& _Right) noexcept
+{
+	return !(_Left == _Right);
 }
 
 namespace _Details {
 
 template<typename _Value_type, size_t _Columns, size_t _Rows>
-inline const matrix<_Value_type, _Columns, _Rows> _Make_zero_matrix()
+_MST_CONSTEXPR17 const matrix<_Value_type, _Columns, _Rows> _Make_zero_matrix() noexcept
 {
-	matrix<_Value_type, _Columns, _Rows> m;
-	for(size_t i = 0; i < _Rows; ++i) for(size_t j = 0; j < _Columns; ++j)
+	return matrix<_Value_type, _Columns, _Rows>{ (_Value_type)0 };
+}
+
+template<typename _Value_type, size_t _ColumnsAndRows>
+_MST_CONSTEXPR17 const matrix<_Value_type, _ColumnsAndRows, _ColumnsAndRows>
+_Make_identity_matrix() noexcept
+{
+	matrix<_Value_type, _ColumnsAndRows, _ColumnsAndRows> m{ (_Value_type)0 };
+	for(size_t i = 0; i < _ColumnsAndRows; ++i)
 	{
-		m[i][j] = 0;
+		m[i][i] = (_Value_type)1;
 	}
 	return m;
 }
 
-template<typename _Value_type, size_t _Columns, size_t _Rows>
-inline const matrix<_Value_type, _Columns, _Rows> _Make_identity_matrix()
+template<typename _Value_type>
+_MST_CONSTEXPR17 const matrix<_Value_type, 4, 3> _Make_identity4x3_matrix() noexcept
 {
-	matrix<_Value_type, _Columns, _Rows> m;
-	for(size_t i = 0; i < _Rows; ++i) for(size_t j = 0; j < _Columns; ++j)
+	matrix<_Value_type, 4, 3> m{ (_Value_type)0 };
+	for(size_t i = 0; i < 3; ++i)
 	{
-		m[i][j] = 0;
-	}
-	for(size_t i = 0; i < _Rows; ++i)
-	{
-		m[i][i] = 1;
+		m[i][i] = (_Value_type)1;
 	}
 	return m;
 }
 
-}; // namespace _Details
-
-template<typename _Value_type, size_t _Columns, size_t _Rows, bool _Is_square>
-const matrix<_Value_type, _Columns, _Rows> _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, _Is_square>::zero = 
-	_Details::_Make_zero_matrix<_Value_type, _Columns, _Rows>();
+} // namespace _Details
 
 template<typename _Value_type, size_t _Columns, size_t _Rows>
-const matrix<_Value_type, _Columns, _Rows> _Details::_Math_matrix_base<_Value_type, _Columns, _Rows, true>::identity = 
-	_Details::_Make_identity_matrix<_Value_type, _Columns, _Rows>();
+const matrix<_Value_type, _Columns, _Rows>
+	_Details::_Math_matrix_base<_Value_type, _Columns, _Rows>::zero =
+		_Details::_Make_zero_matrix<_Value_type, _Columns, _Rows>();
+
+template<typename _Value_type, size_t _ColumnsAndRows>
+const matrix<_Value_type, _ColumnsAndRows, _ColumnsAndRows>
+	_Details::_Math_matrix_square<_Value_type, _ColumnsAndRows>::identity =
+		_Details::_Make_identity_matrix<_Value_type, _ColumnsAndRows>();
 
 template<typename _Value_type>
-const matrix<_Value_type, 1, 1> _Details::_Math_matrix_base<_Value_type, 1, 1, true>::identity = 
-	_Details::_Make_identity_matrix<_Value_type, 1, 1>();
-
-
+const matrix<_Value_type, 1, 1> _Details::_Math_matrix_square<_Value_type, 1>::identity =
+	_Details::_Make_identity_matrix<_Value_type, 1>();
 
 template<typename _Value_type>
+const matrix<_Value_type, 4, 3>
+	matrix<_Value_type, 4, 3>::identity = _Details::_Make_identity4x3_matrix<_Value_type>();
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17
+	typename _Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::_Matrix_t
+	_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::rotated(
+		radians<_Value_type> _X_angle, radians<_Value_type> _Y_angle, radians<_Value_type> _Z_angle,
+		euler_rotation_order order) const noexcept
+{
+	byte orderingByte = (byte)order;
+
+	_Matrix_t m = static_cast<const _Matrix_t&>(*this);
+
+	for(int i = 0; i < 3; ++i)
+	{
+		switch(orderingByte & 3)
+		{
+		case 0:
+			if(_X_angle.is_zero())
+				m = m.rotated_x(_X_angle);
+			break;
+		case 1:
+			if(_Y_angle.is_zero())
+				m = m.rotated_y(_Y_angle);
+			break;
+		case 2:
+			if(_Z_angle.is_zero())
+				m = m.rotated_z(_Z_angle);
+			break;
+		default:
+			MST_FATAL_ERROR("invalid euler ordering value");
+		}
+
+		orderingByte >>= 2;
+	}
+
+	return m;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
 /* returns a copy of the matrix, that is rotated around the global x axis */
-inline matrix<_Value_type,4,4> matrix<_Value_type,4,4>::rotated_x( _Value_type _Angle_in_radians ) const
+_MST_CONSTEXPR17
+	typename _Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::_Matrix_t
+	_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::rotated_x(
+		radians<_Value_type> _Angle) const noexcept
 {
-	const float sx = sin( _Angle_in_radians );
-	const float cx = cos( _Angle_in_radians );
-	matrix<_Value_type,4,4> rot_mat = matrix<_Value_type,4,4>::identity;
-	rot_mat[1].y = cx, rot_mat[2].y = sx, rot_mat[1].z = -sx, rot_mat[2].z = cx;
-	return *this * rot_mat;
+	const _Value_type sx = sin(_Angle);
+	const _Value_type cx = cos(_Angle);
+	_Value_type _Right[9] = { 1, 0, 0, 0, cx, -sx, 0, sx, cx };
+
+	_Matrix_t m = static_cast<const _Matrix_t&>(*this);
+
+	for(size_t x = 0; x < 3; ++x)
+		for(size_t y = 0; y < 3; ++y)
+		{
+			m[x][y] = (_Value_type)0;
+			for(size_t i = 0; i < 3; ++i)
+			{
+				m[x][y] += (*this)[i][y] * _Right[x * 3 + i];
+			}
+		}
+
+	return m;
 }
 
-template<typename _Value_type>
+template<typename _Value_type, size_t _Columns, size_t _Rows>
 /* returns a copy of the matrix, that is rotated around the global y axis */
-inline matrix<_Value_type,4,4> matrix<_Value_type,4,4>::rotated_y( _Value_type _Angle_in_radians ) const
+_MST_CONSTEXPR17
+	typename _Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::_Matrix_t
+	_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::rotated_y(
+		radians<_Value_type> _Angle) const noexcept
 {
-	const float sy = sin(_Angle_in_radians);
-	const float cy = cos(_Angle_in_radians);
-	matrix<_Value_type,4,4> rot_mat = matrix<_Value_type,4,4>::identity;
-	rot_mat[0].x = cy, rot_mat[2].x = -sy, rot_mat[0].z = sy, rot_mat[2].z = cy;
-	return *this * rot_mat;
+	const _Value_type sy = sin(_Angle);
+	const _Value_type cy = cos(_Angle);
+
+	_Value_type _Right[9] = { cy, 0, sy, 0, 1, 0, -sy, 0, cy };
+
+	_Matrix_t m = static_cast<const _Matrix_t&>(*this);
+
+	for(size_t x = 0; x < 3; ++x)
+		for(size_t y = 0; y < 3; ++y)
+		{
+			m[x][y] = (_Value_type)0;
+			for(size_t i = 0; i < 3; ++i)
+			{
+				m[x][y] += (*this)[i][y] * _Right[x * 3 + i];
+			}
+		}
+
+	return m;
 }
 
-template<typename _Value_type>
+template<typename _Value_type, size_t _Columns, size_t _Rows>
 /* returns a copy of the matrix, that is rotated around the global z axis */
-inline matrix<_Value_type,4,4> matrix<_Value_type,4,4>::rotated_z( _Value_type _Angle_in_radians ) const
+_MST_CONSTEXPR17
+	typename _Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::_Matrix_t
+	_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::rotated_z(
+		radians<_Value_type> _Angle) const noexcept
 {
-	const float sz = sin(_Angle_in_radians);
-	const float cz = cos(_Angle_in_radians);
-	matrix<_Value_type,4,4> rot_mat = matrix<_Value_type,4,4>::identity;
-	rot_mat[0].x = cz, rot_mat[1].x = sz, rot_mat[0].y = -sz, rot_mat[1].y = cz;
-	return *this * rot_mat;
+	const _Value_type sz = sin(_Angle);
+	const _Value_type cz = cos(_Angle);
+
+	_Value_type _Right[9] = { cz, -sz, 0, sz, cz, 0, 0, 0, 1 };
+
+	_Matrix_t m = static_cast<const _Matrix_t&>(*this);
+
+	for(size_t x = 0; x < 3; ++x)
+		for(size_t y = 0; y < 3; ++y)
+		{
+			m[x][y] = (_Value_type)0;
+			for(size_t i = 0; i < 3; ++i)
+			{
+				m[x][y] += (*this)[i][y] * _Right[x * 3 + i];
+			}
+		}
+
+	return m;
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_positional<_Value_type, _Columns, _Rows>::get_position() const noexcept
+{
+	return vector<_Value_type, 3>(this->_Data[0][3], this->_Data[1][3], this->_Data[2][3]);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 void _Details::_Math_matrix_positional<_Value_type, _Columns, _Rows>::set_position(
+	const vector<_Value_type, 3>& position) noexcept
+{
+	this->_Data[0][3] = position[0];
+	this->_Data[1][3] = position[1];
+	this->_Data[2][3] = position[2];
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+_MST_CONSTEXPR17 void _Details::_Math_matrix_positional<_Value_type, _Columns, _Rows>::translate(
+	const vector<_Value_type, 3>& translation) noexcept
+{
+	this->_Data[0][3] += translation[0];
+	this->_Data[1][3] += translation[1];
+	this->_Data[2][3] += translation[2];
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::get_left_direction()
+	const noexcept
+{
+	return vector<_Value_type, 3>(-this->_Data[0][0], -this->_Data[1][0], -this->_Data[2][0]);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::get_right_direction()
+	const noexcept
+{
+	return vector<_Value_type, 3>(this->_Data[0][0], this->_Data[1][0], this->_Data[2][0]);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::get_up_direction()
+	const noexcept
+{
+	return vector<_Value_type, 3>(this->_Data[0][1], this->_Data[1][1], this->_Data[2][1]);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::get_down_direction()
+	const noexcept
+{
+	return vector<_Value_type, 3>(-this->_Data[0][1], -this->_Data[1][1], -this->_Data[2][1]);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::get_forward_direction()
+	const noexcept
+{
+	return vector<_Value_type, 3>(this->_Data[0][2], this->_Data[1][2], this->_Data[2][2]);
+}
+
+template<typename _Value_type, size_t _Columns, size_t _Rows>
+constexpr vector<_Value_type, 3>
+_Details::_Math_matrix_orientational<_Value_type, _Columns, _Rows>::get_backward_direction()
+	const noexcept
+{
+	return vector<_Value_type, 3>(-this->_Data[0][2], -this->_Data[1][2], -this->_Data[2][2]);
 }
 
 template<typename _Value_type>
-inline typename ::mst::math::_Details::_Math_base<_Value_type>::vector3_type matrix<_Value_type, 4, 4>::_position() const
+_MST_CONSTEXPR17 void matrix<_Value_type, 4, 4>::scale(_Value_type _Scale) noexcept
 {
-	return vector<_Value_type, 3>(_Data[0][3], _Data[1][3], _Data[2][3]);
+	scale(vector<_Value_type, 3>(_Scale, _Scale, _Scale));
 }
 
 template<typename _Value_type>
-inline void matrix<_Value_type, 4, 4>::_position(const vector3_type& _Position)
+_MST_CONSTEXPR17 void matrix<_Value_type, 4, 4>::scale(
+	const vector<_Value_type, 3>& _Scale) noexcept
 {
-	_Data[0][3] = _Position[0];
-	_Data[1][3] = _Position[1];
-	_Data[2][3] = _Position[2];
+	*this = matrix<_Value_type, 4, 4>(vector<_Value_type, 4>(_Scale.x, 0, 0, 0),
+				vector<_Value_type, 4>(0, _Scale.y, 0, 0),
+				vector<_Value_type, 4>(0, 0, _Scale.z, 0), vector<_Value_type, 4>(0, 0, 0, 1)) *
+			*this;
 }
 
-template<typename _Value_type>
-inline void matrix<_Value_type, 4, 4>::scale(_Value_type _Scale)
-{
-	scale(vector3_type(_Scale, _Scale, _Scale));
-}
-
-template<typename _Value_type>
-inline void matrix<_Value_type, 4, 4>::scale(const vector3_type& _Scale)
-{
-	matrix<_Value_type, 4, 4>(vector4_type(_Scale.x, 0, 0, 0),
-							  vector4_type(0, _Scale.y, 0, 0),
-							  vector4_type(0, 0, _Scale.z, 0),
-							  vector4_type(0, 0, 0, 1)) * *this;
-}
+} // namespace math
+} // namespace mst

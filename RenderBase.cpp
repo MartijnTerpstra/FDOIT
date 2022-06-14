@@ -62,25 +62,25 @@ RenderBase::~RenderBase()
 
 void RenderBase::RenderMeshes(const matrix& view, const shared_ptr<Window>& window, com_ptr<ID3D11PixelShader> pixel)
 {
-	if(pixel == null)
+	if(pixel == nullptr)
 	{
-		pixel = Renderer::Get().defaultShader->m_Pixel;
+		pixel = Renderer::Get().defaultShader()->m_Pixel;
 	}
 
 	const auto& meshes = Scene::Get().m_Meshes;
-	auto camera = Renderer::Get().camera;
+	auto camera = Renderer::Get().camera();
 
 	s_ModelBuffer.VSSetConstantBuffer(s_Context, 1);
 
 	s_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	s_Context->VSSetShader(s_VertexShader.get(), null, 0);
-	s_Context->PSSetShader(pixel.get(), null, 0);
+	s_Context->VSSetShader(s_VertexShader.get(), nullptr, 0);
+	s_Context->PSSetShader(pixel.get(), nullptr, 0);
 
-	foreach(const auto& mesh, meshes)	
+	for(const auto& mesh : meshes)	
 	{
-		s_ModelBuffer.data.modelView = mesh.second * view;
-		s_ModelBuffer.data.modelViewProj = s_ModelBuffer.data.modelView * camera->m_Projection;
+		s_ModelBuffer.data.modelView = view * mesh.second;
+		s_ModelBuffer.data.modelViewProj = camera->m_Projection * s_ModelBuffer.data.modelView;
 		
 		s_ModelBuffer.Update(s_Context);
 
@@ -94,10 +94,10 @@ void RenderBase::RenderMeshes(const matrix& view, const shared_ptr<Window>& wind
 		s_Context->IASetIndexBuffer(mesh.first->m_IndexBuffer.get(), DXGI_FORMAT_R32_UINT, 0);
 
 		uint index_offset = 0;
-		foreach(const auto& submesh, materials)
+		for(const auto& submesh : materials)
 		{
 
-			submesh.material->_Upload(s_Context);
+			submesh.material->Upload(s_Context);
 
 			s_Context->RSSetState(submesh.material->m_Rasterizer.get());
 
@@ -141,7 +141,7 @@ void RenderBase::RenderQuad()
 
 	s_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	s_Context->VSSetShader(s_QuadVS.get(), null, 0);
+	s_Context->VSSetShader(s_QuadVS.get(), nullptr, 0);
 
 	s_Context->Draw(4, 0);
 }
@@ -151,21 +151,21 @@ void RenderBase::InitStatics(const com_ptr<ID3D11Device>& device)
 	s_Device = device;
 	device->GetImmediateContext(mst::initialize(s_Context));
 
-	s_Device->CreateVertexShader(g_VertexShader, sizeof(g_VertexShader), null, mst::initialize(s_VertexShader));
-	s_Device->CreateVertexShader(g_QuadVS, sizeof(g_QuadVS), null, mst::initialize(s_QuadVS));
+	s_Device->CreateVertexShader(g_VertexShader, sizeof(g_VertexShader), nullptr, mst::initialize(s_VertexShader));
+	s_Device->CreateVertexShader(g_QuadVS, sizeof(g_QuadVS), nullptr, mst::initialize(s_QuadVS));
 
-	D3D11_INPUT_ELEMENT_DESC inputElements[] =
+	std::array inputElements =
 	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 0 , D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,		0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0} // BITANGENT
+		D3D11_INPUT_ELEMENT_DESC{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 0 , D3D11_INPUT_PER_VERTEX_DATA, 0},
+		D3D11_INPUT_ELEMENT_DESC{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		D3D11_INPUT_ELEMENT_DESC{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,		0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		D3D11_INPUT_ELEMENT_DESC{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		D3D11_INPUT_ELEMENT_DESC{"BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0} // BITANGENT
 	};
 
 	com_ptr<ID3D11InputLayout> inputLayout;
 
-	s_Device->CreateInputLayout(inputElements, extentof(inputElements), g_VertexShader, sizeof(g_VertexShader), mst::initialize(inputLayout));
+	s_Device->CreateInputLayout(inputElements.data(), inputElements.size(), g_VertexShader, sizeof(g_VertexShader), mst::initialize(inputLayout));
 
 	s_Context->IASetInputLayout(inputLayout.get());
 
@@ -173,19 +173,19 @@ void RenderBase::InitStatics(const com_ptr<ID3D11Device>& device)
 
 void RenderBase::ReleaseStatics()
 {
-	s_RTVs[0] = null;
-	s_RTVs[1] = null;
-	s_DSV = null;
+	s_RTVs[0] = nullptr;
+	s_RTVs[1] = nullptr;
+	s_DSV = nullptr;
 
 	s_LightingBuffer.Reset();
 	s_ModelBuffer.Reset();
-	s_VertexShader = null;
-	s_QuadVS = null;
+	s_VertexShader = nullptr;
+	s_QuadVS = nullptr;
 
 	s_Context->ClearState();
 	s_Context->Flush();
 
-	s_Context = null;
+	s_Context = nullptr;
 	/*
 	com_ptr<ID3D11Debug> debug;
 	s_Device->QueryInterface<ID3D11Debug>(mst::initialize(debug));
@@ -195,7 +195,7 @@ void RenderBase::ReleaseStatics()
 		debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	}
 	*/
-	s_Device = null;
+	s_Device = nullptr;
 }
 
 void RenderBase::Clear()
@@ -218,6 +218,6 @@ TwBar* RenderBase::GetGUIBar()
 	case 1:
 		return TwGetBarByName("Error calculation");
 	default:
-		return null;
+		return nullptr;
 	}
 }

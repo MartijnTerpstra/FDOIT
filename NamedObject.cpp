@@ -34,7 +34,7 @@ NamedObject::NamedObject(string&& name)
 {
 }
 
-string NamedObject::_name() const
+string NamedObject::name() const
 {
 	return m_Name;
 }

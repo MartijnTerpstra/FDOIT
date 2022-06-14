@@ -48,7 +48,7 @@ protected:
 	static void InitStatics(const com_ptr<ID3D11Device>& device);
 	static void ReleaseStatics();
 	static void RenderQuad();
-	static void RenderMeshes(const matrix& view, const shared_ptr<Window>& window, com_ptr<ID3D11PixelShader> pixel = null);
+	static void RenderMeshes(const matrix& view, const shared_ptr<Window>& window, com_ptr<ID3D11PixelShader> pixel = nullptr);
 
 	const com_ptr<ID3D11RenderTargetView>& GetRTV();
 

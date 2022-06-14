@@ -39,7 +39,7 @@ Mesh::~Mesh()
 {
 }
 
-shared_ptr<Mesh> Mesh::Create(string name, const std::vector<Vertex>& vertices, const std::vector<uint32>& indices, 
+shared_ptr<Mesh> Mesh::Create(string name, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, 
 		std::vector<SubMesh>& submeshes)
 {
 	auto retval = make_shared<Mesh>(move(name));
@@ -51,7 +51,7 @@ shared_ptr<Mesh> Mesh::Create(string name, const std::vector<Vertex>& vertices, 
 	return retval;
 }
 
-void Mesh::SetData(const std::vector<Vertex>& vertices, const std::vector<uint32>& indices)
+void Mesh::SetData(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -69,7 +69,7 @@ void Mesh::SetData(const std::vector<Vertex>& vertices, const std::vector<uint32
 	device->CreateBuffer(&desc, &data, mst::initialize(m_VertexBuffer));
 
 	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	desc.ByteWidth = indices.size() * sizeof(uint32);
+	desc.ByteWidth = indices.size() * sizeof(uint32_t);
 
 	data.pSysMem = indices.data();
 
@@ -91,7 +91,7 @@ void Mesh::UpdateVertexBuffer(const std::vector<Vertex>& vertices)
 	context->UpdateSubresource(m_VertexBuffer.get(), 0, &box, vertices.data(), 0, 0);
 }
 
-shared_ptr<Material> Mesh::_materials(size_t index) const
+shared_ptr<Material> Mesh::material(size_t index) const
 {
 	if(index >= m_SubMeshes.size())
 	{
@@ -100,11 +100,11 @@ shared_ptr<Material> Mesh::_materials(size_t index) const
 	return m_SubMeshes[index].material;
 }
 
-void Mesh::_materials(size_t index, const shared_ptr<Material>& material)
+void Mesh::material(size_t index, const shared_ptr<Material>& value)
 {
 	if(index >= m_SubMeshes.size())
 	{
 		throw std::out_of_range("Mesh::materials[]: index out of range");
 	}
-	m_SubMeshes[index].material = material;
+	m_SubMeshes[index].material = value;
 }

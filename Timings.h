@@ -60,9 +60,9 @@ private:
 
 		bool disjoint() const
 		{
-			return frequency == 0 && query == null;
+			return frequency == 0 && query == nullptr;
 		}
-		uint64 frequency;
+		uint64_t frequency;
 		com_ptr<ID3D11Query> query;
 	};
 
@@ -75,7 +75,7 @@ private:
 		}
 
 		std::vector<shared_ptr<Query>> running;
-		uint64 data;
+		uint64_t data;
 #if USE_PIPELINE_STATISTICS
 		D3D11_QUERY_DATA_PIPELINE_STATISTICS stats;
 #endif
@@ -86,7 +86,7 @@ private:
 		Frame() : runningQueries(0) {}
 
 		Frequency frequency;
-		uint64 runningQueries;
+		uint64_t runningQueries;
 		std::map<string, Results> results;
 	};
 

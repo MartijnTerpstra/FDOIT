@@ -70,12 +70,12 @@ using namespace Demo::Implementation;
 
 void __stdcall OnSetPeelingLayers(__in const void* value, __inout_opt void* data)
 {
-	reinterpret_cast<RenderDDP*>(data)->numLayers = RenderMode(*(uint32*)value);
+	reinterpret_cast<RenderDDP*>(data)->numLayers(*(uint32_t*)value);
 }
 
 void __stdcall OnGetPeelingLayers(__inout void* value, __inout_opt void* data)
 {
-	*(uint32*)value = reinterpret_cast<RenderDDP*>(data)->numLayers;
+	*(uint32_t*)value = reinterpret_cast<RenderDDP*>(data)->numLayers();
 }
 
 RenderDDP::RenderDDP(uint RTVindex, const shared_ptr<Window>& window)
@@ -83,21 +83,21 @@ RenderDDP::RenderDDP(uint RTVindex, const shared_ptr<Window>& window)
 {
 	m_NumPeelingLayers = 4;
 
-	s_Device->CreatePixelShader(g_DDPInitPS, sizeof(g_DDPInitPS), null, mst::initialize(m_InitPass));
-	s_Device->CreatePixelShader(g_DDPMergePS, sizeof(g_DDPMergePS), null, mst::initialize(m_MergePass));
-	s_Device->CreatePixelShader(g_DDPPeelingPS, sizeof(g_DDPPeelingPS), null, mst::initialize(m_PeelPass));
+	s_Device->CreatePixelShader(g_DDPInitPS, sizeof(g_DDPInitPS), nullptr, mst::initialize(m_InitPass));
+	s_Device->CreatePixelShader(g_DDPMergePS, sizeof(g_DDPMergePS), nullptr, mst::initialize(m_MergePass));
+	s_Device->CreatePixelShader(g_DDPPeelingPS, sizeof(g_DDPPeelingPS), nullptr, mst::initialize(m_PeelPass));
 
-	CreateTextures(window->size);
+	CreateTextures(window->size());
 	CreateStates();
 
 	TwAddVarCB(GetGUIBar(), "Num peeling layers", TW_TYPE_UINT32,
-		OnSetPeelingLayers, OnGetPeelingLayers, this, null);
+		OnSetPeelingLayers, OnGetPeelingLayers, this, nullptr);
 }
 
 RenderDDP::~RenderDDP()
 {
 	float blendFactor[] = {1,1,1,1};
-	s_Context->OMSetBlendState(null, blendFactor, 0xFFFFFFFF);
+	s_Context->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFFF);
 
 	TwRemoveVar(GetGUIBar(), "Num peeling layers");
 }
@@ -124,7 +124,7 @@ void RenderDDP::Render(const matrix& view, const shared_ptr<Window>& window)
 	s_Context->OMSetBlendState(m_MaxBlend.get(), blendFactor, 0xFFFFFFFF);
 	s_Context->OMSetDepthStencilState(m_NoDSS.get(), 0);
 
-	s_Context->OMSetRenderTargets(1, &m_DepthsRTV[0], null);
+	s_Context->OMSetRenderTargets(1, &m_DepthsRTV[0], nullptr);
 
 	RenderMeshes(view, window, m_InitPass);
 
@@ -145,14 +145,14 @@ void RenderDDP::Render(const matrix& view, const shared_ptr<Window>& window)
             m_FrontRTV.get(),
 			GetRTV().get(),
         };
-		s_Context->OMSetRenderTargets(3, MRTs, NULL);
+		s_Context->OMSetRenderTargets(3, MRTs, nullptr);
 
 		s_Context->PSSetShaderResources(3, 1, &m_DepthsSRV[prevId]);
 		s_Context->OMSetBlendState( m_PeelBlend.get(), blendFactor, 0xffffffff );
 
         RenderMeshes(view, window, m_PeelPass);
 
-		ID3D11ShaderResourceView* nullview = null;
+		ID3D11ShaderResourceView* nullview = nullptr;
 		s_Context->PSSetShaderResources(3, 1, &nullview);
 	}
 
@@ -163,15 +163,15 @@ void RenderDDP::Render(const matrix& view, const shared_ptr<Window>& window)
 	
 	Implementation::Timings::BeginQuery("Merge");
 	
-	s_Context->PSSetShader(m_MergePass.get(), null, 0);
-	s_Context->OMSetRenderTargets(1, &GetRTV(), null);
+	s_Context->PSSetShader(m_MergePass.get(), nullptr, 0);
+	s_Context->OMSetRenderTargets(1, &GetRTV(), nullptr);
 	s_Context->PSSetShaderResources(0, 1, &m_FrontSRV);
 	s_Context->OMSetBlendState( m_FinalBlend.get(), blendFactor, 0xffffffff );
 	
 	RenderQuad();
 	
-	s_Context->OMSetBlendState( null, blendFactor, 0xffffffff );
-	s_Context->OMSetDepthStencilState(null, 0);
+	s_Context->OMSetBlendState( nullptr, blendFactor, 0xffffffff );
+	s_Context->OMSetDepthStencilState(nullptr, 0);
 
 	Implementation::Timings::EndQuery("Merge");
 }
@@ -189,17 +189,17 @@ void RenderDDP::CreateTextures(uint2 size)
 
 	desc.Format = DXGI_FORMAT_R32G32_FLOAT;
 	com_ptr<ID3D11Texture2D> tex;
-	s_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-	s_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(m_DepthsSRV[0]));
-	s_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(m_DepthsRTV[0]));
-	s_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-	s_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(m_DepthsSRV[1]));
-	s_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(m_DepthsRTV[1]));
+	s_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+	s_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(m_DepthsSRV[0]));
+	s_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(m_DepthsRTV[0]));
+	s_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+	s_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(m_DepthsSRV[1]));
+	s_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(m_DepthsRTV[1]));
 
 	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	s_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-	s_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(m_FrontSRV));
-	s_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(m_FrontRTV));
+	s_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+	s_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(m_FrontSRV));
+	s_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(m_FrontRTV));
 }
 
 void RenderDDP::CreateStates()
@@ -282,12 +282,12 @@ void RenderDDP::CreateStates()
 	s_Device->CreateDepthStencilState(&desc, mst::initialize(m_NoDSS));
 }
 
-void RenderDDP::_numLayers(const uint& passes)
+void RenderDDP::numLayers(const uint& passes)
 {
 	m_NumPeelingLayers = max(1U, min(passes, MAX_NUM_PEELING_LAYERS));
 }
 
-uint RenderDDP::_numLayers() const
+uint RenderDDP::numLayers() const
 {
 	return m_NumPeelingLayers;
 }

@@ -48,12 +48,12 @@ using namespace Demo::Implementation;
 
 void __stdcall OnSetLayerDepth(__in const void* value, __inout_opt void* data)
 {
-	reinterpret_cast<RenderFDOIT*>(data)->layerDepth = FDOITDepth(*(uint32*)value);
+	reinterpret_cast<RenderFDOIT*>(data)->layerDepth(FDOITDepth(*(uint32_t*)value));
 }
 
 void __stdcall OnGetLayerDepth(__inout void* value, __inout_opt void* data)
 {
-	*(uint32*)value = reinterpret_cast<RenderFDOIT*>(data)->layerDepth;
+	*(uint32_t*)value = reinterpret_cast<RenderFDOIT*>(data)->layerDepth();
 }
 
 RenderFDOIT::RenderFDOIT(uint RTVindex, const shared_ptr<Window>& window)
@@ -64,26 +64,26 @@ RenderFDOIT::RenderFDOIT(uint RTVindex, const shared_ptr<Window>& window)
 	m_FragmentList.Init(s_Device, mst::make_flag(D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS), GPUARR_USE_COUNTER);
 	
 	m_FragmentStartIndices.Init(s_Device, mst::make_flag(D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS)
-		, DXGI_FORMAT_R32_UINT, window->size);
+		, DXGI_FORMAT_R32_UINT, window->size());
 
 	//m_FragmentStartIndices.Resize(window->width * window->height); // + 1 for the overhead counter
 
-	m_FragmentList.Resize(window->width * window->height * 16);
+	m_FragmentList.Resize(window->width() * window->height() * 16);
 
-	s_Device->CreatePixelShader(g_FDOITResolve4, sizeof(g_FDOITResolve4), null, mst::initialize(m_ResolvePS[0]));
-	s_Device->CreatePixelShader(g_FDOITResolve8, sizeof(g_FDOITResolve8), null, mst::initialize(m_ResolvePS[1]));
-	s_Device->CreatePixelShader(g_FDOITResolve16, sizeof(g_FDOITResolve16), null, mst::initialize(m_ResolvePS[2]));
-	s_Device->CreatePixelShader(g_FDOITResolve32, sizeof(g_FDOITResolve32), null, mst::initialize(m_ResolvePS[3]));
+	s_Device->CreatePixelShader(g_FDOITResolve4, sizeof(g_FDOITResolve4), nullptr, mst::initialize(m_ResolvePS[0]));
+	s_Device->CreatePixelShader(g_FDOITResolve8, sizeof(g_FDOITResolve8), nullptr, mst::initialize(m_ResolvePS[1]));
+	s_Device->CreatePixelShader(g_FDOITResolve16, sizeof(g_FDOITResolve16), nullptr, mst::initialize(m_ResolvePS[2]));
+	s_Device->CreatePixelShader(g_FDOITResolve32, sizeof(g_FDOITResolve32), nullptr, mst::initialize(m_ResolvePS[3]));
 	
-	s_Device->CreatePixelShader(g_FDOITGeometryPS, sizeof(g_FDOITGeometryPS), null, mst::initialize(m_GeometryPS));
+	s_Device->CreatePixelShader(g_FDOITGeometryPS, sizeof(g_FDOITGeometryPS), nullptr, mst::initialize(m_GeometryPS));
 
 	TwEnumVal renderModesEnum[] = { {FDOIT_DEPTH_4, "4"}, {FDOIT_DEPTH_8, "8"}, 
 									{FDOIT_DEPTH_16, "16"}, {FDOIT_DEPTH_32, "32" } };
 
-	TwType rmEnum = TwDefineEnum("LayerDepth", renderModesEnum, extentof(renderModesEnum));
+	TwType rmEnum = TwDefineEnum("LayerDepth", renderModesEnum, std::extent_v<decltype(renderModesEnum)>);
 
 	TwAddVarCB(GetGUIBar(), "Depth layers", rmEnum, 
-		OnSetLayerDepth, OnGetLayerDepth, this, null);
+		OnSetLayerDepth, OnGetLayerDepth, this, nullptr);
 }
 
 RenderFDOIT::~RenderFDOIT()
@@ -103,23 +103,23 @@ void RenderFDOIT::Render(const matrix& view, const shared_ptr<Window>& window)
 		m_FragmentList.GetUAV().get()
 	};
 	UINT initCounters[2] = { 0,0 };
-	s_Context->OMSetRenderTargetsAndUnorderedAccessViews(0, null, null, 0, 2,
+	s_Context->OMSetRenderTargetsAndUnorderedAccessViews(0, nullptr, nullptr, 0, 2,
 		accessviews, initCounters);
 
 
-	m_OITBuffer.data.g_Far = Renderer::Get().camera->farDistance;
-	m_OITBuffer.data.g_HalfSizef = float2(window->size) * 0.5f; 
-	m_OITBuffer.data.g_Resolution = window->size;
-	m_OITBuffer.data.g_Resolutionf = float2(window->size);
+	m_OITBuffer.data.g_Far = Renderer::Get().camera()->farDistance();
+	m_OITBuffer.data.g_HalfSizef = float2(window->size()) * 0.5f; 
+	m_OITBuffer.data.g_Resolution = window->size();
+	m_OITBuffer.data.g_Resolutionf = float2(window->size());
 	m_OITBuffer.data.g_MaxLinkedListCount = m_FragmentList.GetCapacity();
-	m_OITBuffer.data.g_Debug = Renderer::Get().debugMode;
+	m_OITBuffer.data.g_Debug = Renderer::Get().debugMode();
 
 	m_OITBuffer.Update(s_Context);
 
 	m_OITBuffer.PSSetConstantBuffer(s_Context, 2);
 
 	float blendFactor[]={1,1,1,1};
-	s_Context->OMSetBlendState(null, blendFactor, -1);
+	s_Context->OMSetBlendState(nullptr, blendFactor, -1);
 
 	RenderMeshes(view, window, m_GeometryPS);
 
@@ -131,18 +131,18 @@ void RenderFDOIT::Render(const matrix& view, const shared_ptr<Window>& window)
 
 	Timings::BeginQuery("Resolve");
 
-	s_Context->OMSetRenderTargets(1, &GetRTV(), null);
+	s_Context->OMSetRenderTargets(1, &GetRTV(), nullptr);
 
 
 	m_FragmentStartIndices.PSSetShaderResource(0);
 	m_FragmentList.PSSetShaderResource(1);
 
-	s_Context->PSSetShader(m_ResolvePS[m_CurrentDepth].get(), null, 0);
+	s_Context->PSSetShader(m_ResolvePS[m_CurrentDepth].get(), nullptr, 0);
 
 	RenderQuad();
 
-	ID3D11ShaderResourceView* nullviews[2] = {};
-	s_Context->PSSetShaderResources(0, extentof(nullviews), nullviews);
+	std::array<ID3D11ShaderResourceView*,2> nullviews = {};
+	s_Context->PSSetShaderResources(0, nullviews.size(), nullviews.data());
 
 	Timings::EndQuery("Resolve");
 
@@ -167,12 +167,12 @@ void RenderFDOIT::Resize(uint2 new_size)
 	m_FragmentList.Resize(new_size.x * new_size.y * 32);
 }
 
-void RenderFDOIT::_layerDepth(const FDOITDepth& depth)
+void RenderFDOIT::layerDepth(const FDOITDepth& depth)
 {
 	m_CurrentDepth = depth;
 }
 
-FDOITDepth RenderFDOIT::_layerDepth() const
+FDOITDepth RenderFDOIT::layerDepth() const
 {
 	return m_CurrentDepth;
 }

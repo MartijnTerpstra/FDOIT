@@ -62,16 +62,16 @@ RenderPlain::RenderPlain(uint RTVindex, const shared_ptr<Window>& window)
 RenderPlain::~RenderPlain()
 {
 	float blendFactor[] = {1,1,1,1};
-	s_Context->OMSetBlendState(null, blendFactor, 0xFFFFFFFF);
+	s_Context->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFFF);
 }
 
 void RenderPlain::Render(const matrix& view, const shared_ptr<Window>& window)
 {
 	float blendFactor[] = {1,1,1,1};
 	s_Context->OMSetBlendState(m_AlphaBlend.get(), blendFactor, 0xFFFFFFFF);
-	//s_Context->OMSetBlendState(null, blendFactor, 0xFFFFFFFF);
+	//s_Context->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFFF);
 
-	s_Context->OMSetRenderTargets(1, &GetRTV(), null);
+	s_Context->OMSetRenderTargets(1, &GetRTV(), nullptr);
 	//s_Context->omse
 
 	RenderMeshes(view, window);

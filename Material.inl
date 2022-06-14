@@ -28,7 +28,7 @@
 template<typename T>
 T Material::GetVariable(const string& var_name, size_t array_index) const
 {
-	return *reinterpret_cast<const T*>(m_Shader->GetVariable(var_name, array_size, Graphics::ToEnum<T>::value, sizeof(T)));
+	return *reinterpret_cast<const T*>(m_Shader->GetVariable(var_name, array_index, Graphics::ToEnum<T>::value, sizeof(T)));
 }
 
 template<typename T>

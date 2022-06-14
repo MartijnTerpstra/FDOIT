@@ -45,8 +45,8 @@ public:
 
 	void Reset();
 
-	void AdvanceCurrentPtr(uint64 count);
-	uint64 GetFileSize() const;
+	void AdvanceCurrentPtr(uint64_t count);
+	uint64_t GetFileSize() const;
 
 	void AddMemory(const void* mem_block, size_t mem_size);
 	void AddString(const std::string& str);
@@ -105,7 +105,7 @@ private:
 
 private:
 	std::fstream m_File;
-	uint64 m_FileSize;
+	uint64_t m_FileSize;
 };
 
 };

@@ -67,7 +67,7 @@ void Scene::AddLight(shared_ptr<Light> light, const matrix& mat)
 		throw std::invalid_argument("Scene::AddLight(): light does not point to a valid object");
 	}
 
-	LightType type = light->type;
+	LightType type = light->type();
 
 	switch(type)
 	{
@@ -92,7 +92,7 @@ void Scene::RemoveAllMeshesWithName(string name)
 {
 	m_Meshes.erase(std::remove_if(m_Meshes.begin(), m_Meshes.end(), [&name](std::pair<shared_ptr<Mesh>, matrix>& it)
 	{
-		return it.first->name == name;
+		return it.first->name() == name;
 	} ), m_Meshes.end());
 }
 

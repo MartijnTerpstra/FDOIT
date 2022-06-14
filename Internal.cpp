@@ -43,7 +43,8 @@ float g_TimeStep;
 
 int main(int argc, char** argv)
 {
-	WinMain(GetModuleHandleA(null), null, "", 0);
+	CHAR empty = 0;
+	WinMain(GetModuleHandleA(nullptr), nullptr, &empty, 0);
 }
 
 int WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -62,7 +63,7 @@ int OnExit()
 	if(g_Internal)
 	{
 		Internal* internal = g_Internal;
-		g_Internal = null;
+		g_Internal = nullptr;
 		internal->Exit();
 		delete internal;
 	}
@@ -150,8 +151,8 @@ void Internal::Exit()
 {
 	Implementation::Timings::Exit();
 	m_Game->Exit();
-	m_Game = null;
-	m_Window = null;
+	m_Game = nullptr;
+	m_Window = nullptr;
 	Renderer::Get().Exit();
 	delete &Renderer::Get();
 #if !USE_DX11_STATIC_LIB
@@ -166,7 +167,7 @@ void Internal::OnResize(uint2 new_size)
 
 void Internal::Terminate()
 {
-	if(g_Internal != null)
+	if(g_Internal != nullptr)
 	{
 		exit(0);
 	}

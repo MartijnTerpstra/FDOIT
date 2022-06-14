@@ -96,7 +96,7 @@ shared_ptr<Shader> Shader::Create(string file)
 
 	auto device = Renderer::Get().GetDevice();
 
-	device->CreatePixelShader(data.get(), data_size, null, mst::initialize(shader->m_Pixel));
+	device->CreatePixelShader(data.get(), data_size, nullptr, mst::initialize(shader->m_Pixel));
 
 	//shader->PrintVariables();
 
@@ -180,7 +180,7 @@ shared_ptr<Shader> Shader::Create(string file)
 			bdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			bdesc.ByteWidth = buffer_desc.Size;
 			bdesc.Usage = D3D11_USAGE_DEFAULT;
-			device->CreateBuffer(&bdesc, null, &buf.buffer);*/
+			device->CreateBuffer(&bdesc, nullptr, &buf.buffer);*/
 
 			shader->m_Buffers.push_back(buf);
 			for(uint j = 0; j < buffer_desc.Variables; ++j)
@@ -214,7 +214,7 @@ shared_ptr<Shader> Shader::Create(string file)
 
 bool Shader::HasTexture(const string& name_in_shader) const
 {
-	foreach(auto& it, m_Textures)
+	for(auto& it : m_Textures)
 	{
 		if(it.name == name_in_shader)
 		{

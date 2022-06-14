@@ -29,8 +29,7 @@ namespace Demo {
 
 class Particles : public Mesh
 {
-	friend class std::_Ref_count_obj<Particles>;
-private:
+public:
 	// ctor & dtor
 	Particles(string&& name);
 	~Particles();

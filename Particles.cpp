@@ -82,7 +82,7 @@ void Particles::Init()
 	SubMesh sm;
 	sm.num_indices = 600;
 	sm.material = Material::Create("Particle material", 
-		Renderer::Get().defaultShader);
+		Renderer::Get().defaultShader());
 
 	sm.material->SetTexture("DiffuseTex", Texture::Create("smoke_particle.btf"));
 
@@ -123,18 +123,18 @@ void Particles::Update(const shared_ptr<Camera>& camera, const matrix& modelView
 
 	//SpawnParticles();
 
-	const matrix inverseView = modelView.inverse;
+	const matrix inverseView = modelView.get_inverse();
 
 	for(uint i = 0; i < m_Particles.size(); ++i)
 	{
 		Particle& p = m_Particles[i];
 
-		const float4 viewPos = modelView * float4(p.position, 1);
+		const float4 viewPos = float4(p.position, 1) * modelView.get_transpose();
 
-		m_Vertices[i * 4 + 0].position = (inverseView * (viewPos + float4(-p.size, p.size, 0, 0))).xyz;
-		m_Vertices[i * 4 + 1].position = (inverseView * (viewPos + float4( p.size, p.size, 0, 0))).xyz;
-		m_Vertices[i * 4 + 2].position = (inverseView * (viewPos + float4( p.size,-p.size, 0, 0))).xyz;
-		m_Vertices[i * 4 + 3].position = (inverseView * (viewPos + float4(-p.size,-p.size, 0, 0))).xyz;
+		m_Vertices[i * 4 + 0].position = swizzle::xyz((viewPos + float4(-p.size, p.size, 0, 0)) * inverseView.get_transpose());
+		m_Vertices[i * 4 + 1].position = swizzle::xyz((viewPos + float4( p.size, p.size, 0, 0)) * inverseView.get_transpose());
+		m_Vertices[i * 4 + 2].position = swizzle::xyz((viewPos + float4( p.size,-p.size, 0, 0)) * inverseView.get_transpose());
+		m_Vertices[i * 4 + 3].position = swizzle::xyz((viewPos + float4(-p.size,-p.size, 0, 0)) * inverseView.get_transpose());
 
 		m_Vertices[i * 4 + 0].uv_coord = float2(0,0);
 		m_Vertices[i * 4 + 1].uv_coord = float2(1,0);

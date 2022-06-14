@@ -70,23 +70,23 @@ public:
 public:
 	// properties
 
-	declare_get_property(shared_ptr<Camera>, camera);
+	shared_ptr<Camera> camera() const;
 
-	declare_get_property(shared_ptr<Window>, window);
+	shared_ptr<Window> window() const;
 
-	declare_get_property(shared_ptr<Shader>, defaultShader);
+	shared_ptr<Shader> defaultShader() const;
 
-	declare_property(float, globalAmbient);
+	float globalAmbient() const; void globalAmbient(const float& value);
 
-	declare_property(RenderMode, renderMode);
+	RenderMode renderMode() const; void renderMode(const RenderMode& value);
 
-	declare_property(bool, debugMode);
+	bool debugMode() const; void debugMode(const bool& value);
 
-	declare_property(bool, errorCalculation);
+	bool errorCalculation() const; void errorCalculation(const bool& value);
 
-	declare_property(RenderMode, comparisonRenderMode);
+	RenderMode comparisonRenderMode() const; void comparisonRenderMode(const RenderMode& value);
 
-	declare_get_property(float, rootMeanSquareDeviation);
+	float rootMeanSquareDeviation() const;
 
 public:
 	// main functionality

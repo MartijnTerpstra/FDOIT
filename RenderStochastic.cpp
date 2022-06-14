@@ -83,23 +83,23 @@ using namespace Demo::Implementation;
 
 void __stdcall OnSetAlphaCorrection(__in const void* value, __inout_opt void* data)
 {
-	reinterpret_cast<RenderStochastic*>(data)->alphaCorrection = *(bool*)value;
+	reinterpret_cast<RenderStochastic*>(data)->alphaCorrection(*(bool*)value);
 }
 
 void __stdcall OnGetAlphaCorrection(__inout void* value, __inout_opt void* data)
 {
-	*(bool*)value = reinterpret_cast<RenderStochastic*>(data)->alphaCorrection;
+	*(bool*)value = reinterpret_cast<RenderStochastic*>(data)->alphaCorrection();
 }
 
 
 void __stdcall OnSetNumPasses(__in const void* value, __inout_opt void* data)
 {
-	reinterpret_cast<RenderStochastic*>(data)->numPasses = *(uint32*)value;
+	reinterpret_cast<RenderStochastic*>(data)->numPasses(*(uint32_t*)value);
 }
 
 void __stdcall OnGetNumPasses(__inout void* value, __inout_opt void* data)
 {
-	*(uint32*)value = reinterpret_cast<RenderStochastic*>(data)->numPasses;
+	*(uint32_t*)value = reinterpret_cast<RenderStochastic*>(data)->numPasses();
 }
 
 
@@ -112,16 +112,16 @@ RenderStochastic::RenderStochastic(uint RTVindex, const shared_ptr<Window>& wind
 	m_NumPasses = 4;
 	m_AlphaCorrection = true;
 
-	InitTextures(window->size);
+	InitTextures(window->size());
 	InitBlendStates();
 	InitShaders();
 	InitDSS();
 
 	TwAddVarCB(GetGUIBar(), "Num passes", TW_TYPE_UINT32,
-		OnSetNumPasses, OnGetNumPasses, this, null);
+		OnSetNumPasses, OnGetNumPasses, this, nullptr);
 
 	TwAddVarCB(GetGUIBar(), "Alpha correction", TW_TYPE_BOOLCPP,
-		OnSetAlphaCorrection, OnGetAlphaCorrection, this, null);
+		OnSetAlphaCorrection, OnGetAlphaCorrection, this, nullptr);
 }
 
 RenderStochastic::~RenderStochastic()
@@ -149,15 +149,15 @@ void RenderStochastic::Render(const matrix& view, const shared_ptr<Window>& wind
 	
     // Update the constant buffer
 	m_Params.Update(s_Context);
-	//s_Context->UpdateSubresource(m_pParamsCB, 0, null, &CBData, 0, 0);
+	//s_Context->UpdateSubresource(m_pParamsCB, 0, nullptr, &CBData, 0, 0);
 
 
 	m_Params.PSSetConstantBuffer(s_Context, 2);
 	s_Context->OMSetDepthStencilState(m_NoDepth.get(), 0);
 
 	s_Context->OMSetBlendState(m_TransmittanceBS.get(), blendFactor, -1);
-	s_Context->OMSetRenderTargets(1, &m_Transmittance.GetRTV(), null);
-	//s_Context->OMSetRenderTargets(1, &s_RTV, null);
+	s_Context->OMSetRenderTargets(1, &m_Transmittance.GetRTV(), nullptr);
+	//s_Context->OMSetRenderTargets(1, &s_RTV, nullptr);
 
 	RenderMeshes(view, window, m_AlphaPS);
 
@@ -174,8 +174,8 @@ void RenderStochastic::Render(const matrix& view, const shared_ptr<Window>& wind
 
 		s_Context->ClearDepthStencilView(m_DSV.get(), D3D11_CLEAR_DEPTH, 1.0, 0);
 
-		s_Context->OMSetRenderTargets(0, null, m_DSV.get());
-		s_Context->OMSetBlendState(null, blendFactor, 0xffffffff);
+		s_Context->OMSetRenderTargets(0, nullptr, m_DSV.get());
+		s_Context->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
 		s_Context->OMSetDepthStencilState(m_DepthRW.get(), 0);
 		s_Context->PSSetShaderResources(4, 1, &m_RandTex);
 
@@ -208,10 +208,10 @@ void RenderStochastic::Render(const matrix& view, const shared_ptr<Window>& wind
 
 	Timings::BeginQuery("Resolve");
 
-	s_Context->OMSetRenderTargets(1, &GetRTV(), null);
-    s_Context->OMSetBlendState(null, blendFactor, 0xffffffff);
+	s_Context->OMSetRenderTargets(1, &GetRTV(), nullptr);
+    s_Context->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
 
-	s_Context->PSSetShader(m_ResolvePS[m_NumPasses-1][m_AlphaCorrection].get(), null, 0);
+	s_Context->PSSetShader(m_ResolvePS[m_NumPasses-1][m_AlphaCorrection].get(), nullptr, 0);
 
     ID3D11ShaderResourceView *pSRVs[3] =
     {
@@ -298,7 +298,7 @@ void RenderStochastic::InitRandTexture()
 		com_ptr<ID3D11Texture2D> tex;
 		s_Device->CreateTexture2D(&texDesc, &srDesc, mst::initialize(tex));
 
-		s_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(m_RandTex));
+		s_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(m_RandTex));
 
 		delete[] allmasks;
 	}
@@ -357,45 +357,45 @@ void RenderStochastic::InitBlendStates()
 
 void RenderStochastic::InitShaders()
 {
-	s_Device->CreatePixelShader(g_StochasticAlpha, sizeof(g_StochasticAlpha), null, mst::initialize(m_AlphaPS));
-	s_Device->CreatePixelShader(g_StochasticDepth, sizeof(g_StochasticDepth), null, mst::initialize(m_DepthPS));
-	s_Device->CreatePixelShader(g_StochasticColor, sizeof(g_StochasticColor), null, mst::initialize(m_ColorPS));
+	s_Device->CreatePixelShader(g_StochasticAlpha, sizeof(g_StochasticAlpha), nullptr, mst::initialize(m_AlphaPS));
+	s_Device->CreatePixelShader(g_StochasticDepth, sizeof(g_StochasticDepth), nullptr, mst::initialize(m_DepthPS));
+	s_Device->CreatePixelShader(g_StochasticColor, sizeof(g_StochasticColor), nullptr, mst::initialize(m_ColorPS));
 
-	s_Device->CreatePixelShader(g_StochasticResolve1, sizeof(g_StochasticResolve1), null, mst::initialize(m_ResolvePS[0][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve2, sizeof(g_StochasticResolve2), null, mst::initialize(m_ResolvePS[1][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve3, sizeof(g_StochasticResolve3), null, mst::initialize(m_ResolvePS[2][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve4, sizeof(g_StochasticResolve4), null, mst::initialize(m_ResolvePS[3][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve5, sizeof(g_StochasticResolve5), null, mst::initialize(m_ResolvePS[4][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve6, sizeof(g_StochasticResolve6), null, mst::initialize(m_ResolvePS[5][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve7, sizeof(g_StochasticResolve7), null, mst::initialize(m_ResolvePS[6][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve8, sizeof(g_StochasticResolve8), null, mst::initialize(m_ResolvePS[7][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve9, sizeof(g_StochasticResolve9), null, mst::initialize(m_ResolvePS[8][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve1, sizeof(g_StochasticResolve1), nullptr, mst::initialize(m_ResolvePS[0][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve2, sizeof(g_StochasticResolve2), nullptr, mst::initialize(m_ResolvePS[1][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve3, sizeof(g_StochasticResolve3), nullptr, mst::initialize(m_ResolvePS[2][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve4, sizeof(g_StochasticResolve4), nullptr, mst::initialize(m_ResolvePS[3][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve5, sizeof(g_StochasticResolve5), nullptr, mst::initialize(m_ResolvePS[4][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve6, sizeof(g_StochasticResolve6), nullptr, mst::initialize(m_ResolvePS[5][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve7, sizeof(g_StochasticResolve7), nullptr, mst::initialize(m_ResolvePS[6][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve8, sizeof(g_StochasticResolve8), nullptr, mst::initialize(m_ResolvePS[7][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve9, sizeof(g_StochasticResolve9), nullptr, mst::initialize(m_ResolvePS[8][0]));
 
-	s_Device->CreatePixelShader(g_StochasticResolve10, sizeof(g_StochasticResolve10), null, mst::initialize(m_ResolvePS[9][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve11, sizeof(g_StochasticResolve11), null, mst::initialize(m_ResolvePS[10][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve12, sizeof(g_StochasticResolve12), null, mst::initialize(m_ResolvePS[11][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve13, sizeof(g_StochasticResolve13), null, mst::initialize(m_ResolvePS[12][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve14, sizeof(g_StochasticResolve14), null, mst::initialize(m_ResolvePS[13][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve15, sizeof(g_StochasticResolve15), null, mst::initialize(m_ResolvePS[14][0]));
-	s_Device->CreatePixelShader(g_StochasticResolve16, sizeof(g_StochasticResolve16), null, mst::initialize(m_ResolvePS[15][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve10, sizeof(g_StochasticResolve10), nullptr, mst::initialize(m_ResolvePS[9][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve11, sizeof(g_StochasticResolve11), nullptr, mst::initialize(m_ResolvePS[10][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve12, sizeof(g_StochasticResolve12), nullptr, mst::initialize(m_ResolvePS[11][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve13, sizeof(g_StochasticResolve13), nullptr, mst::initialize(m_ResolvePS[12][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve14, sizeof(g_StochasticResolve14), nullptr, mst::initialize(m_ResolvePS[13][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve15, sizeof(g_StochasticResolve15), nullptr, mst::initialize(m_ResolvePS[14][0]));
+	s_Device->CreatePixelShader(g_StochasticResolve16, sizeof(g_StochasticResolve16), nullptr, mst::initialize(m_ResolvePS[15][0]));
 
-	s_Device->CreatePixelShader(g_StochasticResolve1C, sizeof(g_StochasticResolve1C), null, mst::initialize(m_ResolvePS[0][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve2C, sizeof(g_StochasticResolve2C), null, mst::initialize(m_ResolvePS[1][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve3C, sizeof(g_StochasticResolve3C), null, mst::initialize(m_ResolvePS[2][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve4C, sizeof(g_StochasticResolve4C), null, mst::initialize(m_ResolvePS[3][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve5C, sizeof(g_StochasticResolve5C), null, mst::initialize(m_ResolvePS[4][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve6C, sizeof(g_StochasticResolve6C), null, mst::initialize(m_ResolvePS[5][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve7C, sizeof(g_StochasticResolve7C), null, mst::initialize(m_ResolvePS[6][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve8C, sizeof(g_StochasticResolve8C), null, mst::initialize(m_ResolvePS[7][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve9C, sizeof(g_StochasticResolve9C), null, mst::initialize(m_ResolvePS[8][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve1C, sizeof(g_StochasticResolve1C), nullptr, mst::initialize(m_ResolvePS[0][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve2C, sizeof(g_StochasticResolve2C), nullptr, mst::initialize(m_ResolvePS[1][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve3C, sizeof(g_StochasticResolve3C), nullptr, mst::initialize(m_ResolvePS[2][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve4C, sizeof(g_StochasticResolve4C), nullptr, mst::initialize(m_ResolvePS[3][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve5C, sizeof(g_StochasticResolve5C), nullptr, mst::initialize(m_ResolvePS[4][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve6C, sizeof(g_StochasticResolve6C), nullptr, mst::initialize(m_ResolvePS[5][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve7C, sizeof(g_StochasticResolve7C), nullptr, mst::initialize(m_ResolvePS[6][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve8C, sizeof(g_StochasticResolve8C), nullptr, mst::initialize(m_ResolvePS[7][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve9C, sizeof(g_StochasticResolve9C), nullptr, mst::initialize(m_ResolvePS[8][1]));
 
-	s_Device->CreatePixelShader(g_StochasticResolve10C, sizeof(g_StochasticResolve10C), null, mst::initialize(m_ResolvePS[9][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve11C, sizeof(g_StochasticResolve11C), null, mst::initialize(m_ResolvePS[10][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve12C, sizeof(g_StochasticResolve12C), null, mst::initialize(m_ResolvePS[11][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve13C, sizeof(g_StochasticResolve13C), null, mst::initialize(m_ResolvePS[12][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve14C, sizeof(g_StochasticResolve14C), null, mst::initialize(m_ResolvePS[13][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve15C, sizeof(g_StochasticResolve15C), null, mst::initialize(m_ResolvePS[14][1]));
-	s_Device->CreatePixelShader(g_StochasticResolve16C, sizeof(g_StochasticResolve16C), null, mst::initialize(m_ResolvePS[15][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve10C, sizeof(g_StochasticResolve10C), nullptr, mst::initialize(m_ResolvePS[9][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve11C, sizeof(g_StochasticResolve11C), nullptr, mst::initialize(m_ResolvePS[10][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve12C, sizeof(g_StochasticResolve12C), nullptr, mst::initialize(m_ResolvePS[11][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve13C, sizeof(g_StochasticResolve13C), nullptr, mst::initialize(m_ResolvePS[12][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve14C, sizeof(g_StochasticResolve14C), nullptr, mst::initialize(m_ResolvePS[13][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve15C, sizeof(g_StochasticResolve15C), nullptr, mst::initialize(m_ResolvePS[14][1]));
+	s_Device->CreatePixelShader(g_StochasticResolve16C, sizeof(g_StochasticResolve16C), nullptr, mst::initialize(m_ResolvePS[15][1]));
 }
 
 void RenderStochastic::InitDSV(uint2 size)
@@ -412,9 +412,9 @@ void RenderStochastic::InitDSV(uint2 size)
 	desc.Usage = D3D11_USAGE_DEFAULT;
 
 	com_ptr<ID3D11Texture2D> tex;
-	s_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
+	s_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
 
-	s_Device->CreateDepthStencilView(tex.get(), null, mst::initialize(m_DSV));
+	s_Device->CreateDepthStencilView(tex.get(), nullptr, mst::initialize(m_DSV));
 }
 
 void RenderStochastic::InitDSS()
@@ -438,22 +438,22 @@ void RenderStochastic::InitDSS()
 	s_Device->CreateDepthStencilState( &depthstencilState,mst::initialize(m_DepthR) );
 }
 
-void RenderStochastic::_numPasses(const uint& passes)
+void RenderStochastic::numPasses(const uint& passes)
 {
 	m_NumPasses = max(1U, min(STOCHASTIC_MAX_NUM_PASSES, passes));
 }
 
-uint RenderStochastic::_numPasses() const
+uint RenderStochastic::numPasses() const
 {
 	return m_NumPasses;
 }
 
-void RenderStochastic::_alphaCorrection(const bool& correction)
+void RenderStochastic::alphaCorrection(const bool& correction)
 {
 	m_AlphaCorrection = correction;
 }
 
-bool RenderStochastic::_alphaCorrection() const
+bool RenderStochastic::alphaCorrection() const
 {
 	return m_AlphaCorrection;
 }

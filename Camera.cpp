@@ -36,21 +36,21 @@ Camera::Camera()
 	m_EulerAngles(0,0,0),
 	m_FOV(70.0f), m_NearZ(3.0f), m_FarZ(3000.0f)
 {
-	_CalcProjectionMatrix();
+	CalcProjectionMatrix();
 }
 
 Camera::~Camera()
 {
 }
 
-float3 Camera::_eulerAngles() const
+float3 Camera::eulerAngles() const
 {
 	return m_EulerAngles;
 }
 
-void Camera::_eulerAngles(const float3& angles)
+void Camera::eulerAngles(const float3& angles)
 { // ZYX rotation
-	float3 pos = position;
+	float3 pos = position();
 
 //	m_Matrix = g_Identity.rotated_z(Common::DegreeToRadian(angles.z)).rotated_y(Common::DegreeToRadian(angles.y)).rotated_x(Common::DegreeToRadian(angles.x));
 
@@ -58,34 +58,33 @@ void Camera::_eulerAngles(const float3& angles)
 
 	//m_Matrix = g_Identity.rotated_z(Common::DegreeToRadian(angles.z)).rotated_y(Common::DegreeToRadian(angles.y));
 	
-	position = pos;
+	position(pos);
 
 	m_EulerAngles = angles;
 }
 
-float3 Camera::_position() const
+float3 Camera::position() const
 {
-	return m_Matrix.position;
+	return m_Matrix.get_position();
 }
 
-void Camera::_position(const float3& position)
+void Camera::position(const float3& position)
 {
-	m_Matrix.position = position;
+	m_Matrix.set_position(position);
 }
 
-void Camera::_CalcProjectionMatrix()
+void Camera::CalcProjectionMatrix()
 {
-
 	double sine, cotangent, deltaZ;
 	double radians = float(m_FOV / 2.0 * 3.14159265 / 180.0) / 2.0f;
-	double aspect = Renderer::Get().window->aspectRatio;
+	double aspect = Renderer::Get().window()->aspectRatio();
   
 	deltaZ = m_FarZ - m_NearZ;
 	sine = sin(radians);
 	/* Should be non-zero to avoid division by zero. */
-	CHECK_IFNOT(deltaZ, "internal error: CreatePerspectiveMatrix(): (E1)");
-	CHECK_IFNOT(sine, "internal error: CreatePerspectiveMatrix(): (E2)");
-	CHECK_IFNOT(aspect, "internal error: CreatePerspectiveMatrix(): (E2)");
+	MST_ASSERT(deltaZ, "internal error: CreatePerspectiveMatrix(): (E1)");
+	MST_ASSERT(sine, "internal error: CreatePerspectiveMatrix(): (E2)");
+	MST_ASSERT(aspect, "internal error: CreatePerspectiveMatrix(): (E2)");
 	cotangent = cos(radians) / sine;
 
 	memset(&m_Projection, 0, sizeof(m_Projection));
@@ -105,42 +104,42 @@ void Camera::_CalcProjectionMatrix()
 
 }
 
-float3 Camera::_forwardDirection() const
+float3 Camera::forwardDirection() const
 {
 	return float3(m_Matrix[0].z, m_Matrix[1].z, m_Matrix[2].z);
 }
 
-float3 Camera::_backwardDirection() const
+float3 Camera::backwardDirection() const
 {
-	return -forwardDirection;
+	return -forwardDirection();
 }
 
-float3 Camera::_leftDirection() const
+float3 Camera::leftDirection() const
 {
-	return -rightDirection;
+	return -rightDirection();
 }
 
-float3 Camera::_rightDirection() const
+float3 Camera::rightDirection() const
 {
 	return float3(m_Matrix[0].x, m_Matrix[1].x, m_Matrix[2].x);
 }
 
-float3 Camera::_upDirection() const
+float3 Camera::upDirection() const
 {
 	return float3(m_Matrix[0].y, m_Matrix[1].y, m_Matrix[2].y);
 }
 
-float3 Camera::_downDirection() const
+float3 Camera::downDirection() const
 {
-	return -upDirection;
+	return -upDirection();
 }
 
-float Camera::_farDistance() const
+float Camera::farDistance() const
 {
 	return m_FarZ;
 }
 
-matrix Camera::_projectionMatrix() const
+matrix Camera::projectionMatrix() const
 {
 	return m_Projection;
 }

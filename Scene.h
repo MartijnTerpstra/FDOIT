@@ -48,25 +48,33 @@ public:
 public:
 	// properties
 
-	declare_get_property(shared_ptr<Camera>, camera);
+	shared_ptr<Camera> camera() const;
 
-	declare_property_mapped_array(shared_ptr<Mesh>, meshes);
+	shared_ptr<Mesh> mesh(size_t idx) const;
+	shared_ptr<Mesh> mesh(const std::string& name) const;
 
-	declare_property_mapped_array(matrix, meshMatrices);
+	matrix meshMatrix(size_t idx) const;
+	matrix meshMatrix(const std::string& name) const;
+	void meshMatrix(size_t idx, const matrix& value);
+	void meshMatrix(const std::string& name, const matrix& value);
 
-	declare_get_property(uint, meshCount);
+	uint meshCount() const;
 
-	declare_property_mapped_array(shared_ptr<Light>, lights);
+	shared_ptr<Light> light(size_t idx) const;
+	shared_ptr<Light> light(const std::string& name) const;
 
-	declare_property_mapped_array(matrix, lightMatrices);
+	matrix lightMatrix(size_t idx) const;
+	matrix lightMatrix(const std::string& name) const;
+	void lightMatrix(size_t idx, const matrix& value);
+	void lightMatrix(const std::string& name, const matrix& value);
 
-	declare_get_property(uint, lightCount);
+	uint lightCount() const;
 
-	declare_get_property(uint, pointLightCount);
+	uint pointLightCount() const;
 
-	declare_get_property(uint, spotLightCount);
+	uint spotLightCount() const;
 
-	declare_get_property(uint, directionalLightCount);
+	uint directionalLightCount() const;
 
 public:
 	// main functionality

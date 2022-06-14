@@ -1,33 +1,45 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-inline void wait_object::wait() const
+#include "mx_platform.h"
+#include <mthreading_slim.h>
+
+namespace mst {
+namespace threading {
+namespace slim {
+
+inline bool wait_object::try_wait() const noexcept
 {
-	while(1)
+	return _Try_wait();
+}
+
+inline void wait_object::wait() const noexcept
+{
+	for(;;)
 	{
 		if(_Try_wait())
 		{
@@ -39,7 +51,8 @@ inline void wait_object::wait() const
 }
 
 template<typename RepType, typename PeriodType>
-inline bool wait_object::wait_for(const ::std::chrono::duration<RepType, PeriodType>& duration) const
+inline bool wait_object::wait_for(
+	const ::std::chrono::duration<RepType, PeriodType>& duration) const noexcept
 {
 	typedef ::std::chrono::duration<RepType, PeriodType> DurationType;
 
@@ -53,13 +66,13 @@ inline bool wait_object::wait_for(const ::std::chrono::duration<RepType, PeriodT
 
 		while(1)
 		{
-			const unsigned long currentValue = m_counter;
-
 			if(_Try_wait())
 			{
 				return true;
 			}
-			if(duration_cast<DurationType>(::std::chrono::high_resolution_clock::now() - start).count() > duration)
+			if(::std::chrono::duration_cast<DurationType>(
+				   ::std::chrono::high_resolution_clock::now() - start)
+					.count() > duration)
 			{
 				return false;
 			}
@@ -70,7 +83,8 @@ inline bool wait_object::wait_for(const ::std::chrono::duration<RepType, PeriodT
 }
 
 template<typename ClockType, typename DurationType>
-inline bool wait_object::wait_until(const ::std::chrono::time_point<ClockType, DurationType>& timePoint) const
+inline bool wait_object::wait_until(
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) const noexcept
 {
 	if(ClockType::now() > timePoint)
 	{
@@ -81,8 +95,6 @@ inline bool wait_object::wait_until(const ::std::chrono::time_point<ClockType, D
 
 		while(1)
 		{
-			const unsigned long currentValue = m_counter;
-
 			if(_Try_wait())
 			{
 				return true;
@@ -98,12 +110,13 @@ inline bool wait_object::wait_until(const ::std::chrono::time_point<ClockType, D
 }
 
 template<size_t WaitObjectCount>
-inline void wait_object::wait_all(const wait_object *(&waitObjects)[WaitObjectCount])
+inline void wait_object::wait_all(const wait_object* (&waitObjects)[WaitObjectCount]) noexcept
 {
 	wait_object::wait_all(waitObjects, WaitObjectCount);
 }
 
-inline void wait_object::wait_all(const wait_object * const * waitObjects, size_t waitObjectCount)
+inline void wait_object::wait_all(
+	const wait_object* const* waitObjects, size_t waitObjectCount) noexcept
 {
 	for(size_t i = 0; i < waitObjectCount; ++i)
 	{
@@ -112,23 +125,24 @@ inline void wait_object::wait_all(const wait_object * const * waitObjects, size_
 }
 
 template<size_t WaitObjectCount>
-inline size_t wait_object::wait_any(const wait_object *(&waitObjects)[WaitObjectCount])
+inline size_t wait_object::wait_any(const wait_object* (&waitObjects)[WaitObjectCount]) noexcept
 {
 	return wait_object::wait_any(waitObjects, WaitObjectCount);
 }
 
 template<size_t WaitObjectCount>
-inline size_t wait_object::wait_any(wait_object *(&waitObjects)[WaitObjectCount])
+inline size_t wait_object::wait_any(wait_object* (&waitObjects)[WaitObjectCount]) noexcept
 {
 	return wait_object::wait_any(waitObjects, WaitObjectCount);
 }
 
-inline size_t wait_object::wait_any(const wait_object * const * waitObjects, size_t waitObjectCount)
+inline size_t wait_object::wait_any(
+	const wait_object* const* waitObjects, size_t waitObjectCount) noexcept
 {
 	if(waitObjectCount == 0)
 		return (size_t)-1;
 
-	while(1)
+	for(;;)
 	{
 		for(size_t i = 0; i < waitObjectCount; ++i)
 		{
@@ -143,19 +157,22 @@ inline size_t wait_object::wait_any(const wait_object * const * waitObjects, siz
 }
 
 template<typename RepType, typename PeriodType, size_t WaitObjectCount>
-inline bool wait_object::wait_all_for(const wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::duration<RepType, PeriodType>& duration)
+inline bool wait_object::wait_all_for(const wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::duration<RepType, PeriodType>& duration) noexcept
 {
 	return wait_object::wait_all_for(waitObjects, WaitObjectCount, duration);
 }
 
 template<typename RepType, typename PeriodType, size_t WaitObjectCount>
-inline bool wait_object::wait_all_for(wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::duration<RepType, PeriodType>& duration)
+inline bool wait_object::wait_all_for(wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::duration<RepType, PeriodType>& duration) noexcept
 {
 	return wait_object::wait_all_for(waitObjects, WaitObjectCount, duration);
 }
 
 template<typename RepType, typename PeriodType>
-inline bool wait_object::wait_all_for(const wait_object * const * waitObjects, size_t waitObjectCount, const::std::chrono::duration<RepType, PeriodType>& duration)
+inline bool wait_object::wait_all_for(const wait_object* const* waitObjects, size_t waitObjectCount,
+	const ::std::chrono::duration<RepType, PeriodType>& duration) noexcept
 {
 	if(waitObjectCount == 0)
 		return true;
@@ -197,19 +214,23 @@ inline bool wait_object::wait_all_for(const wait_object * const * waitObjects, s
 }
 
 template<typename ClockType, typename DurationType, size_t WaitObjectCount>
-inline bool wait_object::wait_all_until(const wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::time_point<ClockType, DurationType>& timePoint)
+inline bool wait_object::wait_all_until(const wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) noexcept
 {
 	return wait_object::wait_all_until(waitObjects, WaitObjectCount, timePoint);
 }
 
 template<typename ClockType, typename DurationType, size_t WaitObjectCount>
-inline bool wait_object::wait_all_until(wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::time_point<ClockType, DurationType>& timePoint)
+inline bool wait_object::wait_all_until(wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) noexcept
 {
 	return wait_object::wait_all_until(waitObjects, WaitObjectCount, timePoint);
 }
 
 template<typename ClockType, typename DurationType>
-inline bool wait_object::wait_all_until(const wait_object * const * waitObjects, size_t waitObjectCount, const::std::chrono::time_point<ClockType, DurationType>& timePoint)
+inline bool wait_object::wait_all_until(const wait_object* const* waitObjects,
+	size_t waitObjectCount,
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) noexcept
 {
 	if(waitObjectCount == 0)
 		return true;
@@ -249,22 +270,25 @@ inline bool wait_object::wait_all_until(const wait_object * const * waitObjects,
 }
 
 template<typename RepType, typename PeriodType, size_t WaitObjectCount>
-inline size_t (wait_object::wait_any_for)(const wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::duration<RepType, PeriodType>& duration)
+inline size_t(wait_object::wait_any_for)(const wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::duration<RepType, PeriodType>& duration) noexcept
 {
 	return wait_object::wait_any_for(waitObjects, WaitObjectCount, duration);
 }
 
 template<typename RepType, typename PeriodType, size_t WaitObjectCount>
-inline size_t(wait_object::wait_any_for)(wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::duration<RepType, PeriodType>& duration)
+inline size_t(wait_object::wait_any_for)(wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::duration<RepType, PeriodType>& duration) noexcept
 {
 	return wait_object::wait_any_for(waitObjects, WaitObjectCount, duration);
 }
 
 template<typename RepType, typename PeriodType>
-inline size_t (wait_object::wait_any_for)(const wait_object * const * waitObjects, size_t waitObjectCount, const::std::chrono::duration<RepType, PeriodType>& duration)
+inline size_t(wait_object::wait_any_for)(const wait_object* const* waitObjects,
+	size_t waitObjectCount, const ::std::chrono::duration<RepType, PeriodType>& duration) noexcept
 {
 	if(waitObjectCount == 0)
-		return -1;
+		return (size_t)-1;
 
 	if(duration.count() == 0)
 	{
@@ -275,13 +299,13 @@ inline size_t (wait_object::wait_any_for)(const wait_object * const * waitObject
 				return i;
 			}
 		}
-		return -1;
+		return (size_t)-1;
 	}
 	else
 	{
 		auto start = ::std::chrono::high_resolution_clock::now();
 
-		while(1)
+		for(;;)
 		{
 			for(size_t i = 0; i < waitObjectCount; ++i)
 			{
@@ -293,7 +317,7 @@ inline size_t (wait_object::wait_any_for)(const wait_object * const * waitObject
 
 			if((::std::chrono::high_resolution_clock::now() - start) > duration)
 			{
-				return -1;
+				return (size_t)-1;
 			}
 
 			std::this_thread::yield();
@@ -302,19 +326,23 @@ inline size_t (wait_object::wait_any_for)(const wait_object * const * waitObject
 }
 
 template<typename ClockType, typename DurationType, size_t WaitObjectCount>
-inline size_t (wait_object::wait_any_until)(const wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::time_point<ClockType, DurationType>& timePoint)
+inline size_t(wait_object::wait_any_until)(const wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) noexcept
 {
 	return wait_object::wait_any_until(waitObjects, WaitObjectCount, timePoint);
 }
 
 template<typename ClockType, typename DurationType, size_t WaitObjectCount>
-inline size_t(wait_object::wait_any_until)(wait_object *(&waitObjects)[WaitObjectCount], const::std::chrono::time_point<ClockType, DurationType>& timePoint)
+inline size_t(wait_object::wait_any_until)(wait_object* (&waitObjects)[WaitObjectCount],
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) noexcept
 {
 	return wait_object::wait_any_until(waitObjects, WaitObjectCount, timePoint);
 }
 
 template<typename ClockType, typename DurationType>
-inline size_t mst::threading::slim::wait_object::wait_any_until(const wait_object * const * waitObjects, size_t waitObjectCount, const::std::chrono::time_point<ClockType, DurationType>& timePoint)
+inline size_t mst::threading::slim::wait_object::wait_any_until(
+	const wait_object* const* waitObjects, size_t waitObjectCount,
+	const ::std::chrono::time_point<ClockType, DurationType>& timePoint) noexcept
 {
 	if(waitObjectCount == 0)
 		return -1;
@@ -352,62 +380,59 @@ inline size_t mst::threading::slim::wait_object::wait_any_until(const wait_objec
 	}
 }
 
-inline semaphore::semaphore(unsigned long initialCount)
+inline semaphore::semaphore(uint32_t initialCount) noexcept
 	: m_counter(initialCount)
+{ }
+
+inline void semaphore::signal() const noexcept
 {
+	++m_counter;
 }
 
-inline void semaphore::signal() const
+inline void semaphore::signal(uint32_t count) const noexcept
 {
-	mst::atomic::increment(m_counter);
+	m_counter += count;
 }
 
-inline void semaphore::signal(unsigned long count) const
+inline bool semaphore::_Try_wait() const noexcept
 {
-	mst::atomic::add(m_counter, count);
+	uint32_t currentValue = m_counter.load();
+
+	return (currentValue != 0) && m_counter.compare_exchange_strong(currentValue, currentValue - 1);
 }
 
-inline bool semaphore::_Try_wait() const
-{
-	const unsigned long currentValue = m_counter;
+inline mutex::mutex(bool owned) noexcept
+	: m_counter(owned ? 1U : 0)
+{ }
 
-	return (currentValue != 0) && (mst::atomic::compare_and_swap(m_counter, currentValue, currentValue - 1) == currentValue);
+inline void mutex::signal() const noexcept
+{
+	m_counter.store(0);
 }
 
-inline mutex::mutex(bool owned)
-	: m_counter(owned ? 1 : 0)
+inline bool mutex::_Try_wait() const noexcept
 {
+	return m_counter.exchange(1U) == 0;
 }
 
-inline void mutex::signal() const
-{
-	mst::atomic::swap(m_counter, 0);
-}
+inline recursive_mutex::recursive_mutex(bool owned) noexcept
+	: m_counter(owned ? 1U : 0)
+	, m_tid(owned ? ::mst::_Details::get_current_thread_id() : UINT64_MAX)
+	, m_recursiveCounter(owned ? 1U : 0)
+{ }
 
-inline bool mutex::_Try_wait() const
-{
-	return mst::atomic::compare_and_swap(m_counter, 0, 1) == 0;
-}
-
-inline recursive_mutex::recursive_mutex(bool owned)
-	: m_counter(owned ? 1 : 0),
-	m_tid(owned ? ::mst::_Details::_Get_tid() : -1),
-	m_recursiveCounter(owned ? 1 : 0)
-{
-}
-
-inline void recursive_mutex::signal() const
+inline void recursive_mutex::signal() const noexcept
 {
 	if((--m_recursiveCounter) == 0)
 	{
-		m_tid = (unsigned long)-1;
-		mst::atomic::swap(m_counter, 0);
+		m_tid = UINT64_MAX;
+		m_counter.store(0);
 	}
 }
 
-inline bool recursive_mutex::_Try_wait() const
+inline bool recursive_mutex::_Try_wait() const noexcept
 {
-	unsigned long tid = ::mst::_Details::_Get_tid();
+	const uint32_t tid = ::mst::_Details::get_current_thread_id();
 
 	if(m_tid == tid)
 	{
@@ -415,7 +440,7 @@ inline bool recursive_mutex::_Try_wait() const
 		return true;
 	}
 
-	bool success = (mst::atomic::compare_and_swap(m_counter, 0, 1) == 0);
+	const bool success = m_counter.exchange(1U) == 0;
 
 	if(success)
 	{
@@ -426,32 +451,33 @@ inline bool recursive_mutex::_Try_wait() const
 	return success;
 }
 
-inline event::event(bool set, bool manual)
-	: m_counter(set ? 1 : 0),
-	m_manualReset(manual)
+inline event::event(bool set, bool manual) noexcept
+	: m_counter(set ? 0 : 1U)
+	, m_manualReset(manual)
+{ }
+
+inline void event::set() const noexcept
 {
+	m_counter.store(0);
 }
 
-inline void event::set() const
+inline void event::reset() const noexcept
 {
-	mst::atomic::swap(m_counter, 1);
+	m_counter.store(1U);
 }
 
-inline void event::reset() const
-{
-	mst::atomic::swap(m_counter, 0);
-}
-
-inline bool event::_Try_wait() const
+inline bool event::_Try_wait() const noexcept
 {
 	if(m_manualReset)
 	{
-		const unsigned long currentValue = m_counter;
-
-		return currentValue == 1;
+		return m_counter.load() == 0;
 	}
 	else
 	{
-		return mst::atomic::compare_and_swap(m_counter, 1, 0) == 0;
+		return m_counter.exchange(1U) == 0;
 	}
 }
+
+} // slim
+} // namespace threading
+} // namespace mst

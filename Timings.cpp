@@ -58,11 +58,11 @@ void operator += (D3D11_QUERY_DATA_PIPELINE_STATISTICS& left, const D3D11_QUERY_
 void Timings::Reset()
 {
 	m_infos.clear();
-	foreach(auto& frame, m_frames)
+	for(auto& frame : m_frames)
 	{
-		foreach(auto& result, frame.results)
+		for(auto& result : frame.results)
 		{
-			foreach(auto& query, result.second.running)
+			for(auto& query : result.second.running)
 			{
 				query->Reset(m_context);
 				m_unusedQueries.push_back(query);
@@ -127,7 +127,7 @@ void Timings::Update()
 
 	TwDefine(" Timings valueswidth=90 ");
 
-	mst::iterate_remove(m_frames, [&](Frame& frame) -> bool
+	std::erase_if(m_frames, [&](Frame& frame) -> bool
 	{
 		if(frame.frequency.disjoint())
 		{
@@ -144,7 +144,7 @@ void Timings::Update()
 			if(hr == S_OK)
 			{
 				m_unusedFrequencies.push_back(frame.frequency.query);
-				frame.frequency.query = null;
+				frame.frequency.query = nullptr;
 
 				if(data.Disjoint == FALSE)
 				{
@@ -153,7 +153,7 @@ void Timings::Update()
 			}
 		}
 
-		UINT64 data;
+		uint64_t data;
 
 #if USE_PIPELINE_STATISTICS
 		D3D11_QUERY_DATA_PIPELINE_STATISTICS stats;
@@ -161,9 +161,9 @@ void Timings::Update()
 
 		const auto& context = m_context;
 
-		foreach(auto& result, frame.results)
+		for(auto& result : frame.results)
 		{
-			mst::iterate_remove(result.second.running, [&](const shared_ptr<Query>& query) -> bool
+			std::erase_if(result.second.running, [&](const shared_ptr<Query>& query) -> bool
 			{
 				if(query->GetData(context, data
 #if USE_PIPELINE_STATISTICS
@@ -185,7 +185,7 @@ void Timings::Update()
 
 		if(frame.frequency.frequency != 0)
 		{
-			foreach(auto& result, frame.results)
+			for(auto& result : frame.results)
 			{
 				if(result.second.running.empty())
 				{
@@ -249,7 +249,7 @@ void Timings::EndQuery(string name)
 		return;
 	}
 
-	CHECK_IF(m_frames.back().results.find(name) == m_frames.back().results.end(), "Query not found");
+	MST_ASSERT(m_frames.back().results.find(name) != m_frames.back().results.end(), "Query not found");
 	auto& queryList = m_frames.back().results[name].running;
 
 	queryList.back()->End(m_context);
@@ -261,13 +261,13 @@ void Timings::Init(const com_ptr<ID3D11DeviceContext>& context)
 	m_context = context;
 	m_disabled = true;
 
-	TwAddVarCB(TwGetBarByName("Settings"), "Timings", TW_TYPE_BOOLCPP, OnSetEnabled, OnGetEnabled, null, null);
+	TwAddVarCB(TwGetBarByName("Settings"), "Timings", TW_TYPE_BOOLCPP, OnSetEnabled, OnGetEnabled, nullptr, nullptr);
 }
 
 void Timings::Exit()
 {
 	Reset();
-	m_context = null;
+	m_context = nullptr;
 	m_frames.clear();
 	m_unusedFrequencies.clear();
 	m_unusedQueries.clear();
@@ -298,15 +298,15 @@ void Timings::SetEnabled(bool enabled)
 		}
 		else
 		{
-			Renderer::Get().errorCalculation = false;
+			Renderer::Get().errorCalculation(false);
 
 			auto timings = TwNewBar("Timings");
 
-			TwAddVarRW(timings, "Get pipeline statistics", TW_TYPE_BOOLCPP, &Query::s_gatherStatistics, null);
+			TwAddVarRW(timings, "Get pipeline statistics", TW_TYPE_BOOLCPP, &Query::s_gatherStatistics, nullptr);
 
 			TwDefine(" Timings color='17 143 129'");
 			//float4 clr;
-			//TwGetParam(timings, null, "color", TwParamValueType::TW_PARAM_FLOAT, 4, &clr);
+			//TwGetParam(timings, nullptr, "color", TwParamValueType::TW_PARAM_FLOAT, 4, &clr);
 			TwDefine("Timings size='320 320' ");
 			TwDefine("Timings position='16 352' ");
 
@@ -322,7 +322,7 @@ void Timings::PrintResults(std::ofstream& outFile)
 
 	for(uint i = 0; i < m_infos.size(); ++i)
 	{
-		foreach(const auto& it, m_infos)
+		for(const auto& it : m_infos)
 		{
 			if(it.second->GetIndex() == i)
 			{
@@ -339,7 +339,7 @@ void Timings::Wait()
 
 	Sleep(500);
 
-	mst::iterate_remove(m_frames, [&](Frame& frame) -> bool
+	std::erase_if(m_frames, [&](Frame& frame) -> bool
 	{
 		if(frame.frequency.disjoint())
 		{
@@ -350,15 +350,15 @@ void Timings::Wait()
 		}
 
 
-		UINT64 data;
+		uint64_t data;
 #if USE_PIPELINE_STATISTICS
 		D3D11_QUERY_DATA_PIPELINE_STATISTICS stats;
 #endif
 
-		foreach(auto& result, frame.results)
+		for(auto& result : frame.results)
 		{
 			
-			foreach(const auto& query, result.second.running)
+			for(const auto& query : result.second.running)
 			{
 				query->WaitAndGetData(m_context, data
 #if USE_PIPELINE_STATISTICS
@@ -382,7 +382,7 @@ void Timings::Wait()
 			while(m_context->GetData(frame.frequency.query.get(), &data, sizeof(data), 0) != S_OK)
 			{}
 			m_unusedFrequencies.push_back(frame.frequency.query);
-			frame.frequency.query = null;
+			frame.frequency.query = nullptr;
 
 			if(data.Disjoint == TRUE)
 			{
@@ -393,7 +393,7 @@ void Timings::Wait()
 
 		if(frame.frequency.frequency != 0)
 		{
-			foreach(auto& result, frame.results)
+			for(auto& result : frame.results)
 			{
 				if(result.second.running.empty())
 				{

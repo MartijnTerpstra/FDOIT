@@ -47,16 +47,16 @@ RenderHQ::RenderHQ(uint RTVindex, const shared_ptr<Window>& window)
 	m_FragmentList.Init(s_Device, mst::make_flag(D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS), GPUARR_USE_COUNTER);
 	
 	m_FragmentStartIndices.Init(s_Device, mst::make_flag(D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS)
-		, DXGI_FORMAT_R32_UINT, window->size);
+		, DXGI_FORMAT_R32_UINT, window->size());
 
 	//m_FragmentStartIndices.Resize(window->width * window->height); // + 1 for the overhead counter
 
-	m_FragmentList.Resize(window->width * window->height * 16);
+	m_FragmentList.Resize(window->width() * window->height() * 16);
 
-	s_Device->CreatePixelShader(g_HQResolvePS, sizeof(g_HQResolvePS), null, mst::initialize(m_ResolvePS));
-	s_Device->CreatePixelShader(g_HQGeometryPS, sizeof(g_HQGeometryPS), null, mst::initialize(m_GeometryPS));
+	s_Device->CreatePixelShader(g_HQResolvePS, sizeof(g_HQResolvePS), nullptr, mst::initialize(m_ResolvePS));
+	s_Device->CreatePixelShader(g_HQGeometryPS, sizeof(g_HQGeometryPS), nullptr, mst::initialize(m_GeometryPS));
 
-	s_Device->CreatePixelShader(g_CombineComparePS, sizeof(g_CombineComparePS), null, mst::initialize(m_CombineComparePS));
+	s_Device->CreatePixelShader(g_CombineComparePS, sizeof(g_CombineComparePS), nullptr, mst::initialize(m_CombineComparePS));
 }
 
 RenderHQ::~RenderHQ()
@@ -73,7 +73,7 @@ void RenderHQ::Render(const matrix& view, const shared_ptr<Window>& window)
 		m_FragmentList.GetUAV().get()
 	};
 	UINT initCounters[2] = { 0,0 };
-	s_Context->OMSetRenderTargetsAndUnorderedAccessViews(0, null, null, 0, 2,
+	s_Context->OMSetRenderTargetsAndUnorderedAccessViews(0, nullptr, nullptr, 0, 2,
 		accessviews, initCounters);
 
 
@@ -85,7 +85,7 @@ void RenderHQ::Render(const matrix& view, const shared_ptr<Window>& window)
 	m_Buffer.PSSetConstantBuffer(s_Context, 2);
 
 	float blendFactor[]={1,1,1,1};
-	s_Context->OMSetBlendState(null, blendFactor, -1);
+	s_Context->OMSetBlendState(nullptr, blendFactor, -1);
 
 	RenderMeshes(view, window, m_GeometryPS);
 
@@ -93,18 +93,18 @@ void RenderHQ::Render(const matrix& view, const shared_ptr<Window>& window)
 
 	// Pass 2 resolve
 
-	s_Context->OMSetRenderTargets(1, &GetRTV(), null);
+	s_Context->OMSetRenderTargets(1, &GetRTV(), nullptr);
 
 
 	m_FragmentStartIndices.PSSetShaderResource(0);
 	m_FragmentList.PSSetShaderResource(1);
 
-	s_Context->PSSetShader(m_ResolvePS.get(), null, 0);
+	s_Context->PSSetShader(m_ResolvePS.get(), nullptr, 0);
 
 	RenderQuad();
 
-	ID3D11ShaderResourceView* nullviews[2] = {};
-	s_Context->PSSetShaderResources(0, extentof(nullviews), nullviews);
+	std::array<ID3D11ShaderResourceView*, 2> nullviews = {};
+	s_Context->PSSetShaderResources(0, nullviews.size(), nullviews.data());
 
 }
 
@@ -126,7 +126,7 @@ void RenderHQ::RenderCompare()
 
 	s_Context->PSSetShaderResources(0, 3, views);
 
-	s_Context->PSSetShader(m_CombineComparePS.get(), null, 0);
+	s_Context->PSSetShader(m_CombineComparePS.get(), nullptr, 0);
 
 	RenderQuad();
 

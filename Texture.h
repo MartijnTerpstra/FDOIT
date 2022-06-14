@@ -39,8 +39,7 @@ enum TextureType
 class Texture : public NamedObject
 {
 	friend class Material;
-	friend class std::_Ref_count_obj<Texture>;
-private:
+public:
 	// ctor & dtor
 	Texture(string&& name);
 	~Texture();
@@ -52,13 +51,13 @@ public:
 public:
 	// properties
 
-	declare_get_property(uint2, size);
+	uint2 size() const;
 
-	declare_get_property(uint, width);
+	uint width() const;
 
-	declare_get_property(uint, height);
+	uint height() const;
 
-	declare_get_property(TextureType, type);
+	TextureType type() const;
 
 private:
 	com_ptr<ID3D11ShaderResourceView> m_Texture;

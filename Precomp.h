@@ -28,8 +28,6 @@
 
 #define _WIN32_WINNT _WIN32_WINNT_WIN7
 
-#define MST_MAPPED_PROPERTY_STRING_TYPE ::std::string
-
 // mst includes
 #include <mcommon.h>
 #include <mmath2.h>
@@ -43,6 +41,9 @@
 #include <algorithm>
 #include <Windows.h>
 #include <map>
+#include <fstream>
+#include <array>
+#include <numeric>
 
 #include <AntTweakBar.h>
 
@@ -68,6 +69,10 @@ typedef ::mst::math::vector<int, 2> int2;
 typedef ::mst::math::vector<float, 2> float2;
 typedef ::mst::math::vector<float, 3> float3;
 typedef ::mst::math::vector<float, 4> float4;
+
+namespace swizzle {
+	using namespace ::mst::math::swizzle;
+}
 
 // forward declarations
 namespace Demo {

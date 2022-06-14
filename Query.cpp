@@ -55,7 +55,7 @@ Query::Query(const com_ptr<ID3D11Device>& device)
 
 void Query::Begin(const com_ptr<ID3D11DeviceContext>& context)
 {
-	CHECK_IF(InUse(), "already in use");
+	MST_ASSERT(!InUse(), "already in use");
 	context->End(m_query[0].get());
 #if USE_PIPELINE_STATISTICS
 	if(s_gatherStatistics)
@@ -67,7 +67,7 @@ void Query::Begin(const com_ptr<ID3D11DeviceContext>& context)
 
 void Query::End(const com_ptr<ID3D11DeviceContext>& context)
 {
-	CHECK_IFNOT(InUse(), "not in use");
+	MST_ASSERT(InUse(), "not in use");
 	context->End(m_query[1].get());
 #if USE_PIPELINE_STATISTICS
 	if(m_usingStats)
@@ -76,7 +76,7 @@ void Query::End(const com_ptr<ID3D11DeviceContext>& context)
 	m_inUse = false;
 }
 
-bool Query::GetData(const com_ptr<ID3D11DeviceContext>& context, uint64& outData
+bool Query::GetData(const com_ptr<ID3D11DeviceContext>& context, uint64_t& outData
 #if USE_PIPELINE_STATISTICS
 		, D3D11_QUERY_DATA_PIPELINE_STATISTICS& outStats
 #endif
@@ -137,7 +137,7 @@ bool Query::GetData(const com_ptr<ID3D11DeviceContext>& context, uint64& outData
 }
 
 
-void Query::WaitAndGetData(const com_ptr<ID3D11DeviceContext>& context, uint64& outData
+void Query::WaitAndGetData(const com_ptr<ID3D11DeviceContext>& context, uint64_t& outData
 #if USE_PIPELINE_STATISTICS
 						   , D3D11_QUERY_DATA_PIPELINE_STATISTICS& outStats
 #endif

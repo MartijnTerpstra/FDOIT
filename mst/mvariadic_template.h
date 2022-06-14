@@ -1,33 +1,29 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // note no include guard
-
-#if !_MST_VARIADIC_TEMPLATE_HACK_SUPPORTED
-//#error "variadic templates require C++11"
-#endif // !_MST_VARIADIC_TEMPLATE_HACK_SUPPORTED
 
 #ifdef MST_MAX_NARGS
 
@@ -72,17 +68,17 @@
 #undef MST_NARGS
 
 #ifndef MST_VARIADIC_TEMPLATE_DECL
-#define MST_VARIADIC_TEMPLATE_DECL				template<typename... Args>
-#define MST_VARIADIC_TEMPLATE					, typename... Args
-#define MST_VARIADIC_TEMPLATE_TYPES				Args...
-#define MST_VARIADIC_TEMPLATE_TYPES_COMMA		, Args...
-#define MST_VARIADIC_TEMPLATE_REFFS				Args&&... args
-#define MST_VARIADIC_TEMPLATE_REFFS_COMMA		, Args&&... args
-#define MST_VARIADIC_TEMPLATE_COPIES			Args... args
-#define MST_VARIADIC_TEMPLATE_COPIES_COMMA		, Args... args
-#define MST_VARIADIC_TEMPLATE_FORWARDS			::std::forward<Args>(args)...
-#define MST_VARIADIC_TEMPLATE_FORWARDS_COMMA	, ::std::forward<Args>(args)...
-#define MST_VARIADIC_TEMPLATE_COUNT				sizeof...(Args)
+#define MST_VARIADIC_TEMPLATE_DECL			 template<typename... Args>
+#define MST_VARIADIC_TEMPLATE				 , typename... Args
+#define MST_VARIADIC_TEMPLATE_TYPES			 Args...
+#define MST_VARIADIC_TEMPLATE_TYPES_COMMA	 , Args...
+#define MST_VARIADIC_TEMPLATE_REFFS			 Args&&... args
+#define MST_VARIADIC_TEMPLATE_REFFS_COMMA	 , Args&&... args
+#define MST_VARIADIC_TEMPLATE_COPIES		 Args... args
+#define MST_VARIADIC_TEMPLATE_COPIES_COMMA	 , Args... args
+#define MST_VARIADIC_TEMPLATE_FORWARDS		 ::std::forward<Args>(args)...
+#define MST_VARIADIC_TEMPLATE_FORWARDS_COMMA , ::std::forward<Args>(args)...
+#define MST_VARIADIC_TEMPLATE_COUNT			 sizeof...(Args)
 #endif
 
 #include MST_VARIADIC_INCLUDE
@@ -98,23 +94,14 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 2
+#elif MST_NARGS == 2
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 3
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 4
+#elif MST_NARGS == 3
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
@@ -123,9 +110,7 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 5
+#elif MST_NARGS == 4
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
@@ -136,9 +121,7 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 6
+#elif MST_NARGS == 5
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
@@ -151,9 +134,7 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 7
+#elif MST_NARGS == 6
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
@@ -168,9 +149,7 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 8
+#elif MST_NARGS == 7
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
@@ -187,9 +166,7 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#include <mx_variadic_template.h>
-#include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 9
+#elif MST_NARGS == 8
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
@@ -208,9 +185,28 @@
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
+#elif MST_NARGS == 9
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
-#elif  MST_NARGS == 10
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#include <mx_variadic_template.h>
+#include MST_VARIADIC_INCLUDE
+#elif MST_NARGS == 10
 #include <mx_variadic_template.h>
 #include MST_VARIADIC_INCLUDE
 #include <mx_variadic_template.h>

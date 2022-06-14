@@ -39,13 +39,13 @@ public:
 	void Begin(const com_ptr<ID3D11DeviceContext>& context);
 	void End(const com_ptr<ID3D11DeviceContext>& context);
 
-	bool GetData(const com_ptr<ID3D11DeviceContext>& context, uint64& outData
+	bool GetData(const com_ptr<ID3D11DeviceContext>& context, uint64_t& outData
 #if USE_PIPELINE_STATISTICS
 		, D3D11_QUERY_DATA_PIPELINE_STATISTICS& outStats
 #endif
 		);
 
-	void WaitAndGetData(const com_ptr<ID3D11DeviceContext>& context, uint64& outData
+	void WaitAndGetData(const com_ptr<ID3D11DeviceContext>& context, uint64_t& outData
 #if USE_PIPELINE_STATISTICS
 		, D3D11_QUERY_DATA_PIPELINE_STATISTICS& outStats
 #endif
@@ -62,7 +62,7 @@ private:
 	D3D11_QUERY_DATA_PIPELINE_STATISTICS m_stats;
 	bool m_statsDone, m_usingStats;
 #endif
-	uint64 m_results[2];
+	uint64_t m_results[2];
 	bool m_inUse;
 };
 

@@ -42,7 +42,7 @@ QueryInfo::QueryInfo(uint index, const string&  name)
 	m_value = -1.0f;
 	m_string[0] += m_index;
 
-	TwAddVarRO(TwGetBarByName("Timings"), m_string.c_str(), TW_TYPE_FLOAT, &m_value, null);
+	TwAddVarRO(TwGetBarByName("Timings"), m_string.c_str(), TW_TYPE_FLOAT, &m_value, nullptr);
 #if USE_PIPELINE_STATISTICS
 
 	char trisRendered[] = "0. Tris rendered";
@@ -51,8 +51,8 @@ QueryInfo::QueryInfo(uint index, const string&  name)
 	trisRendered[0] += m_index;
 	shadersCount[0] += m_index;
 
-	TwAddVarRO(TwGetBarByName("Timings"), trisRendered, TW_TYPE_UINT32, &m_stats.CPrimitives, null);
-	TwAddVarRO(TwGetBarByName("Timings"), shadersCount, TW_TYPE_UINT32, &m_stats.PSInvocations, null);
+	TwAddVarRO(TwGetBarByName("Timings"), trisRendered, TW_TYPE_UINT32, &m_stats.CPrimitives, nullptr);
+	TwAddVarRO(TwGetBarByName("Timings"), shadersCount, TW_TYPE_UINT32, &m_stats.PSInvocations, nullptr);
 #endif
 }
 

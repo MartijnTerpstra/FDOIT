@@ -53,23 +53,23 @@ using namespace Demo::Implementation;
 
 void __stdcall OnSetDontCompress(__in const void* value, __inout_opt void* data)
 {
-	reinterpret_cast<RenderAOIT*>(data)->dontCompress = *(bool*)value;
+	reinterpret_cast<RenderAOIT*>(data)->dontCompress(*(bool*)value);
 }
 
 void __stdcall OnGetDontCompress(__inout void* value, __inout_opt void* data)
 {
-	*(bool*)value = reinterpret_cast<RenderAOIT*>(data)->dontCompress;
+	*(bool*)value = reinterpret_cast<RenderAOIT*>(data)->dontCompress();
 }
 
 
 void __stdcall OnSetNodeCount(__in const void* value, __inout_opt void* data)
 {
-	reinterpret_cast<RenderAOIT*>(data)->nodeCount = AOITNodeCount(*(uint32*)value);
+	reinterpret_cast<RenderAOIT*>(data)->nodeCount(AOITNodeCount(*(uint32_t*)value));
 }
 
 void __stdcall OnGetNodeCount(__inout void* value, __inout_opt void* data)
 {
-	*(uint32*)value = reinterpret_cast<RenderAOIT*>(data)->nodeCount;
+	*(uint32_t*)value = reinterpret_cast<RenderAOIT*>(data)->nodeCount();
 }
 
 RenderAOIT::RenderAOIT(uint RTVindex, const shared_ptr<Window>& window)
@@ -80,31 +80,31 @@ RenderAOIT::RenderAOIT(uint RTVindex, const shared_ptr<Window>& window)
 
 	m_FragmentList.Init(s_Device, mst::make_flag(D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS), GPUARR_USE_COUNTER);
 	m_FragmentStartIndices.Init(s_Device, mst::make_flag(D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS), DXGI_FORMAT_R32_UINT
-		, window->size);
+		, window->size());
 	
-	Resize(window->size);
+	Resize(window->size());
 
-	s_Device->CreatePixelShader(g_AOITGeometryPS, sizeof(g_AOITGeometryPS), null, mst::initialize(m_GeometryPS));
-	s_Device->CreatePixelShader(g_AOITResolve4, sizeof(g_AOITResolve4), null, mst::initialize(m_ResolvePS[0][0]));
-	s_Device->CreatePixelShader(g_AOITResolve8, sizeof(g_AOITResolve8), null, mst::initialize(m_ResolvePS[1][0]));
-	s_Device->CreatePixelShader(g_AOITResolve16, sizeof(g_AOITResolve16), null, mst::initialize(m_ResolvePS[2][0]));
-	s_Device->CreatePixelShader(g_AOITResolve32, sizeof(g_AOITResolve32), null, mst::initialize(m_ResolvePS[3][0]));
+	s_Device->CreatePixelShader(g_AOITGeometryPS, sizeof(g_AOITGeometryPS), nullptr, mst::initialize(m_GeometryPS));
+	s_Device->CreatePixelShader(g_AOITResolve4, sizeof(g_AOITResolve4), nullptr, mst::initialize(m_ResolvePS[0][0]));
+	s_Device->CreatePixelShader(g_AOITResolve8, sizeof(g_AOITResolve8), nullptr, mst::initialize(m_ResolvePS[1][0]));
+	s_Device->CreatePixelShader(g_AOITResolve16, sizeof(g_AOITResolve16), nullptr, mst::initialize(m_ResolvePS[2][0]));
+	s_Device->CreatePixelShader(g_AOITResolve32, sizeof(g_AOITResolve32), nullptr, mst::initialize(m_ResolvePS[3][0]));
 
-	s_Device->CreatePixelShader(g_AOITResolve4C, sizeof(g_AOITResolve4C), null, mst::initialize(m_ResolvePS[0][1]));
-	s_Device->CreatePixelShader(g_AOITResolve8C, sizeof(g_AOITResolve8C), null, mst::initialize(m_ResolvePS[1][1]));
-	s_Device->CreatePixelShader(g_AOITResolve16C, sizeof(g_AOITResolve16C), null, mst::initialize(m_ResolvePS[2][1]));
-	s_Device->CreatePixelShader(g_AOITResolve32C, sizeof(g_AOITResolve32C), null, mst::initialize(m_ResolvePS[3][1]));
+	s_Device->CreatePixelShader(g_AOITResolve4C, sizeof(g_AOITResolve4C), nullptr, mst::initialize(m_ResolvePS[0][1]));
+	s_Device->CreatePixelShader(g_AOITResolve8C, sizeof(g_AOITResolve8C), nullptr, mst::initialize(m_ResolvePS[1][1]));
+	s_Device->CreatePixelShader(g_AOITResolve16C, sizeof(g_AOITResolve16C), nullptr, mst::initialize(m_ResolvePS[2][1]));
+	s_Device->CreatePixelShader(g_AOITResolve32C, sizeof(g_AOITResolve32C), nullptr, mst::initialize(m_ResolvePS[3][1]));
 
-	TwEnumVal renderModesEnum[] = { {AOIT_NODE_COUNT_4, "4"}, {AOIT_NODE_COUNT_8, "8"}, 
-									{AOIT_NODE_COUNT_16, "16"}, {AOIT_NODE_COUNT_32, "32" } };
+	std::array renderModesEnum = { TwEnumVal{AOIT_NODE_COUNT_4, "4"}, TwEnumVal{AOIT_NODE_COUNT_8, "8"},
+									TwEnumVal{AOIT_NODE_COUNT_16, "16"}, TwEnumVal{AOIT_NODE_COUNT_32, "32" } };
 
-	TwType rmEnum = TwDefineEnum("AOIT node count", renderModesEnum, extentof(renderModesEnum));
+	TwType rmEnum = TwDefineEnum("AOIT node count", renderModesEnum.data(), renderModesEnum.size());
 
 	TwAddVarCB(GetGUIBar(), "Node count", rmEnum, 
-		OnSetNodeCount, OnGetNodeCount, this, null);
+		OnSetNodeCount, OnGetNodeCount, this, nullptr);
 
 	TwAddVarCB(GetGUIBar(), "Don't compress first half", TW_TYPE_BOOLCPP, 
-		OnSetDontCompress, OnGetDontCompress, this, null);
+		OnSetDontCompress, OnGetDontCompress, this, nullptr);
 }
 
 RenderAOIT::~RenderAOIT()
@@ -127,7 +127,7 @@ void RenderAOIT::Render(const matrix& view, const shared_ptr<Window>& window)
 		m_FragmentList.GetUAV().get()
 	};
 	UINT initCounters[2] = { 0,0 };
-	s_Context->OMSetRenderTargetsAndUnorderedAccessViews(0, null, null, 0, 2,
+	s_Context->OMSetRenderTargetsAndUnorderedAccessViews(0, nullptr, nullptr, 0, 2,
 		accessviews, initCounters);
 
 	m_MaxListCount.PSSetConstantBuffer(s_Context, 2);
@@ -138,20 +138,20 @@ void RenderAOIT::Render(const matrix& view, const shared_ptr<Window>& window)
 
 	Timings::BeginQuery("Resolve list");
 
-	s_Context->OMSetRenderTargets(1, &GetRTV(), null);
+	s_Context->OMSetRenderTargets(1, &GetRTV(), nullptr);
 
 
 	m_FragmentStartIndices.PSSetShaderResource(0);
 	m_FragmentList.PSSetShaderResource(1);
 
-	s_Context->PSSetShader(m_ResolvePS[m_NodeCount][m_DontCompress].get(), null, 0);
+	s_Context->PSSetShader(m_ResolvePS[m_NodeCount][m_DontCompress].get(), nullptr, 0);
 
 	RenderQuad();
 
 	Timings::EndQuery("Resolve list");
 
-	ID3D11ShaderResourceView* nullviews[2] = {};
-	s_Context->PSSetShaderResources(0, extentof(nullviews), nullviews);
+	std::array<ID3D11ShaderResourceView*, 2> nullviews = {};
+	s_Context->PSSetShaderResources(0, nullviews.size(), nullviews.data());
 }
 
 void RenderAOIT::Resize(uint2 newSize)
@@ -168,22 +168,22 @@ void RenderAOIT::Resize(uint2 newSize)
 	m_MaxListCount.Update(s_Context);
 }
 
-void RenderAOIT::_nodeCount(const AOITNodeCount& count)
+void RenderAOIT::nodeCount(const AOITNodeCount& count)
 {
 	m_NodeCount = count;
 }
 
-AOITNodeCount RenderAOIT::_nodeCount() const
+AOITNodeCount RenderAOIT::nodeCount() const
 {
 	return m_NodeCount;
 }
 
-void RenderAOIT::_dontCompress(const bool& compress)
+void RenderAOIT::dontCompress(const bool& compress)
 {
 	m_DontCompress = compress;
 }
 
-bool RenderAOIT::_dontCompress() const
+bool RenderAOIT::dontCompress() const
 {
 	return m_DontCompress;
 }

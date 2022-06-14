@@ -1,76 +1,75 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #include <mcore.h>
-#include <malloc.h>
+#include <maligned_malloc.h>
 
 namespace mst {
 
-template<typename T>
+template<typename _Ty, size_t _Alignment>
 class aligned_allocator
 {
+	static_assert(std::alignment_of<_Ty>::value <= _Alignment,
+		"aligned_allocator<T, Alignment>: Alignment should have a bigger alignment than the "
+		"alignment of T");
+
 public:
-	typedef T value_type;
+	typedef _Ty value_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-	typedef T* pointer;
-	typedef const T* const_pointer;
-	typedef T& reference;
-	typedef const T& const_reference;
+	typedef _Ty* pointer;
+	typedef const _Ty* const_pointer;
+	typedef _Ty& reference;
+	typedef const _Ty& const_reference;
 
-	aligned_allocator()
-#if _MST_HAS_DEFAULT_DELETE
-		= default;
-#else
-	{
-		/* do nothing */
-	}
-#endif
+	aligned_allocator() = default;
 
 	template<typename T2>
-	aligned_allocator(const aligned_allocator<T2>& other)
+	aligned_allocator(const aligned_allocator<T2, _Alignment>&)
 	{
-		/* do nothing */
+		// do nothing
 	}
 
 	void deallocate(pointer ptr, size_t count)
 	{
-		_free<::std::alignment_of<T>::value>(ptr);
+		_MST_UNUSED(count);
+		_free(ptr);
 	}
 
 	pointer allocate(size_t count)
 	{
-		return _alloc<::std::alignment_of<T>::value>(count);
+		return _alloc(count);
 	}
 
-#if _MST_VARIADIC_TEMPLATE_HACK_SUPPORTED
-#define MST_VARIADIC_INCLUDE <mx_allocator_construct.h>
-#include <mvariadic_template.h>
-#endif
+	template<typename... Args>
+	inline void construct(_Ty* ptr, Args&&... args)
+	{
+		new((void*)ptr) _Ty(std::forward<Args>(args)...);
+	}
 
 	void destroy(pointer ptr)
 	{
@@ -80,39 +79,46 @@ public:
 	template<typename T2>
 	struct rebind
 	{
-		typedef aligned_allocator<T2> other;
+		typedef aligned_allocator<T2, _Alignment> other;
 	};
 
 private:
-
-	template<size_t aligment>
-	inline void _free(void* memory)
+	inline void _free_impl(void* memory, std::true_type)
 	{
-		_aligned_free(memory);
+		aligned_free(memory);
 	}
 
-	template<>
-	inline void _free<1>(void* memory)
+	inline void _free_impl(void* memory, std::false_type)
 	{
 		free(memory);
 	}
 
-	template<size_t aligment>
-	inline pointer _alloc(size_t count)
+	inline void _free(void* memory)
 	{
-		return reinterpret_cast<pointer>(_aligned_malloc(sizeof(T) * count, aligment));
+		_free_impl(
+			memory, std::integral_constant<bool, (_Alignment > alignof(std::max_align_t))>{});
 	}
 
-	template<>
-	inline pointer _alloc<1>(size_t count)
+	inline pointer _alloc_impl(size_t count, std::true_type)
 	{
-		return reinterpret_cast<pointer>(malloc(sizeof(T) * count));
+		return reinterpret_cast<pointer>(aligned_malloc(sizeof(_Ty) * count, _Alignment));
+	}
+
+	inline pointer _alloc_impl(size_t count, std::false_type)
+	{
+		return reinterpret_cast<pointer>(malloc(sizeof(_Ty) * count));
+	}
+
+	inline pointer _alloc(size_t count)
+	{
+		return _alloc_impl(
+			count, std::integral_constant<bool, (_Alignment > alignof(std::max_align_t))>{});
 	}
 };
 
 
-template<>
-class aligned_allocator<void>
+template<size_t _Alignment>
+class aligned_allocator<void, _Alignment>
 {
 public:
 	typedef void value_type;
@@ -121,27 +127,19 @@ public:
 	typedef void* pointer;
 	typedef const void* const_pointer;
 
-	aligned_allocator()
-#if _MST_HAS_DEFAULT_DELETE
-		= default;
-#else
-	{
-		/* do nothing */
-	}
-#endif
+	aligned_allocator() = default;
 
 	template<typename T2>
-	aligned_allocator(const aligned_allocator<T2>& other)
+	aligned_allocator(const aligned_allocator<T2, _Alignment>&)
 	{
-		/* do nothing */
+		// do nothing
 	}
 
 	template<typename T2>
 	struct rebind
 	{
-		typedef aligned_allocator<T2> other;
+		typedef aligned_allocator<T2, _Alignment> other;
 	};
-
 };
 
-}; // namespace mst
+} // namespace mst

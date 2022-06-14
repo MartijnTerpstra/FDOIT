@@ -64,7 +64,7 @@ public:
 
 	void Update(const com_ptr<ID3D11DeviceContext>& context)
 	{
-		if(m_Buffer == null)
+		if(m_Buffer == nullptr)
 		{
 			com_ptr<ID3D11Device> device;
 			context->GetDevice(mst::initialize(device));
@@ -73,19 +73,19 @@ public:
 			desc.ByteWidth = sizeof(__aligned);
 			desc.CPUAccessFlags = (usage == D3D11_USAGE_DYNAMIC ? D3D11_CPU_ACCESS_WRITE : 0);
 			desc.Usage = usage;
-			device->CreateBuffer(&desc, null, mst::initialize(m_Buffer));
+			device->CreateBuffer(&desc, nullptr, mst::initialize(m_Buffer));
 		}
 		Update(context, is_default_usage());
 	}
 
 	void Update(const com_ptr<ID3D11DeviceContext>& context, std::true_type)
 	{ // D3D11_USAGE_DEFAULT
-		context->UpdateSubresource(m_Buffer.get(), 0, null, &data, 0, 0);
+		context->UpdateSubresource(m_Buffer.get(), 0, nullptr, &data, 0, 0);
 	}
 
 	void Reset()
 	{
-		m_Buffer = null;
+		m_Buffer = nullptr;
 	}
 
 	void Update(const com_ptr<ID3D11DeviceContext>& context, std::false_type)
@@ -98,7 +98,7 @@ public:
 
 	void PSSetConstantBuffer(const com_ptr<ID3D11DeviceContext>& context, uint slot)
 	{
-		if(m_Buffer == null)
+		if(m_Buffer == nullptr)
 		{
 			com_ptr<ID3D11Device> device;
 			context->GetDevice(mst::initialize(device));
@@ -107,14 +107,14 @@ public:
 			desc.ByteWidth = sizeof(__aligned);
 			desc.CPUAccessFlags = (usage == D3D11_USAGE_DYNAMIC ? D3D11_CPU_ACCESS_WRITE : 0);
 			desc.Usage = usage;
-			device->CreateBuffer(&desc, null, mst::initialize(m_Buffer));
+			device->CreateBuffer(&desc, nullptr, mst::initialize(m_Buffer));
 		}
 		context->PSSetConstantBuffers(slot, 1, &m_Buffer);
 	}
 
 	void VSSetConstantBuffer(const com_ptr<ID3D11DeviceContext>& context, uint slot)
 	{
-		if(m_Buffer == null)
+		if(m_Buffer == nullptr)
 		{
 			com_ptr<ID3D11Device> device;
 			context->GetDevice(mst::initialize(device));
@@ -123,7 +123,7 @@ public:
 			desc.ByteWidth = sizeof(__aligned);
 			desc.CPUAccessFlags = (usage == D3D11_USAGE_DYNAMIC ? D3D11_CPU_ACCESS_WRITE : 0);
 			desc.Usage = usage;
-			device->CreateBuffer(&desc, null, mst::initialize(m_Buffer));
+			device->CreateBuffer(&desc, nullptr, mst::initialize(m_Buffer));
 		}
 		context->VSSetConstantBuffers(slot, 1, &m_Buffer);
 	}

@@ -134,7 +134,7 @@ shared_ptr<Texture> Texture::Create(string name)
 	com_ptr<ID3D11Texture2D> tex;
 	device->CreateTexture2D(&desc, resources.get(), mst::initialize(tex));
 
-	device->CreateShaderResourceView(tex.get(), null, mst::initialize(retval->m_Texture));
+	device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(retval->m_Texture));
 
 	return retval;
 }

@@ -26,6 +26,7 @@
 #pragma once
 
 #include "ShaderVariableTypes.h"
+#include "Shader.h"
 
 namespace Demo {
 
@@ -34,8 +35,7 @@ class Material : public NamedObject
 	friend class Renderer;
 	friend class Implementation::RenderBase;
 	friend class Mesh;
-	friend class std::_Ref_count_obj<Material>;
-private:
+public:
 	// ctor & dtor
 	Material(string&& name);
 	~Material();
@@ -47,11 +47,11 @@ public:
 public:
 	// properties
 
-	declare_property(shared_ptr<Shader>, shader);
+	shared_ptr<Shader> shader() const; void shader(const shared_ptr<Shader>& value);
 
-	declare_property(D3D11_FILL_MODE, fillingMode);
+	D3D11_FILL_MODE fillingMode() const; void fillingMode(const D3D11_FILL_MODE& value);
 
-	declare_property(D3D11_CULL_MODE, cullingMode);
+	D3D11_CULL_MODE cullingMode() const; void cullingMode(const D3D11_CULL_MODE& value);
 
 public:
 	// main functionality
@@ -71,7 +71,7 @@ public:
 private:
 	// implementation
 
-	void _Upload(const com_ptr<ID3D11DeviceContext>& context);
+	void Upload(const com_ptr<ID3D11DeviceContext>& context);
 
 private:
 	shared_ptr<Shader> m_Shader;

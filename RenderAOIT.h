@@ -46,9 +46,9 @@ public:
 	void Render(const matrix& view, const shared_ptr<Window>& window) final override;
 	void Resize(uint2 new_size) final override;
 
-	declare_property(AOITNodeCount, nodeCount);
+	AOITNodeCount nodeCount() const; void nodeCount(const AOITNodeCount& value);
 
-	declare_property(bool, dontCompress);
+	bool dontCompress() const; void dontCompress(const bool& value);
 
 private:
 	Graphics::ConstantBuffer<uint> m_MaxListCount;

@@ -120,7 +120,7 @@ shared_ptr<Mesh> Mesh::Create(string file)
 
 		string tex_name;
 
-		shared_ptr<Material> mat = Material::Create(name.c_str(), Renderer::Get().defaultShader);
+		shared_ptr<Material> mat = Material::Create(name.c_str(), Renderer::Get().defaultShader());
 
 		const string texnames[ADAM_MAX_NUM_TEXTURES_IN_MATERIAL] =
 		{
@@ -202,12 +202,12 @@ shared_ptr<Mesh> Mesh::Create(string file)
 	}
 
 	retval->SetData(vertices, triangles);
-			retval->m_SubMeshes = move(submeshes);
+	retval->m_SubMeshes = move(submeshes);
 
 	switch(header.mesh_type)
 	{
 	default:
-		ERROR_MESG("unhandled mesh type");
+		MST_FATAL_ERROR("unhandled mesh type");
 		break;
 
 	case MESH_BASEMESH:

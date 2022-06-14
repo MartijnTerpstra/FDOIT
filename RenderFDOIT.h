@@ -46,7 +46,7 @@ public:
 	void Render(const matrix& view, const shared_ptr<Window>& window) final override;
 	void Resize(uint2 new_size) final override;
 
-	declare_property(FDOITDepth, layerDepth);
+	FDOITDepth layerDepth() const; void layerDepth(const FDOITDepth& value);
 
 private:
 	Graphics::ConstantBuffer<Graphics::GPUFDOITBuffer> m_OITBuffer;

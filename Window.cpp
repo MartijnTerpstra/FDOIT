@@ -62,7 +62,7 @@ Window::Window(uint2 size)
 	m_Size(size)
 {
 	WTRACE;
-	HINSTANCE instance = GetModuleHandleA(null);
+	HINSTANCE instance = GetModuleHandleA(nullptr);
 
 	WNDCLASSA wc; 
 	if(!GetClassInfoA(instance, "TFR window", &wc))
@@ -73,8 +73,8 @@ Window::Window(uint2 size)
 		wc.cbClsExtra = 0; 
 		wc.cbWndExtra = 0; 
 		wc.hInstance = instance;
-		wc.hIcon = null;
-		wc.hCursor = LoadCursor(null, IDC_ARROW); 
+		wc.hIcon = nullptr;
+		wc.hCursor = LoadCursor(nullptr, IDC_ARROW); 
 		wc.hbrBackground = (HBRUSH)GetStockObject(0); 
 		wc.lpszMenuName =  "MainMenu"; 
 		wc.lpszClassName = "TFR window"; 
@@ -83,8 +83,8 @@ Window::Window(uint2 size)
 		ATOM result = RegisterClassA(&wc);
 	}
 
-	m_NativeHandle = CreateWindowExA(WS_EX_APPWINDOW, "TFR window", null, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, size.x, size.y, null, null, instance, null);
+	m_NativeHandle = CreateWindowExA(WS_EX_APPWINDOW, "TFR window", nullptr, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, size.x, size.y, nullptr, nullptr, instance, nullptr);
 
 	SetWindowLongA(m_NativeHandle, GWL_USERDATA, reinterpret_cast<LONG>(this));
 
@@ -108,7 +108,7 @@ LRESULT Window::OnWndProc(HWND window, UINT message, WPARAM first_param, LPARAM 
 
 	bool active = GetActiveWindow() == window;
 
-	/*if(m_Game == null)
+	/*if(m_Game == nullptr)
 	{
 		return DefWindowProcA(window, message, first_param, second_param);
 	}*/
@@ -125,7 +125,7 @@ LRESULT Window::OnWndProc(HWND window, UINT message, WPARAM first_param, LPARAM 
         case WM_SIZE: 
 			if(!m_Destroyed && m_Game.use_count() != 0)
 			{
-				size = uint2(LOWORD(second_param), HIWORD(second_param));
+				size(uint2(LOWORD(second_param), HIWORD(second_param)));
 
 				shared_ptr<IGame>(m_Game)->OnResize(uint2(LOWORD(second_param), HIWORD(second_param)));
 			}
@@ -221,7 +221,7 @@ void Window::SystemMessages()
 		return;
 	}
 	MSG msg = { 0 };
-	while(PeekMessageA(&msg, null, 0, 0, PM_REMOVE | PM_QS_POSTMESSAGE))
+	while(PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE | PM_QS_POSTMESSAGE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
@@ -235,39 +235,39 @@ void Window::CheckForMessages()
 		return;
 	}
 	MSG msg = { 0 };
-	while(PeekMessageA(&msg, null, 0, 0, PM_REMOVE | PM_QS_INPUT | PM_QS_POSTMESSAGE))
+	while(PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE | PM_QS_INPUT | PM_QS_POSTMESSAGE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
 	}
 }
 
-uint2 Window::_size() const
+uint2 Window::size() const
 {
 	return m_Size;
 }
 
-uint Window::_width() const
+uint Window::width() const
 {
 	return m_Size.x;
 }
 
-uint Window::_height() const
+uint Window::height() const
 {
 	return m_Size.y;
 }
 
-float Window::_aspectRatio() const
+float Window::aspectRatio() const
 {
 	return (float)m_Size.x / m_Size.y;
 }
 
-bool Window::_active() const
+bool Window::active() const
 {
 	return m_NativeHandle == GetActiveWindow();
 }
 
-void Window::_size(const uint2& newSize)
+void Window::size(const uint2& newSize)
 {
 	if(m_Size != newSize && newSize != uint2::zero)
 	{
@@ -276,17 +276,17 @@ void Window::_size(const uint2& newSize)
 	}
 }
 
-void Window::_fullScreen(const bool& goFullscreen)
+void Window::fullScreen(const bool& goFullscreen)
 {
-	if(goFullscreen != fullScreen)
+	if(goFullscreen != fullScreen())
 	{
-		m_SwapChain->SetFullscreenState(goFullscreen ? TRUE : FALSE, null);
+		m_SwapChain->SetFullscreenState(goFullscreen ? TRUE : FALSE, nullptr);
 	}
 }
 
-bool Window::_fullScreen() const
+bool Window::fullScreen() const
 {
 	BOOL isFullscreen;
-	m_SwapChain->GetFullscreenState(&isFullscreen, null);
+	m_SwapChain->GetFullscreenState(&isFullscreen, nullptr);
 	return isFullscreen != 0;
 }

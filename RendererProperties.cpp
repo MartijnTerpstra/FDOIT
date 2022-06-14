@@ -33,32 +33,51 @@ using namespace Demo;
 
 #include "GPUStructs.h"
 
-shared_ptr<Window> Renderer::_window() const
+namespace {
+
+void __stdcall OnSetCompRenderMode(const void* value, void* data)
+{
+	Renderer::Get().comparisonRenderMode(RenderMode(*(int32_t*)value));
+}
+
+void __stdcall OnGetCompRenderMode(void* value, void* data)
+{
+	*(int32_t*)value = (int32_t)Renderer::Get().comparisonRenderMode();
+}
+
+void __stdcall OnClickRecalculate(void* data)
+{
+	Renderer::Get().RecalculateRMSD();
+}
+
+}
+
+shared_ptr<Window> Renderer::window() const
 {
 	return shared_ptr<Window>(m_Window);
 }
 
-shared_ptr<Camera> Renderer::_camera() const
+shared_ptr<Camera> Renderer::camera() const
 {
 	return m_Camera;
 }
 
-shared_ptr<Shader> Renderer::_defaultShader() const
+shared_ptr<Shader> Renderer::defaultShader() const
 {
 	return m_DefShader;
 }
 
-float Renderer::_globalAmbient() const
+float Renderer::globalAmbient() const
 {
 	return Implementation::RenderBase::s_LightingBuffer.data.globalAmbient;
 }
 
-void Renderer::_globalAmbient(const float& ambient)
+void Renderer::globalAmbient(const float& ambient)
 {
 	Implementation::RenderBase::s_LightingBuffer.data.globalAmbient = ambient;
 }
 
-void Renderer::_renderMode(const RenderMode& mode)
+void Renderer::renderMode(const RenderMode& mode)
 {
 	if(m_Mode != mode)
 	{
@@ -67,12 +86,12 @@ void Renderer::_renderMode(const RenderMode& mode)
 	}
 }
 
-RenderMode Renderer::_renderMode() const
+RenderMode Renderer::renderMode() const
 {
 	return m_Mode;
 }
 
-void Renderer::_comparisonRenderMode(const RenderMode& mode)
+void Renderer::comparisonRenderMode(const RenderMode& mode)
 {
 	if(m_CompMode != mode)
 	{
@@ -80,14 +99,14 @@ void Renderer::_comparisonRenderMode(const RenderMode& mode)
 
 		if(m_CompMode == -1)
 		{
-			m_RendererImpls[1] = null;
+			m_RendererImpls[1] = nullptr;
 			Implementation::RenderBase::s_RTVs[0] = m_RTV;
 			Implementation::RenderBase::s_RTVs[1] = m_RTV;
 			Implementation::RenderBase::s_RTVs[2] = m_RTV;
 		}
 		else
 		{
-			errorCalculation = true;
+			errorCalculation(true);
 			m_RendererImpls[1] = CreateRenderMode(mode, 1);
 
 			if(Implementation::RenderBase::s_RTVs[1] == m_RTV)
@@ -100,40 +119,40 @@ void Renderer::_comparisonRenderMode(const RenderMode& mode)
 				tex->GetDesc(&desc);
 				desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 
-				m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-				m_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_RTVs[0]));
-				m_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_SRVs[0]));
+				m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+				m_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_RTVs[0]));
+				m_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_SRVs[0]));
 
-				m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-				m_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_RTVs[1]));
-				m_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_SRVs[1]));
+				m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+				m_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_RTVs[1]));
+				m_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_SRVs[1]));
 
-				m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-				m_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_RTVs[2]));
-				m_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_SRVs[2]));
+				m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+				m_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_RTVs[2]));
+				m_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_SRVs[2]));
 
-				m_HQ = make_unique<Implementation::RenderHQ>(2, window);
+				m_HQ = make_unique<Implementation::RenderHQ>(2, window());
 			}
 		}
 	}
 }
 
-RenderMode Renderer::_comparisonRenderMode() const
+RenderMode Renderer::comparisonRenderMode() const
 {
 	return m_CompMode;
 }
 
-bool Renderer::_debugMode() const
+bool Renderer::debugMode() const
 {
 	return m_DebugMode;
 }
 
-void Renderer::_debugMode(const bool& mode)
+void Renderer::debugMode(const bool& mode)
 {
 	m_DebugMode = mode;
 }
 
-void Renderer::_errorCalculation(const bool& enabled)
+void Renderer::errorCalculation(const bool& enabled)
 {
 	if(m_CalcError != enabled)
 	{
@@ -153,35 +172,35 @@ void Renderer::_errorCalculation(const bool& enabled)
 
 			RecalculateRMSD();
 
-			TwAddButton(errorCalc, "Recalculate RMSD", OnClickRecalculate, null, null);
-			TwAddVarRO(errorCalc, "RMS deviation", TW_TYPE_FLOAT, &m_RMSD, null);
+			TwAddButton(errorCalc, "Recalculate RMSD", OnClickRecalculate, nullptr, nullptr);
+			TwAddVarRO(errorCalc, "RMS deviation", TW_TYPE_FLOAT, &m_RMSD, nullptr);
 
 			TwEnumVal renderModesEnum[] = { {-1, "None"}, {0, "Fixed Depth OIT"}, {1, "Dual depth peeling"},
 			{ 2, "Intel's Adaptive OIT" } , {3, "Stochastic Transparency"}, 
 			{4, "Unsorted Alpha Blending"}, {5, "High Quality" }};
 
-			TwType rmEnum = TwDefineEnum("CompRenderModes", renderModesEnum, extentof(renderModesEnum));
+			TwType rmEnum = TwDefineEnum("CompRenderModes", renderModesEnum, std::extent_v<decltype(renderModesEnum)>);
 
 			m_CompMode = (RenderMode)-1;
 			TwAddVarCB(errorCalc, "Compare with", rmEnum, OnSetCompRenderMode, OnGetCompRenderMode,
-				null, null);
+				nullptr, nullptr);
 
 
 		}
 		else
 		{
 			TwDeleteBar(TwGetBarByName("Error calculation"));
-			comparisonRenderMode = (RenderMode)-1;
+			comparisonRenderMode((RenderMode)-1);
 		}
 	}
 }
 
-bool Renderer::_errorCalculation() const
+bool Renderer::errorCalculation() const
 {
 	return m_CalcError;
 }
 
-float Renderer::_rootMeanSquareDeviation() const
+float Renderer::rootMeanSquareDeviation() const
 {
 	return m_RMSD;
 }

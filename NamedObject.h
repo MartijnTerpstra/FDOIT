@@ -39,7 +39,7 @@ protected:
 public:
 	// properties
 
-	declare_get_property(string, name);
+	string name() const;
 
 private:
 	const string m_Name;

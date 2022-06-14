@@ -32,7 +32,7 @@ using namespace Demo;
 
 const void* Shader::GetVariable(const string& var_name, size_t array_index, Graphics::VariableType type, size_t size, const std::vector<Graphics::ShaderBuffer>& buffers) const
 {
-	foreach(const auto& it, m_Variables)
+	for(const auto& it : m_Variables)
 	{
 		if(var_name == it.name)
 		{
@@ -60,7 +60,7 @@ const void* Shader::GetVariable(const string& var_name, size_t array_index, Grap
 
 void Shader::SetVariable(const string& var_name, size_t array_index, const void* src, size_t size, Graphics::VariableType type, std::vector<Graphics::ShaderBuffer>& buffers)
 {
-	foreach(const auto& it, m_Variables)
+	for(const auto& it : m_Variables)
 	{
 		if(var_name == it.name)
 		{
@@ -90,7 +90,7 @@ void Shader::SetVariable(const string& var_name, size_t array_index, const void*
 
 bool Shader::HasVariable(const string& var_name) const
 {
-	foreach(const auto& it, m_Variables)
+	for(const auto& it : m_Variables)
 	{
 		if(var_name == it.name)
 		{

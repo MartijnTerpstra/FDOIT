@@ -31,7 +31,31 @@
 
 using namespace Demo;
 
-MST_ALIGN(16) struct ModelBuffer
+namespace {
+
+void __stdcall OnSetRenderMode(const void* value, void* data)
+{
+	Renderer::Get().renderMode(RenderMode(*(int32_t*)value));
+}
+
+void __stdcall OnGetRenderMode(void* value, void* data)
+{
+	*(int32_t*)value = (int32_t)Renderer::Get().renderMode();
+}
+
+void __stdcall OnSetErrorCalculation(const void* value, void* data)
+{
+	Renderer::Get().errorCalculation(*(bool*)value);
+}
+
+void __stdcall OnGetErrorCalculation(void* value, void* data)
+{
+	*(bool*)value = Renderer::Get().errorCalculation();
+}
+
+}
+
+struct alignas(16) ModelBuffer
 {
 	matrix ModelView;
 	matrix ModelViewProj;
@@ -52,14 +76,14 @@ void Renderer::InitDevice(__in HMODULE d3d11)
 	flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	D3D_FEATURE_LEVEL lvls[] = 
+	std::array lvls = 
 	{
 		D3D_FEATURE_LEVEL_11_0,
 	};
 
 	D3D_FEATURE_LEVEL found_lvl;
 	
-	/*HRESULT hr = PD3D11CreateDevice(null, D3D_DRIVER_TYPE_HARDWARE, null, flags,
+	/*HRESULT hr = PD3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags,
 		lvls, extentof(lvls), D3D11_SDK_VERSION, mst::initialize(m_Device), &found_lvl, 
 		mst::initialize(m_Context));
 
@@ -76,7 +100,7 @@ void Renderer::InitDevice(__in HMODULE d3d11)
 
 	DEVMODEA devMode;
 
-	if(EnumDisplaySettingsA(NULL, ENUM_CURRENT_SETTINGS, &devMode) == FALSE)
+	if(EnumDisplaySettingsA(nullptr, ENUM_CURRENT_SETTINGS, &devMode) == FALSE)
 	{
 		devMode.dmDisplayFrequency = 60;
 	}
@@ -102,7 +126,7 @@ void Renderer::InitDevice(__in HMODULE d3d11)
 
 	//hr = _factory->CreateSwapChain(m_Device.get(), &desc, mst::initialize(window->m_SwapChain));
 	
-	HRESULT hr = PD3D11CreateDeviceAndSwapChain(null, D3D_DRIVER_TYPE_HARDWARE, null, flags, lvls, extentof(lvls),
+	HRESULT hr = PD3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, lvls.data(), (UINT)lvls.size(),
 		D3D11_SDK_VERSION, &desc, 
 		mst::initialize(window->m_SwapChain), 
 		mst::initialize(m_Device), &found_lvl, 
@@ -121,9 +145,9 @@ void Renderer::InitDevice(__in HMODULE d3d11)
 			{ 2, "Intel's Adaptive OIT" } , {3, "Stochastic Transparency"}, 
 			{4, "Unsorted Alpha Blending"}, {5, "High Quality" } };
 
-	TwType rmEnum = TwDefineEnum("RenderModes", renderModesEnum, extentof(renderModesEnum));
-
-	TwAddVarCB(bar, "Mode", rmEnum, OnSetRenderMode, OnGetRenderMode, null, null);
+	TwType rmEnum = TwDefineEnum("RenderModes", renderModesEnum, std::extent_v<decltype(renderModesEnum)>);
+	
+	TwAddVarCB(bar, "Mode", rmEnum, OnSetRenderMode, OnGetRenderMode, nullptr, nullptr);
 
 	TwDefine("Settings position='16 16' ");
 	TwDefine("Settings size='320 320' ");
@@ -148,9 +172,9 @@ void Renderer::InitDevice(__in HMODULE d3d11)
 	}
 
 	window->m_SwapChain->ResizeTarget(&desc.BufferDesc);
-
+	
 	TwAddVarCB(bar, "Error calculation", TW_TYPE_BOOLCPP, OnSetErrorCalculation, OnGetErrorCalculation
-		, null, null);
+		, nullptr, nullptr);
 
 	Implementation::Timings::Init(m_Context);
 }
@@ -163,7 +187,7 @@ void Renderer::InitObjects()
 	window->m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&_back_buffer);
 	com_ptr<ID3D11Texture2D> back_buffer(_back_buffer);
 
-	m_Device->CreateRenderTargetView(back_buffer.get(), null, mst::initialize(m_RTV));
+	m_Device->CreateRenderTargetView(back_buffer.get(), nullptr, mst::initialize(m_RTV));
 	{
 		D3D11_TEXTURE2D_DESC desc = {};
 		desc.ArraySize = 1;
@@ -177,9 +201,9 @@ void Renderer::InitObjects()
 
 		com_ptr<ID3D11Texture2D> tex;
 
-		m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
+		m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
 
-		m_Device->CreateDepthStencilView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_DSV));
+		m_Device->CreateDepthStencilView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_DSV));
 	}
 
 	{

@@ -46,21 +46,21 @@ shared_ptr<Material> Material::Create(string name, shared_ptr<Shader> shader)
 {
 	auto retval = make_shared<Material>(move(name));
 
-	retval->shader = move(shader);
+	retval->shader(move(shader));
 
 	return retval;
 }
 
-shared_ptr<Shader> Material::_shader() const
+shared_ptr<Shader> Material::shader() const
 {
 	return m_Shader;
 }
 
-void Material::_shader(const shared_ptr<Shader>& new_shader)
+void Material::shader(const shared_ptr<Shader>& new_shader)
 {
 	m_Shader = new_shader;
 
-	foreach(auto& it, m_Buffers)
+	for(auto& it : m_Buffers)
 	{
 		_aligned_free(it.data);
 	}
@@ -80,17 +80,17 @@ void Material::_shader(const shared_ptr<Shader>& new_shader)
 		bdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bdesc.ByteWidth = m_Buffers[i].data_size;
 		bdesc.Usage = D3D11_USAGE_DEFAULT;
-		device->CreateBuffer(&bdesc, null, mst::initialize(m_Buffers[i].buffer));
+		device->CreateBuffer(&bdesc, nullptr, mst::initialize(m_Buffers[i].buffer));
 	}
 
 	for(size_t i = 0; i < m_Textures.size(); ++i)
 	{
-		m_Textures[i].first = null;
+		m_Textures[i].first = nullptr;
 		m_Textures[i].second = new_shader->m_Textures[i].slot;
 	}
 }
 
-void Material::_fillingMode(const D3D11_FILL_MODE& mode)
+void Material::fillingMode(const D3D11_FILL_MODE& mode)
 {
 	D3D11_RASTERIZER_DESC desc;
 	m_Rasterizer->GetDesc(&desc);
@@ -100,7 +100,7 @@ void Material::_fillingMode(const D3D11_FILL_MODE& mode)
 	device->CreateRasterizerState(&desc, mst::initialize(m_Rasterizer));
 }
 
-void Material::_cullingMode(const D3D11_CULL_MODE& mode)
+void Material::cullingMode(const D3D11_CULL_MODE& mode)
 {
 	D3D11_RASTERIZER_DESC desc;
 	m_Rasterizer->GetDesc(&desc);
@@ -110,14 +110,14 @@ void Material::_cullingMode(const D3D11_CULL_MODE& mode)
 	device->CreateRasterizerState(&desc, mst::initialize(m_Rasterizer));
 }
 
-void Material::_Upload(const com_ptr<ID3D11DeviceContext>& context)
+void Material::Upload(const com_ptr<ID3D11DeviceContext>& context)
 {
 	for(uint i = 0; i < m_Buffers.size(); ++i)
 	{
 		if(m_Buffers[i].dirty)
 		{
 			m_Buffers[i].dirty = false;
-			context->UpdateSubresource(m_Buffers[i].buffer.get(), 0, null, m_Buffers[i].data,0,0);
+			context->UpdateSubresource(m_Buffers[i].buffer.get(), 0, nullptr, m_Buffers[i].data,0,0);
 
 		}
 		context->PSSetConstantBuffers(m_Buffers[i].slot, 1, &m_Buffers[i].buffer);
@@ -165,7 +165,7 @@ bool Material::HasTexture(const string& name_in_shader) const
 	{
 		if(m_Shader->m_Textures[i].name == name_in_shader)
 		{
-			return m_Textures[i].first != null;
+			return m_Textures[i].first != nullptr;
 		}
 	}
 

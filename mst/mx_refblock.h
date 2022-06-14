@@ -1,26 +1,26 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -30,9 +30,9 @@
 #include <matomics.h>
 #include <mx_packed_pair.h>
 
-namespace mst { 
+namespace mst {
 
-typedef uint32 refcount_t;
+typedef uint32_t refcount_t;
 
 template<typename _Ty>
 class smart_ptr;
@@ -45,10 +45,12 @@ namespace _Details {
 class _Refblock_base
 { // base reference block object
 public:
-	_Refblock_base() : _MyRefs(1), _MyBackRefs(0) {}
+	_Refblock_base()
+		: _MyRefs(1)
+		, _MyBackRefs(0)
+	{ }
 
 protected:
-
 	inline void _Inc()
 	{
 		atomic::increment(_MyRefs);
@@ -57,7 +59,7 @@ protected:
 
 	inline bool _Lock()
 	{
-		while(1)
+		for(;;)
 		{
 			volatile refcount_t refCount = static_cast<volatile refcount_t&>(_MyRefs);
 
@@ -75,7 +77,8 @@ protected:
 
 	inline void _Dec()
 	{
-		CHECK_IF(_MyRefs == 0, "reference count == 0, are you trying to erase the same smart_ptr in the destructor of the object?");
+		CHECK_IF(_MyRefs == 0, "reference count == 0, are you trying to erase the same smart_ptr "
+							   "in the destructor of the object?");
 
 		if(atomic::decrement(_MyRefs) == 0)
 		{
@@ -95,7 +98,8 @@ protected:
 
 	inline void _Dec_back()
 	{
-		CHECK_IF(_MyBackRefs == 0, "reference count == 0, are you trying to erase the same smart_ptr in the destructor of the object?");
+		CHECK_IF(_MyBackRefs == 0, "reference count == 0, are you trying to erase the same "
+								   "smart_ptr in the destructor of the object?");
 
 		if(atomic::decrement(_MyBackRefs) == 0)
 		{
@@ -144,7 +148,7 @@ protected:
 	}
 
 	template<typename _Ty>
-	void _Add_this_ptr_impl(_Ty* _Ptr, ::std::false_type)
+	void _Add_this_ptr_impl(_Ty*, ::std::false_type)
 	{
 		/* do nothing*/
 	}
@@ -152,14 +156,12 @@ protected:
 	template<typename _Ty>
 	void _Add_this_ptr(_Ty* _Ptr)
 	{
-#if _MST_HAS_TYPE_TRAITS
 		_Add_this_ptr_impl(_Ptr, typename ::std::is_base_of<enable_smart_this_ptr, _Ty>::type());
-#endif
 	}
 };
 
 class _Refblock_static : public _Refblock_base
-{ // non dieing reference block for null and uninitialized ptrs
+{ // non dieing reference block for nullptr and uninitialized ptrs
 	_Refblock_static()
 	{
 		_MyRefs = 0xFFFFFF;
@@ -208,7 +210,6 @@ public:
 	}
 
 protected:
-
 	void _Delete_this() final override
 	{
 		delete this;
@@ -227,18 +228,13 @@ class _Refblock_ptr_del : public _Refblock_base
 {
 public:
 	_Refblock_ptr_del(_Ty* _Ptr, _Dx _Custom_deleter)
-		: _MyPtr(_Ptr),
-#if _MST_HAS_RVALUE_REFS
-		_Deleter(std::move(_Custom_deleter))
-#else
-		_Deleter(_Custom_deleter)
-#endif
+		: _MyPtr(_Ptr)
+		, _Deleter(std::move(_Custom_deleter))
 	{
 		_Add_this_ptr(_Ptr);
 	}
 
 private:
-
 	void _Delete_this() final override
 	{
 		delete this;
@@ -259,12 +255,7 @@ class _Refblock_object : public _Refblock_base
 public:
 	template<typename _Fn>
 	_Refblock_object(_Fn _Func, _Dx _Deleter)
-#if _MST_HAS_RVALUE_REFS
 		: _Mypair(::std::move(_Deleter))
-#else
-		: _Mypair(_Deleter)
-#endif
-		//_Check_alignment();
 	{
 		_Func(_Get_ptr());
 
@@ -290,7 +281,8 @@ public:
 	/*
 	inline void _Check_alignment()
 	{
-		CHECK_IF((((size_t)this->_Get_ptr()) & (__alignof(_Ty) - 1)) != 0, "alignment failed, object is not aligned");
+		CHECK_IF((((size_t)this->_Get_ptr()) & (__alignof(_Ty) - 1)) != 0, "alignment failed, object
+	is not aligned");
 	}
 	*/
 
@@ -306,12 +298,11 @@ public:
 
 template<typename _Ty>
 class _Refblock_array : public _Refblock_base
-{ //reference block with an array attached to it
+{ // reference block with an array attached to it
 public:
 	_Refblock_array(size_t _Count)
 		: _MyObjects(new _Ty[_Count])
-	{
-	}
+	{ }
 
 	inline _Ty* _Get_ptr()
 	{
@@ -319,7 +310,6 @@ public:
 	}
 
 protected:
-
 	void _Delete_this() final override
 	{
 		delete this;
@@ -327,7 +317,7 @@ protected:
 
 	void _Dealloc() override
 	{
-		delete [] _MyObjects;
+		delete[] _MyObjects;
 	}
 
 	_Ty* const _MyObjects;
@@ -338,8 +328,7 @@ class _Refblock_alloc : public _Refblock_base
 public:
 	_Refblock_alloc(size_t _Size)
 		: _MyMem(malloc(_Size))
-	{
-	}
+	{ }
 
 	void* _Get_ptr()
 	{
@@ -347,7 +336,6 @@ public:
 	}
 
 private:
-
 	void _Delete_this() final override
 	{
 		delete this;
@@ -356,7 +344,6 @@ private:
 	void _Dealloc() override
 	{
 		free(_Get_ptr());
-
 	}
 
 	void* const _MyMem;
@@ -367,8 +354,7 @@ class _Refblock_alloc_align : public _Refblock_base
 public:
 	_Refblock_alloc_align(size_t _Size, size_t _Alignment)
 		: _MyMem(_aligned_malloc(_Size, _Alignment))
-	{
-	}
+	{ }
 
 	void* _Get_ptr()
 	{
@@ -376,7 +362,6 @@ public:
 	}
 
 private:
-
 	void _Delete_this() final override
 	{
 		delete this;
@@ -385,7 +370,6 @@ private:
 	void _Dealloc() override
 	{
 		_aligned_free(_Get_ptr());
-
 	}
 
 	void* const _MyMem;
@@ -394,4 +378,5 @@ private:
 _MST_ADD_CV_TO_POINTER_TO_CONST(::mst::smart_ptr<T>, ::mst::smart_ptr<const T>)
 _MST_ADD_CV_TO_POINTER_TO_CONST(::mst::back_ptr<T>, ::mst::back_ptr<const T>)
 
-}; }; // namespace mst::_Details
+} // namespace _Details
+} // namespace mst

@@ -34,8 +34,7 @@ class Shader : public NamedObject
 	friend class Renderer;
 	friend class Implementation::RenderBase;
 	friend class Material;
-	friend class std::_Ref_count_obj <Shader>;
-private:
+public:
 	// ctor & dtor
 	Shader(string&& name);
 	~Shader();

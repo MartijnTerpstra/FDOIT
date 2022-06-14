@@ -31,8 +31,7 @@ class Window
 {
 	friend class Internal;
 	friend class Renderer;
-	friend class std::_Ref_count_obj<Window>;
-private:
+public:
 	// ctor & dtor
 	Window(uint2);
 	~Window();
@@ -40,19 +39,19 @@ private:
 public:
 	// properties
 
-	declare_property(uint2, size);
+	uint2 size() const; void size(const uint2& value);
 
-	declare_get_property(uint, width);
+	uint width() const;
 
-	declare_get_property(uint, height);
+	uint height() const;
 
-	declare_property(string, caption);
+	string caption() const; void caption(const string& value);
 
-	declare_get_property(float, aspectRatio);
+	float aspectRatio() const;
 
-	declare_get_property(bool, active);
+	bool active() const;
 
-	declare_property(bool, fullScreen);
+	bool fullScreen() const; void fullScreen(const bool& value);
 
 public:
 	// main functionality

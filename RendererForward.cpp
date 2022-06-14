@@ -60,7 +60,7 @@ void Renderer::RenderForward(const shared_ptr<Window>& window)
 
 	//const matrix view = inverse(m_Camera->m_Matrix);
 
-	const matrix view = m_Camera->m_Matrix.inverse;
+	const matrix view = m_Camera->m_Matrix.get_inverse();
 	
 	/*
 	{ // upload lights
@@ -145,12 +145,12 @@ void Renderer::RenderForward(const shared_ptr<Window>& window)
 
 		m_HQ->Render(view, window);
 
-		m_Context->OMSetRenderTargets(1, &m_RTV, null);
+		m_Context->OMSetRenderTargets(1, &m_RTV, nullptr);
 
 		m_HQ->RenderCompare();
 	}
 
-	if(errorCalculation && m_RMSD == -1)
+	if(errorCalculation() && m_RMSD == -1)
 	{
 		// calculate RMSD
 

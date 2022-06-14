@@ -61,21 +61,21 @@ public:
 
 	void PSSetShaderResource(uint bufferSlot)
 	{
-		CHECK_IF(m_SRV == null, "not set as SRV");
+		MST_ASSERT(m_SRV, "not set as SRV");
 		
 		m_context->PSSetShaderResources(bufferSlot, 1, &m_SRV);
 	}
 
 	void CSSetShaderResource(uint bufferSlot)
 	{
-		CHECK_IF(m_SRV == null, "not set as SRV");
+		MST_ASSERT(m_SRV, "not set as SRV");
 		
 		m_context->CSSetShaderResources(bufferSlot, 1, &m_SRV);
 	}
 
 	void CSSetUnorderedAccessViews(uint bufferSlot)
 	{
-		CHECK_IF(m_UAV == null, "not set as UAV");
+		MST_ASSERT(m_UAV, "not set as UAV");
 
 		UINT initCount = 0;
 		m_context->CSSetUnorderedAccessViews(bufferSlot, 1, &m_UAV, &initCount);
@@ -83,32 +83,32 @@ public:
 
 	const com_ptr<ID3D11Texture2D>& GetResource()
 	{
-		CHECK_IF(m_texture == null, "bad call: no texture available");
+		MST_ASSERT(m_texture, "bad call: no texture available");
 		return m_texture;
 	}
 
 	const com_ptr<ID3D11UnorderedAccessView>& GetUAV()
 	{
-		CHECK_IF(m_UAV == null, "bad call: no UAV available");
+		MST_ASSERT(m_UAV, "bad call: no UAV available");
 		return m_UAV;
 	}
 
 	const com_ptr<ID3D11RenderTargetView>& GetRTV()
 	{
-		CHECK_IF(m_RTV == null, "bad call: no RTV available");
+		MST_ASSERT(m_RTV, "bad call: no RTV available");
 		return m_RTV;
 	}
 
 	const com_ptr<ID3D11ShaderResourceView>& GetSRV()
 	{
-		CHECK_IF(m_SRV == null, "bad call: no SRV available");
+		MST_ASSERT(m_SRV, "bad call: no SRV available");
 
 		return m_SRV;
 	}
 
 	void ClearUAV(UINT value)
 	{
-		CHECK_IF(m_UAV == null, "cannot fill this object");
+		MST_ASSERT(m_UAV, "cannot fill this object");
 		UINT values[4] = { value, value, value, value };
 		m_context->ClearUnorderedAccessViewUint(m_UAV.get(), values);
 	}
@@ -120,14 +120,14 @@ public:
 
 	void ClearUAV(FLOAT value)
 	{
-		CHECK_IF(m_UAV == null, "cannot fill this object");
+		MST_ASSERT(m_UAV, "cannot fill this object");
 		FLOAT values[4] = { value, value, value, value };
 		m_context->ClearUnorderedAccessViewFloat(m_UAV.get(), values);
 	}
 
 	void ClearRTV(const float4& color)
 	{
-		CHECK_IF(m_RTV == null, "cannot fill this object");
+		MST_ASSERT(m_RTV, "cannot fill this object");
 		m_context->ClearRenderTargetView(m_RTV.get(), color.data());
 	}
 
@@ -155,19 +155,19 @@ private:
 
 	void CreateD3D11Objects()
 	{
-		m_device->CreateTexture2D(&m_desc, null, mst::initialize(m_texture));
+		m_device->CreateTexture2D(&m_desc, nullptr, mst::initialize(m_texture));
 
 		if(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS))
 		{
-			m_device->CreateUnorderedAccessView(m_texture.get(), null, mst::initialize(m_UAV));
+			m_device->CreateUnorderedAccessView(m_texture.get(), nullptr, mst::initialize(m_UAV));
 		}
 		if(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE))
 		{
-			m_device->CreateShaderResourceView(m_texture.get(), null, mst::initialize(m_SRV));
+			m_device->CreateShaderResourceView(m_texture.get(), nullptr, mst::initialize(m_SRV));
 		}
 		if(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET))
 		{
-			m_device->CreateRenderTargetView(m_texture.get(), null, mst::initialize(m_RTV));
+			m_device->CreateRenderTargetView(m_texture.get(), nullptr, mst::initialize(m_RTV));
 		}
 
 	}
@@ -220,7 +220,7 @@ public:
 
 	void PSSetShaderResource(uint bufferSlot)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE), "not set as SRV");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE), "not set as SRV");
 		
 		CreateSRV();
 
@@ -229,7 +229,7 @@ public:
 
 	void PSSetShaderResourceSlice(uint bufferSlot, UINT arraySlice)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE), "not set as SRV");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE), "not set as SRV");
 
 		CreateSRVSlice(arraySlice);
 		
@@ -238,14 +238,14 @@ public:
 
 	void CSSetShaderResource(uint bufferSlot)
 	{
-		CHECK_IF(m_SRV == null, "not set as SRV");
+		MST_ASSERT(m_SRV, "not set as SRV");
 		
 		m_context->CSSetShaderResources(bufferSlot, 1, &m_SRV);
 	}
 
 	void CSSetUnorderedAccessViews(uint bufferSlot)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "not set as UAV");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "not set as UAV");
 
 		UINT initCount = 0;
 		m_context->CSSetUnorderedAccessViews(bufferSlot, 1, &m_UAV, &initCount);
@@ -253,13 +253,13 @@ public:
 
 	const com_ptr<ID3D11Texture2D>& GetResource()
 	{
-		CHECK_IF(m_texture == null, "bad call: no texture available");
+		MST_ASSERT(m_texture, "bad call: no texture available");
 		return m_texture;
 	}
 
 	const com_ptr<ID3D11UnorderedAccessView>& GetUAV()
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "not set as UAV");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "not set as UAV");
 
 		CreateUAV();
 
@@ -268,7 +268,7 @@ public:
 
 	const com_ptr<ID3D11RenderTargetView>& GetRTV()
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET), "not set as RTV");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET), "not set as RTV");
 
 		CreateRTV();
 
@@ -277,7 +277,7 @@ public:
 
 	const com_ptr<ID3D11ShaderResourceView>& GetSRV()
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE), "not set as SRV");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_SHADER_RESOURCE), "not set as SRV");
 
 		CreateSRV();
 
@@ -286,7 +286,7 @@ public:
 
 	void ClearUAV(UINT value)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "cannot clear this object");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "cannot clear this object");
 
 		CreateUAV();
 
@@ -301,7 +301,7 @@ public:
 
 	void ClearUAV(FLOAT value)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "cannot clear this object");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_UNORDERED_ACCESS), "cannot clear this object");
 
 		CreateUAV();
 
@@ -311,7 +311,7 @@ public:
 
 	void ClearRTV(const float4& color)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET), "cannot clear this object");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET), "cannot clear this object");
 		
 		CreateRTV();
 
@@ -320,7 +320,7 @@ public:
 
 	void ClearRTVSlice(const float4& color, UINT arraySlice)
 	{
-		CHECK_IFNOT(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET), "cannot clear this object");
+		MST_ASSERT(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET), "cannot clear this object");
 		
 		CreateRTVSlice(arraySlice);
 
@@ -351,14 +351,14 @@ private:
 
 	void CreateD3D11Objects()
 	{
-		m_device->CreateTexture2D(&m_desc, null, mst::initialize(m_texture));
+		m_device->CreateTexture2D(&m_desc, nullptr, mst::initialize(m_texture));
 
-		m_RTVSlices = null;
-		m_SRVSlices = null;
-		m_UAVSlices = null;
-		m_UAV = null;
-		m_SRV = null;
-		m_RTV = null;
+		m_RTVSlices = nullptr;
+		m_SRVSlices = nullptr;
+		m_UAVSlices = nullptr;
+		m_UAV = nullptr;
+		m_SRV = nullptr;
+		m_RTV = nullptr;
 
 		if(m_bindFlags.is_enabled(D3D11_BIND_RENDER_TARGET))
 		{
@@ -376,31 +376,31 @@ private:
 
 	void CreateUAV()
 	{
-		if(m_UAV == null)
+		if(m_UAV == nullptr)
 		{
-			m_device->CreateUnorderedAccessView(m_texture.get(), null, mst::initialize(m_UAV));
+			m_device->CreateUnorderedAccessView(m_texture.get(), nullptr, mst::initialize(m_UAV));
 		}
 	}
 
 	void CreateSRV()
 	{
-		if(m_SRV == null)
+		if(m_SRV == nullptr)
 		{
-			m_device->CreateShaderResourceView(m_texture.get(), null, mst::initialize(m_SRV));
+			m_device->CreateShaderResourceView(m_texture.get(), nullptr, mst::initialize(m_SRV));
 		}
 	}
 
 	void CreateRTV()
 	{
-		if(m_RTV == null)
+		if(m_RTV == nullptr)
 		{
-			m_device->CreateRenderTargetView(m_texture.get(), null, mst::initialize(m_RTV));
+			m_device->CreateRenderTargetView(m_texture.get(), nullptr, mst::initialize(m_RTV));
 		}
 	}
 
 	void CreateUAVSlice(UINT index)
 	{
-		if(m_UAVSlices[index] == null)
+		if(m_UAVSlices[index] == nullptr)
 		{
 			D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
 
@@ -415,7 +415,7 @@ private:
 
 	void CreateSRVSlice(UINT index)
 	{
-		if(m_SRVSlices[index] == null)
+		if(m_SRVSlices[index] == nullptr)
 		{
 			D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 
@@ -440,7 +440,7 @@ private:
 
 	void CreateRTVSlice(UINT index)
 	{
-		if(m_RTVSlices[index] == null)
+		if(m_RTVSlices[index] == nullptr)
 		{
 			D3D11_RENDER_TARGET_VIEW_DESC desc;
 
@@ -459,7 +459,7 @@ private:
 				desc.Texture2DMSArray.ArraySize = 1;
 				desc.Texture2DMSArray.FirstArraySlice = index;
 			}
-			m_device->CreateRenderTargetView(m_texture.get(), null, mst::initialize(m_RTVSlices[index]));
+			m_device->CreateRenderTargetView(m_texture.get(), nullptr, mst::initialize(m_RTVSlices[index]));
 		}
 	}
 

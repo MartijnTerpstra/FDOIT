@@ -48,59 +48,59 @@ shared_ptr<Light> Light::Create(string name, float intensity, float3 color, Ligh
 
 	retval->m_Type = type;
 
-	retval->intensity = intensity;
+	retval->intensity(intensity);
 
-	retval->coneAngle = 10;
+	retval->coneAngle(10);
 
-	retval->penumbraAngle = 5;
+	retval->penumbraAngle(5);
 
 	return retval;
 }
 
-void Light::_color(const float3& color)
+void Light::color(const float3& color)
 {
 	m_Color = color;
 }
 
-void Light::_coneAngle(const float& cone_angle)
+void Light::coneAngle(const float& cone_angle)
 {
 	m_CosIntensAngle = cos(Common::DegreeToRadian(cone_angle));
 }
 
-float Light::_coneAngle() const
+float Light::coneAngle() const
 {
 	return Common::RadianToDegree(acos(m_CosIntensAngle));
 }
 
-void Light::_penumbraAngle(const float& penumbra_angle)
+void Light::penumbraAngle(const float& penumbra_angle)
 {
-	m_CosMaxAngle = cos(Common::DegreeToRadian(coneAngle + penumbra_angle));
+	m_CosMaxAngle = cos(Common::DegreeToRadian(coneAngle() + penumbra_angle));
 }
 
-float Light::_penumbraAngle() const
+float Light::penumbraAngle() const
 {
-	return Common::RadianToDegree(acos(m_CosMaxAngle)) - coneAngle;
+	return Common::RadianToDegree(acos(m_CosMaxAngle)) - coneAngle();
 }
 
-void Light::_type(const LightType& type)
+void Light::type(const LightType& type)
 {
 	LightType old_type = m_Type;
 	m_Type = type;
 	Scene::Get().LightTypeChanged(shared_this_ptr, old_type);
 }
 
-LightType Light::_type() const
+LightType Light::type() const
 {
 	return m_Type;
 }
 
-void Light::_intensity(const float& intensity)
+void Light::intensity(const float& intensity)
 {
 	m_Intensity = intensity;
 	m_Radius = intensity * RADIUS_PER_INTENSITY;
 }
 
-float Light::_areaOfInflunce() const
+float Light::areaOfInflunce() const
 {
 	return m_Radius;
 }

@@ -39,8 +39,7 @@ enum LightType
 class Light : public NamedObject
 {
 	friend class Renderer;
-	friend class std::_Ref_count_obj<Light>;
-private:
+public:
 	// ctor & dtor
 	Light(string&& name);
 	~Light();
@@ -53,22 +52,22 @@ public:
 	// properties
 
 	/* the intensity of the light */
-	declare_property(float, intensity);
+	float intensity() const; void intensity(const float& value);
 
 	/* the color of the light */
-	declare_property(float3, color);
+	float3 color() const; void color(const float3& value);
 
 	/* the type of light */
-	declare_property(LightType, type);
+	LightType type() const; void type(const LightType& value);
 
 	/* the area of influence of the light */
-	declare_get_property(float, areaOfInflunce);
+	float areaOfInflunce() const;
 
 	/* cone angle of the spot light, in degrees */
-	declare_property(float, coneAngle);
+	float coneAngle() const; void coneAngle(const float& value);
 
 	/* penumbra angle of the spot light, in degrees */
-	declare_property(float, penumbraAngle);
+	float penumbraAngle() const; void penumbraAngle(const float& value);
 
 private:
 	float m_Intensity, m_Radius;

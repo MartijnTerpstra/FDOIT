@@ -47,8 +47,6 @@ unique_ptr<T[]> make_unique_array(size_t count)
 	return unique_ptr<T[]>(new T[count]);
 }
 
-#include <mproperties.h>
-
 #ifndef PI
 #define PI 3.141592654f
 #endif

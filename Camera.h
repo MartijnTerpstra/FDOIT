@@ -31,8 +31,7 @@ class Camera
 {
 	friend class Renderer;
 	friend class Implementation::RenderBase;
-	friend class std::_Ref_count_obj<Camera>;
-private:
+public:
 	// ctor & dtor
 	Camera();
 	~Camera();
@@ -41,34 +40,34 @@ public:
 	// properties
 
 	// the euler angles of the camera
-	declare_property(float3, eulerAngles);
+	float3 eulerAngles() const; void eulerAngles(const float3& value);
 
 	// the position of the camera
-	declare_property(float3, position);
+	float3 position() const; void position(const float3& value);
 
-	declare_get_property(float3, forwardDirection);
+	float3 forwardDirection() const;
 
-	declare_get_property(float3, backwardDirection);
+	float3 backwardDirection() const;
 
-	declare_get_property(float3, leftDirection);
+	float3 leftDirection() const;
 
-	declare_get_property(float3, rightDirection);
+	float3 rightDirection() const;
 
-	declare_get_property(float3, upDirection);
+	float3 upDirection() const;
 
-	declare_get_property(float3, downDirection);
+	float3 downDirection() const;
 
-	declare_get_property(matrix, projectionMatrix);
+	matrix projectionMatrix() const;
 
-	declare_property(float, fieldOfView);
+	float fieldOfView() const; void fieldOfView(const float& value);
 
-	declare_property(float, nearDistance);
+	float nearDistance() const; void nearDistance(const float& value);
 
-	declare_property(float, farDistance);
+	float farDistance() const; void farDistance(const float& value);
 
 private:
 
-	void _CalcProjectionMatrix();
+	void CalcProjectionMatrix();
 
 private:
 	float3 m_EulerAngles;

@@ -39,9 +39,9 @@ public:
 	void Render(const matrix& view, const shared_ptr<Window>& window) final override;
 	void Resize(uint2 new_size) final override;
 
-	declare_property(uint, numPasses);
+	uint numPasses() const; void numPasses(const uint& value);
 
-	declare_property(bool, alphaCorrection);
+	bool alphaCorrection() const; void alphaCorrection(const bool& value);
 
 private:
 

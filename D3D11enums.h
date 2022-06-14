@@ -30,7 +30,7 @@
 namespace mst {
 
 #define DECLARE_D3D11_ENUM(Type) \
-template<> struct flag_traits<Type> : public ::mst::flag_traits_preshifted<Type, UINT> {};
+template<> struct flag_traits<Type> : public ::mst::flag_traits_preshifted<Type> {};
 
 DECLARE_D3D11_ENUM(D3D11_BIND_FLAG);
 DECLARE_D3D11_ENUM(D3D11_CPU_ACCESS_FLAG);

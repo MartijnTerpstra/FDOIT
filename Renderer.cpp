@@ -102,12 +102,12 @@ void Renderer::Render()
 
 		for(auto& it : results)
 		{
-			TwAddVarRO(timings, it.second.first.c_str(), TW_TYPE_FLOAT, &it.second.second, null);
+			TwAddVarRO(timings, it.second.first.c_str(), TW_TYPE_FLOAT, &it.second.second, nullptr);
 		} */
 
 		TwDefine(" Settings valueswidth=160 ");
 
-		if(errorCalculation)
+		if(errorCalculation())
 		{
 			TwDefine(" 'Error calculation' valueswidth=160 ");
 		}
@@ -120,10 +120,10 @@ void Renderer::Render()
 void Renderer::Exit()
 {
 
-	m_DefShader = null;
+	m_DefShader = nullptr;
 
-	m_RendererImpls[0] = null;
-	m_RendererImpls[1] = null;
+	m_RendererImpls[0] = nullptr;
+	m_RendererImpls[1] = nullptr;
 
 	TwDeleteAllBars();
 	TwTerminate();
@@ -141,18 +141,18 @@ void Renderer::Resize(uint2 new_size)
 	
 	auto window = m_Window.lock();
 
-	m_Context->OMSetRenderTargets(0,null, null);
+	m_Context->OMSetRenderTargets(0,nullptr, nullptr);
 
 	com_ptr<ID3D11Resource> res;
 
-	Implementation::RenderBase::s_RTVs[0] = null;
-	Implementation::RenderBase::s_RTVs[1] = null;
-	Implementation::RenderBase::s_RTVs[2] = null;
-	m_RTV = null;
+	Implementation::RenderBase::s_RTVs[0] = nullptr;
+	Implementation::RenderBase::s_RTVs[1] = nullptr;
+	Implementation::RenderBase::s_RTVs[2] = nullptr;
+	m_RTV = nullptr;
 
 	auto swap_chain = window->m_SwapChain;
 
-	HRESULT result = swap_chain->ResizeBuffers(1, window->width, window->height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	HRESULT result = swap_chain->ResizeBuffers(1, window->width(), window->height(), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
 	ID3D11Texture2D* backbuffer;
 
@@ -160,13 +160,13 @@ void Renderer::Resize(uint2 new_size)
 
 	com_ptr<ID3D11Texture2D> back(backbuffer);
 
-	m_Device->CreateRenderTargetView(back.get(), null, mst::initialize(m_RTV));
+	m_Device->CreateRenderTargetView(back.get(), nullptr, mst::initialize(m_RTV));
 
 	Implementation::RenderBase::s_RTVs[0] = m_RTV;
 	Implementation::RenderBase::s_RTVs[1] = m_RTV;
 	Implementation::RenderBase::s_RTVs[2] = m_RTV;
 
-	if(errorCalculation && comparisonRenderMode != (RenderMode)-1)
+	if(errorCalculation() && comparisonRenderMode() != (RenderMode)-1)
 	{
 		com_ptr<ID3D11Texture2D> tex;
 		Implementation::RenderBase::s_RTVs[0]->GetResource(mst::initialize(res));
@@ -175,17 +175,17 @@ void Renderer::Resize(uint2 new_size)
 		tex->GetDesc(&desc);
 		desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 
-		m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-		m_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_RTVs[0]));
-		m_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_SRVs[0]));
+		m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+		m_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_RTVs[0]));
+		m_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_SRVs[0]));
 
-		m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-		m_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_RTVs[1]));
-		m_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_SRVs[1]));
+		m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+		m_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_RTVs[1]));
+		m_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_SRVs[1]));
 
-		m_Device->CreateTexture2D(&desc, null, mst::initialize(tex));
-		m_Device->CreateRenderTargetView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_RTVs[2]));
-		m_Device->CreateShaderResourceView(tex.get(), null, mst::initialize(Implementation::RenderBase::s_SRVs[2]));
+		m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(tex));
+		m_Device->CreateRenderTargetView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_RTVs[2]));
+		m_Device->CreateShaderResourceView(tex.get(), nullptr, mst::initialize(Implementation::RenderBase::s_SRVs[2]));
 	}
 
 	m_RendererImpls[0]->Resize(new_size);
@@ -194,7 +194,7 @@ void Renderer::Resize(uint2 new_size)
 		m_RendererImpls[1]->Resize(new_size);
 	}
 
-	m_Camera->_CalcProjectionMatrix();
+	m_Camera->CalcProjectionMatrix();
 }
 
 unique_ptr<Implementation::RenderBase> Renderer::CreateRenderMode(RenderMode mode, uint targetRTV)
@@ -209,21 +209,21 @@ unique_ptr<Implementation::RenderBase> Renderer::CreateRenderMode(RenderMode mod
 	switch(mode)
 	{
 	case RENDER_FDOIT:
-		return std::make_unique<Implementation::RenderFDOIT>(targetRTV, window);
+		return std::make_unique<Implementation::RenderFDOIT>(targetRTV, window());
 	case RENDER_DDP:
-		return std::make_unique<Implementation::RenderDDP>(targetRTV, window);
+		return std::make_unique<Implementation::RenderDDP>(targetRTV, window());
 	case RENDER_AOIT:
-		return std::make_unique<Implementation::RenderAOIT>(targetRTV, window);
+		return std::make_unique<Implementation::RenderAOIT>(targetRTV, window());
 	case RENDER_STOCHASTIC:
-		return std::make_unique<Implementation::RenderStochastic>(targetRTV, window);
+		return std::make_unique<Implementation::RenderStochastic>(targetRTV, window());
 	case RENDER_PLAIN:
-		return std::make_unique<Implementation::RenderPlain>(targetRTV, window);
+		return std::make_unique<Implementation::RenderPlain>(targetRTV, window());
 	case RENDER_HQ:
-		return std::make_unique<Implementation::RenderHQ>(targetRTV, window);
+		return std::make_unique<Implementation::RenderHQ>(targetRTV, window());
 	default:
 		__debugbreak();
 		// unimplemented render mode
-		return null;
+		return nullptr;
 	}
 }
 
@@ -234,7 +234,7 @@ void Renderer::RecalculateRMSD()
 
 void Renderer::CalcRMSD(const matrix& view, const shared_ptr<Window>& window)
 {
-	CHECK_IFNOT(m_RMSD == -1, "invalid call");
+	MST_ASSERT(m_RMSD == -1, "invalid call");
 
 	com_ptr<ID3D11Texture2D> tex;
 
@@ -251,13 +251,13 @@ void Renderer::CalcRMSD(const matrix& view, const shared_ptr<Window>& window)
 	desc.BindFlags = 0;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	desc.Usage = D3D11_USAGE_STAGING;
-	m_Device->CreateTexture2D(&desc, null, mst::initialize(stagingHQ));
+	m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(stagingHQ));
 	
-	m_Device->CreateTexture2D(&desc, null, mst::initialize(stagingAlg));
+	m_Device->CreateTexture2D(&desc, nullptr, mst::initialize(stagingAlg));
 
 	m_Context->CopyResource(stagingAlg.get(), tex.get());
 
-	if(m_HQ == null)
+	if(m_HQ == nullptr)
 	{
 		Implementation::RenderHQ(2, window).Render(view, window);
 	}
@@ -320,9 +320,9 @@ void Renderer::CreateTestReport()
 	DXGI_ADAPTER_DESC desc;
 	adapter->GetDesc(&desc);
 
-	char description[extentof(desc.Description)];
+	char description[std::extent_v<decltype(desc.Description)>];
 
-	for(uint i = 0; i < extentof(desc.Description); ++i)
+	for(uint i = 0; i < std::extent_v<decltype(desc.Description)>; ++i)
 	{
 		description[i] = (char)desc.Description[i];
 	}
@@ -388,7 +388,7 @@ void Renderer::CreateTestReport()
 
 		outfile << "<br><hr><br><h1>Algorithm: " << algNames[mode] << "</h1><br><br>";
 
-		Renderer::Get().renderMode = currentMode;
+		Renderer::Get().renderMode(currentMode);
 
 		bool notDone = true;
 
@@ -403,14 +403,14 @@ void Renderer::CreateTestReport()
 			{
 			case RENDER_FDOIT:
 				{
-					RenderType(FDOIT)->layerDepth = (Implementation::FDOITDepth)setting1++;
+					RenderType(FDOIT)->layerDepth((Implementation::FDOITDepth)setting1++);
 					if(setting1 == Implementation::FDOIT_NUM_DEPTHS)
 					{
 						notDone = false;
 
 					}
 
-					outfile << "<h3>Settings:</h3><br>Layer depth: " << nodeCount[RenderType(FDOIT)->layerDepth] << "<br><br>";
+					outfile << "<h3>Settings:</h3><br>Layer depth: " << nodeCount[RenderType(FDOIT)->layerDepth()] << "<br><br>";
 				}
 				break;
 			case RENDER_DDP:
@@ -419,7 +419,7 @@ void Renderer::CreateTestReport()
 					{
 						setting1 = 1;
 					}
-					RenderType(DDP)->numLayers = setting1;
+					RenderType(DDP)->numLayers(setting1);
 					setting1 *= 2;
 					if(setting1 > 32)
 					{
@@ -431,8 +431,8 @@ void Renderer::CreateTestReport()
 				break;
 			case RENDER_AOIT:
 				{
-					RenderType(AOIT)->nodeCount = (Implementation::AOITNodeCount)setting1++;
-					RenderType(AOIT)->dontCompress = setting2 != 0;
+					RenderType(AOIT)->nodeCount((Implementation::AOITNodeCount)setting1++);
+					RenderType(AOIT)->dontCompress(setting2 != 0);
 					if(setting1 == Implementation::AOIT_NUM_NODE_COUNTS)
 					{
 						if(setting2 == 1)
@@ -444,15 +444,15 @@ void Renderer::CreateTestReport()
 						setting1 = 0;
 					}
 
-					outfile << "<h3>Settings:</h3><br>Node count: " << nodeCount[RenderType(AOIT)->nodeCount];
-					outfile << "<br>Compression opt: " << (RenderType(AOIT)->dontCompress ? "enabled" : "disabled") << "<br><br>";
+					outfile << "<h3>Settings:</h3><br>Node count: " << nodeCount[RenderType(AOIT)->nodeCount()];
+					outfile << "<br>Compression opt: " << (RenderType(AOIT)->dontCompress() ? "enabled" : "disabled") << "<br><br>";
 				}
 				break;
 			case RENDER_STOCHASTIC:
 				{
-					RenderType(Stochastic)->numPasses = setting1;
+					RenderType(Stochastic)->numPasses(setting1);
 					setting1 += 4;
-					RenderType(Stochastic)->alphaCorrection = setting2 != 0;
+					RenderType(Stochastic)->alphaCorrection(setting2 != 0);
 					if(setting1 == STOCHASTIC_MAX_NUM_PASSES + 4)
 					{
 						if(setting2 == 1)
@@ -464,8 +464,8 @@ void Renderer::CreateTestReport()
 						setting1 = 0;
 					}
 
-					outfile << "<h3>Settings:</h3><br>Num passes: " << RenderType(Stochastic)->numPasses;
-					outfile << "<br>Alpha correction: " << (RenderType(Stochastic)->alphaCorrection ? "enabled" : "disabled") << "<br><br>";
+					outfile << "<h3>Settings:</h3><br>Num passes: " << RenderType(Stochastic)->numPasses();
+					outfile << "<br>Alpha correction: " << (RenderType(Stochastic)->alphaCorrection() ? "enabled" : "disabled") << "<br><br>";
 				}
 				break;
 			case RENDER_PLAIN:
@@ -480,12 +480,12 @@ void Renderer::CreateTestReport()
 			}
 
 			uint camPos = 0;
-			foreach(auto& it, cameraPositions)
+			for(auto& it : cameraPositions)
 			{
 				outfile << "<br><b>Camera position " << camPosName[camPos++] << ":</b><br>";
 
-				m_Camera->position = it.first;
-				m_Camera->eulerAngles = it.second;
+				m_Camera->position(it.first);
+				m_Camera->eulerAngles(it.second);
 
 				Implementation::Query::s_gatherStatistics = false;
 				Implementation::Timings::SetEnabled(true);
@@ -493,17 +493,17 @@ void Renderer::CreateTestReport()
 				{
 					Renderer::Get().Render();
 
-					window->SystemMessages();
+					window()->SystemMessages();
 				}
 				Implementation::Query::s_gatherStatistics = true;
 				Renderer::Get().Render();
 				Implementation::Timings::PrintResults(outfile);
 
-				Renderer::Get().errorCalculation = true;
+				Renderer::Get().errorCalculation(true);
 
 				Renderer::Get().Render();
 
-				outfile << "RMSD: <b>" << Renderer::Get().rootMeanSquareDeviation << "</b><br>";
+				outfile << "RMSD: <b>" << Renderer::Get().rootMeanSquareDeviation() << "</b><br>";
 			}
 
 			outfile << "<br>";

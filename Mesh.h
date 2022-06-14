@@ -46,8 +46,7 @@ class Mesh : public NamedObject
 {
 	friend class Renderer;
 	friend class Implementation::RenderBase;
-	friend class std::_Ref_count_obj<Mesh>;
-protected:
+public:
 	// ctor & dtor
 	Mesh(string&& name);
 	virtual ~Mesh();
@@ -56,13 +55,15 @@ public:
 	// creation
 	static shared_ptr<Mesh> Create(string file);
 
-	static shared_ptr<Mesh> Create(string name, const std::vector<Vertex>& vertices, const std::vector<uint32>& indices, 
+	static shared_ptr<Mesh> Create(string name, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, 
 		std::vector<SubMesh>& submeshes);
 
 public:
 	// properties
 
-	declare_property_array(shared_ptr<Material>, materials);
+	shared_ptr<Material> material(size_t idx) const;
+
+	void material(size_t idx, const shared_ptr<Material>& value);
 
 public:
 	// main functionality

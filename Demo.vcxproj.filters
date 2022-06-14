@@ -273,8 +273,17 @@
     <ClCompile Include="RenderHQ.cpp">
       <Filter>Renderer\RenderHQ</Filter>
     </ClCompile>
-    <ClCompile Include="RendererGUI.cpp">
-      <Filter>Renderer</Filter>
+    <ClCompile Include="mst\src\mplatform.cpp">
+      <Filter>mst</Filter>
+    </ClCompile>
+    <ClCompile Include="mst\src\mthreading.cpp">
+      <Filter>mst</Filter>
+    </ClCompile>
+    <ClCompile Include="mst\src\mthreading_rw_lock.cpp">
+      <Filter>mst</Filter>
+    </ClCompile>
+    <ClCompile Include="mst\src\muuid.cpp">
+      <Filter>mst</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -518,6 +527,9 @@
     </Filter>
     <Filter Include="Renderer\nVidia%27s Dual Depth Peeling\HLSL">
       <UniqueIdentifier>{a42195ce-7082-4871-bc1f-e5a2c9290018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mst">
+      <UniqueIdentifier>{f20632d0-80df-4977-a071-1771b99c3bf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -74,12 +74,12 @@ void FileBuffer::Reset()
 	m_File.seekg(0);
 }
 
-void FileBuffer::AdvanceCurrentPtr(uint64 count)
+void FileBuffer::AdvanceCurrentPtr(uint64_t count)
 {
 	m_File.seekg((std::streamoff)m_File.tellg() + count);
 }
 
-uint64 FileBuffer::GetFileSize() const
+uint64_t FileBuffer::GetFileSize() const
 {
 	return m_FileSize;
 }

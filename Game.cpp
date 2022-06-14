@@ -72,7 +72,7 @@ void Game::Init()
 	vertices[0].position = float3( 0, 1, 0);
 	vertices[1].position = float3( 1,-1, 0);
 	vertices[2].position = float3(-1,-1, 0);
-	std::vector<uint32> indices(3);
+	std::vector<uint32_t> indices(3);
 	indices[0]=0;
 	indices[1]=1;
 	indices[2]=2;
@@ -83,9 +83,9 @@ void Game::Init()
 	auto mesh = Mesh::Create("Tri", vertices, indices, sub_meshes);
 	*/
 
-	shared_ptr<Mesh> mesh = null;
+	shared_ptr<Mesh> mesh = nullptr;
 
-	while(mesh == null)
+	while(mesh == nullptr)
 	{
 		try
 		{
@@ -95,7 +95,7 @@ void Game::Init()
 		{
 			printf("%s\n", error.what());
 			system("pause");
-			mesh = null;
+			mesh = nullptr;
 		}
 	}
 
@@ -105,7 +105,7 @@ void Game::Init()
 	{
 #define NUM_LIGHTS 512
 
-		const float3 random_colors[] =
+		const std::array random_colors
 		{
 			float3(1,0,0),
 			float3(0,1,0),
@@ -114,12 +114,12 @@ void Game::Init()
 			float3(1,0,1),
 			float3(1,1,0),
 		};
-		Scene::Get().AddLight(Light::Create("Test Light", 4, random_colors[rand() % extentof(random_colors)], SPOT_LIGHT), 
+		Scene::Get().AddLight(Light::Create("Test Light", 4, random_colors[rand() % random_colors.size()], SPOT_LIGHT),
 				float3(0,200,0));
 		for(uint i = 0; i < NUM_LIGHTS; ++i)
 		{
 			LightType type = (LightType)(1 + rand() % 2);
-			Scene::Get().AddLight(Light::Create("Light" + ToString(i), type == SPOT_LIGHT ? 4.0f : 2.0f, random_colors[rand() % extentof(random_colors)], type), 
+			Scene::Get().AddLight(Light::Create("Light" + ToString(i), type == SPOT_LIGHT ? 4.0f : 2.0f, random_colors[rand() % random_colors.size()], type),
 				matrix(float3(Random(-1300, 1300), Random(0, 250), Random(-250, 250))).rotated_x(Random(0, 360.0f)).rotated_y(Random(-90,90)));
 		}
 
@@ -133,10 +133,10 @@ void Game::Init()
 
 	// init camera
 
-	Scene::Get().camera->position = float3(100, 150, 0);
-	Scene::Get().camera->eulerAngles = float3(0, -90, 0);
+	Scene::Get().camera()->position(float3(100, 150, 0));
+	Scene::Get().camera()->eulerAngles(float3(0, -90, 0));
 
-	Renderer::Get().globalAmbient = 0.1f;
+	Renderer::Get().globalAmbient(0.1f);
 
 	printf("done initializing.\n");
 	
@@ -155,12 +155,12 @@ void Game::Exit()
 
 void Game::UpdateInput()
 {
-	if(!Renderer::Get().window->active)
+	if(!Renderer::Get().window()->active())
 	{
 		return;
 	}
 
-	auto camera =  Renderer::Get().camera;
+	auto camera =  Renderer::Get().camera();
 
 	float speed = 40.0f;
 
@@ -169,35 +169,35 @@ void Game::UpdateInput()
 		speed *= 6;
 	}
 
-	float3 angles = camera->eulerAngles;
+	float3 angles = camera->eulerAngles();
 
 	if(Common::IsKeyDown('W'))
 	{
-		camera->position += camera->forwardDirection * speed * g_TimeStep;
+		camera->position(camera->position() + camera->forwardDirection() * speed * g_TimeStep);
 	}
 	if(Common::IsKeyDown('S'))
 	{
-		camera->position += camera->backwardDirection * 40.0f * g_TimeStep;
+		camera->position(camera->position() + camera->backwardDirection() * 40.0f * g_TimeStep);
 	}
 	if(Common::IsKeyDown('A'))
 	{
-		camera->position += camera->leftDirection * 40.0f * g_TimeStep;
+		camera->position(camera->position() + camera->leftDirection() * 40.0f * g_TimeStep);
 	}
 	if(Common::IsKeyDown('D'))
 	{
-		camera->position += camera->rightDirection * 40.0f * g_TimeStep;
+		camera->position(camera->position() + camera->rightDirection() * 40.0f * g_TimeStep);
 	}
 	if(Common::IsKeyDown('Q'))
 	{
-		camera->position += camera->downDirection * 40.0f * g_TimeStep;
+		camera->position(camera->position() + camera->downDirection() * 40.0f * g_TimeStep);
 	}
 	if(Common::IsKeyDown('E'))
 	{
-		camera->position += camera->upDirection * 40.0f * g_TimeStep;
+		camera->position(camera->position() + camera->upDirection() * 40.0f * g_TimeStep);
 	}
-	Renderer::Get().camera->eulerAngles = angles;
+	Renderer::Get().camera()->eulerAngles(angles);
 
-	float3 light_pos = Scene::Get().lightMatrices[0].position;
+	float3 light_pos = Scene::Get().lightMatrix(0).get_position();
 
 	if(Common::IsKeyDown(VK_RETURN))
 	{
@@ -225,7 +225,7 @@ void Game::UpdateInput()
 		light_pos.z -= g_TimeStep * 100.0f;
 	}
 
-	Scene::Get().lightMatrices[0] = light_pos;
+	Scene::Get().lightMatrix(0, light_pos);
 
 	if(m_MouseActive)
 	{
@@ -235,12 +235,12 @@ void Game::UpdateInput()
 		p.x -= GetSystemMetrics(SM_CXSCREEN) / 2;
 		p.y -= GetSystemMetrics(SM_CYSCREEN) / 2;
 
-		float3 angles = Scene::Get().camera->eulerAngles;
+		float3 angles = Scene::Get().camera()->eulerAngles();
 
 		angles.x += p.y * 0.2f;
 		angles.y += p.x * 0.2f;
 
-		Scene::Get().camera->eulerAngles = angles;
+		Scene::Get().camera()->eulerAngles(angles);
 
 		SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 	}
@@ -248,26 +248,26 @@ void Game::UpdateInput()
 	if(m_RenderLightVolumes)
 	{
 		uint light_idx = 0;
-		for(uint i = 0; i < Scene::Get().meshCount; ++i)
+		for(uint i = 0; i < Scene::Get().meshCount(); ++i)
 		{
-			shared_ptr<Mesh> mesh = Scene::Get().meshes[i];
+			shared_ptr<Mesh> mesh = Scene::Get().mesh(i);
 
-			if(mesh->name == "cone" || mesh->name == "sphere")
+			if(mesh->name() == "cone" || mesh->name() == "sphere")
 			{
-				matrix mat = Scene::Get().lightMatrices[light_idx];
-				auto l = Scene::Get().lights[light_idx];
-				switch(l->type)
+				matrix mat = Scene::Get().lightMatrix(light_idx);
+				auto l = Scene::Get().light(light_idx);
+				switch(l->type())
 				{
 				case SPOT_LIGHT:
-					mat.scale(float3(l->areaOfInflunce * sin((l->coneAngle + l->penumbraAngle) * PI / 180), 
-						l->areaOfInflunce * sin((l->coneAngle + l->penumbraAngle) * PI / 180), l->areaOfInflunce));
+					mat.scale(float3(l->areaOfInflunce() * sin((l->coneAngle() + l->penumbraAngle()) * PI / 180),
+						l->areaOfInflunce() * sin((l->coneAngle() + l->penumbraAngle()) * PI / 180), l->areaOfInflunce()));
 					break;
 				case POINT_LIGHT:
-					mat.scale(l->areaOfInflunce);
+					mat.scale(l->areaOfInflunce());
 					break;
 				}
 
-				Scene::Get().meshMatrices[i] = mat;
+				Scene::Get().meshMatrix(i, mat);
 				light_idx++;
 			}
 		}
@@ -317,35 +317,35 @@ void Game::OnKeyDown(int keycode, bool repeating)
 		break;
 
 	case '1':
-		Renderer::Get().camera->position = cameraPositions[0].first;
-		Renderer::Get().camera->eulerAngles = cameraPositions[0].second;
+		Renderer::Get().camera()->position(cameraPositions[0].first);
+		Renderer::Get().camera()->eulerAngles(cameraPositions[0].second);
 		break;
 		
 	case '2':
-		Renderer::Get().camera->position = cameraPositions[1].first;
-		Renderer::Get().camera->eulerAngles = cameraPositions[1].second;
+		Renderer::Get().camera()->position(cameraPositions[1].first);
+		Renderer::Get().camera()->eulerAngles(cameraPositions[1].second);
 		break;
 		
 	case '3':
-		Renderer::Get().camera->position = cameraPositions[2].first;
-		Renderer::Get().camera->eulerAngles = cameraPositions[2].second;
+		Renderer::Get().camera()->position(cameraPositions[2].first);
+		Renderer::Get().camera()->eulerAngles(cameraPositions[2].second);
 		break;
 		
 	case '4':
-		Renderer::Get().camera->position = cameraPositions[3].first;
-		Renderer::Get().camera->eulerAngles = cameraPositions[3].second;
+		Renderer::Get().camera()->position(cameraPositions[3].first);
+		Renderer::Get().camera()->eulerAngles(cameraPositions[3].second);
 		break;
 
 	case 'L':
 		if(!repeating)
 		{
 			static std::vector<std::pair<float3, float3>> cameraPositions2;
-			cameraPositions2.push_back(std::make_pair(Renderer::Get().camera->position,
-				Renderer::Get().camera->eulerAngles));
+			cameraPositions2.push_back(std::make_pair(Renderer::Get().camera()->position(),
+				Renderer::Get().camera()->eulerAngles()));
 			std::ofstream of("cameraPositions", std::ios::binary);
 			uint count = cameraPositions2.size();
 			of.write((const char*)&count, sizeof(count));
-			foreach(auto& it, cameraPositions2)
+			for(auto& it : cameraPositions2)
 			{
 				of.write((const char*)it.first.data(), sizeof(float3));
 				of.write((const char*)it.second.data(), sizeof(float3));
@@ -354,7 +354,7 @@ void Game::OnKeyDown(int keycode, bool repeating)
 		break;
 
 	case 'J':
-		Renderer::Get().renderMode = RenderMode(((int)Renderer::Get().renderMode + 1) % NUM_RENDERMODES);
+		Renderer::Get().renderMode(RenderMode(((int)Renderer::Get().renderMode() + 1) % NUM_RENDERMODES));
 		break;
 
 	case VK_F5:

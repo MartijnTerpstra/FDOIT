@@ -1,33 +1,33 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #include <mcore.h>
 #include <mdebug.h>
-#include <mx_array_view.h>
+#include <initializer_list>
 
 namespace mst {
 
@@ -35,83 +35,97 @@ template<typename T>
 class array_view
 {
 public:
+	inline array_view()
+		: _Mybegin(nullptr)
+		, _Mysize(0)
+	{ }
 
-	typedef ::mst::_Details::_Array_view_iterator<T> iterator;
-
-	array_view(const array_view& other)
-		: _Mybase(other._Mybase)
-	{
-	}
-
-	template<typename T2>
-	array_view(const T2* ptr, size_t count)
-	{
-		::mst::_Details::_Array_view_ptr_size<T, T2>::_Init(_Mybase, ptr, count);
-	}
+	inline array_view(const array_view& other) = default;
 
 	template<typename T2>
-	array_view(const T2& value)
+	inline array_view(const T2* ptr, size_t count)
+		: _Mybegin(ptr)
+		, _Mysize(count)
 	{
-		::mst::_Details::_Array_view_ptr_size<T, T2>::_Init(_Mybase, &value, 1);
+		static_assert(std::is_same<T2, typename std::remove_const<T>::type>::value,
+			"pointer must point to the actional type, to prevent base class shenanigans");
 	}
 
-	template<typename T2, size_t ArraySize>
-	array_view(const T2 (&arr)[ArraySize])
+	template<typename T2,
+		typename std::enable_if<
+			std::is_convertible<T2*, typename std::remove_const<T>::type*>::value, int>::type = 0>
+	inline array_view(const T2& value)
+		: _Mybegin(&value)
+		, _Mysize(1)
+	{ }
+
+	template<size_t _Arrsize>
+	inline array_view(const T (&_Arr)[_Arrsize])
+		: _Mybegin(std::addressof(_Arr[0]))
+		, _Mysize(_Arrsize)
+	{ }
+
+	template<typename _Container,
+		typename std::enable_if<
+			!std::is_convertible<_Container*, typename std::remove_const<T>::type*>::value,
+			int>::type = 0>
+	inline array_view(const _Container& _Cont)
+		: _Mybegin(_Cont.data())
+		, _Mysize(_Cont.size())
+	{ }
+
+	inline array_view(std::initializer_list<T> _Initlist)
+		: _Mybegin(_Initlist.begin())
+		, _Mysize(_Initlist.size())
+	{ }
+
+	[[nodiscard]] inline size_t size() const
 	{
-		::mst::_Details::_Array_view_ptr_size<T, T2>::_Init(_Mybase, arr, ArraySize);
+		return _Mysize;
 	}
 
-	template<typename T2, size_t ArraySize>
-	array_view(T(&arr)[ArraySize])
+	[[nodiscard]] inline bool empty() const
 	{
-		::mst::_Details::_Array_view_ptr_size<T, T2>::_Init(_Mybase, arr, ArraySize);
+		return _Mysize == 0;
 	}
 
-	template<typename T2, typename Allocator>
-	array_view(const ::std::vector<T2, Allocator>& container)
+	[[nodiscard]] inline const T& operator[](size_t index) const
 	{
-		::mst::_Details::_Array_view_container<T, ::std::vector<T2, Allocator>>::_Init(_Mybase, container);
+		MST_ASSERT(index < _Mysize, "index out of range");
+		return _Mybegin[index];
 	}
 
-	size_t size() const
+	[[nodiscard]] inline const T* begin() const
 	{
-		return _Mybase._Mysize;
+		return _Mybegin;
 	}
 
-	bool empty() const
+	[[nodiscard]] inline const T* end() const
 	{
-		return _Mybase._Mysize == 0;
+		return _Mybegin + _Mysize;
 	}
 
-	const T& operator [](size_t index) const
+	[[nodiscard]] inline const T* data() const
 	{
-		CHECK_ARR_RANGE(index, _Mybase._Mysize, "index out of range");
-		return _Mybase._Get_object_func(&_Mybase, index);
-	}
-	
-	iterator begin() const
-	{
-		return iterator(&_Mybase, 0);
+		return _Mybegin;
 	}
 
-	iterator end() const
+	[[nodiscard]] inline const T* cbegin() const
 	{
-		return iterator(&_Mybase, _Mybase._Mysize);
+		return _Mybegin;
 	}
 
-	iterator cbegin() const
+	[[nodiscard]] inline const T* cend() const
 	{
-		return iterator(&_Mybase, 0);
+		return _Mybegin + _Mysize;
 	}
 
-	iterator cend() const
-	{
-		return iterator(&_Mybase, _Mybase._Mysize);
-	}
-	
 private:
-	::mst::_Details::_Array_view_base<T> _Mybase;
+	// Non const to enable copy assignment, which is required by some containers
+
+	const T* _Mybegin;
+	size_t _Mysize;
 
 }; // class array_view
 
-}; // namespace mst
+} // namespace mst

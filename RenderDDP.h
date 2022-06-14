@@ -57,7 +57,7 @@ public:
 	void Render(const matrix& view, const shared_ptr<Window>& window) final override;
 	void Resize(uint2 new_size) final override;
 
-	declare_property(uint, numLayers);
+	uint numLayers() const; void numLayers(const uint& value);
 
 private:
 	void CreateTextures(uint2 size);

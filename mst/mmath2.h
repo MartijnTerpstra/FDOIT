@@ -1,26 +1,26 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//		MST Utility Library							 										//
-//		Copyright (c)2014 Martinus Terpstra													//
-//																							//
-//		Permission is hereby granted, free of charge, to any person obtaining a copy		//
-//		of this software and associated documentation files (the "Software"), to deal		//
-//		in the Software without restriction, including without limitation the rights		//
-//		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
-//		copies of the Software, and to permit persons to whom the Software is				//
-//		furnished to do so, subject to the following conditions:							//
-//																							//
-//		The above copyright notice and this permission notice shall be included in			//
-//		all copies or substantial portions of the Software.									//
-//																							//
-//		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
-//		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
-//		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
-//		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
-//		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
-//		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN			//
-//		THE SOFTWARE.																		//
-//																							//
+//                                                                                          //
+//      MST Utility Library                                                                 //
+//      Copyright (c)2022 Martinus Terpstra                                                 //
+//                                                                                          //
+//      Permission is hereby granted, free of charge, to any person obtaining a copy        //
+//      of this software and associated documentation files (the "Software"), to deal       //
+//      in the Software without restriction, including without limitation the rights        //
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell           //
+//      copies of the Software, and to permit persons to whom the Software is               //
+//      furnished to do so, subject to the following conditions:                            //
+//                                                                                          //
+//      The above copyright notice and this permission notice shall be included in          //
+//      all copies or substantial portions of the Software.                                 //
+//                                                                                          //
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR          //
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,            //
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE         //
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER              //
+//      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,       //
+//      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN           //
+//      THE SOFTWARE.                                                                       //
+//                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -35,8 +35,29 @@
 #include <mcore.h>
 #include <mdebug.h>
 #include <cmath>
-#include <mproperties.h>
 #include <mx_math2.h>
+
+#if MST_MATH_NO_SIMD
+#define _MST_MATH_SIMD_ENABLED 0
+#elif MST_NO_SIMD
+#define _MST_MATH_SIMD_ENABLED 0
+#elif _MST_HAS_ARM
+#define _MST_MATH_SIMD_ENABLED 0
+#else
+#define _MST_MATH_SIMD_ENABLED 1
+
+#include <xmmintrin.h>
+#include <emmintrin.h>
+#include <pmmintrin.h>
+#include <smmintrin.h>
+#include <immintrin.h>
+
+#endif // MST_MATH_NO_SIMD
+
+#if MST_MATH_ALL_VECTORS_MATRICES_SIMD
+#define _MST_ALL_VECTORS_SIMD  1
+#define _MST_ALL_MATRICES_SIMD 1
+#endif // MST_MATH_ALL_VECTORS_MATRICES_SIMD
 
 #define NOMINMAX 1
 #ifdef min
@@ -47,7 +68,7 @@
 #undef max
 #endif
 
-namespace mst { 
+namespace mst {
 namespace math {
 
 template<typename _Value_type, size_t _Elems>
@@ -67,20 +88,25 @@ class ray;
 
 template<typename T>
 struct get_value_type : ::mst::math::_Details::_Get_value_type<T>
-{
-};
+{ };
+
+template<typename _Value_type>
+class degrees;
+
+template<typename _Value_type>
+class radians;
 
 #if _MST_HAS_TEMPLATE_ALIASES
 template<class T>
 using get_value_type_t = typename get_value_type<T>::type;
 #endif
 
-}; // namespace math
-}; // namespace mst
+} // namespace math
+} // namespace mst
 
 #include <mmath_algorithm.h>
 
-namespace mst { 
+namespace mst {
 namespace math {
 
 /* Depricated, use constexpr versions
@@ -90,41 +116,38 @@ namespace math {
 */
 
 template<typename _Value_type>
-inline _MST_CONSTEXPR _Value_type pi()
+inline constexpr _Value_type pi()
 {
-	return (_Value_type)3.141592653589793238462643383279502884197169399375105820974944592307816406286L;
+	return (
+		_Value_type)3.141592653589793238462643383279502884197169399375105820974944592307816406286L;
 }
 
-inline _MST_CONSTEXPR float pi_f()
+inline constexpr float pi_f()
 {
 	return pi<float>();
 }
 
-inline _MST_CONSTEXPR double pi_d()
+inline constexpr double pi_d()
 {
 	return pi<double>();
 }
 
-inline _MST_CONSTEXPR long double pi_ld()
+inline constexpr long double pi_ld()
 {
 	return pi<long double>();
 }
-
-#if _MST_COMPILER_VER >= 12
-#define _DEFAULT_MATH_CONSTRUCTOR = default;
-#else
-#define _DEFAULT_MATH_CONSTRUCTOR {}
-#endif
 
 template<typename T>
 T epsilon()
 {
 	static_assert(::std::is_floating_point<T>::value, "T must be a floating point type");
-	return (T) _MST_EPSILON;
+	return (T)_MST_EPSILON;
 }
 
+} // namespace math
+} // namespace mst
+
 #include <mx_math_angle.h>
-#include <mx_math_space.h>
 #include <mx_math_vector.h>
 #include <mx_math_quaternion.h>
 #include <mx_math_matrix.h>
@@ -135,12 +158,11 @@ T epsilon()
 #include <mx_math_quaternion.inl>
 #include <mx_math_matrix.inl>
 
-#undef vector1
-#undef vector2
-#undef vector3
-#undef vector4
+#if _MST_MATH_SIMD_ENABLED
 
-}; // namespace math
-}; // namespace mst
+#include <mx_math_vector_simd.inl>
+#include <mx_math_matrix_simd.inl>
+
+#endif
 
 #endif
