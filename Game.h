@@ -29,6 +29,7 @@ class Game : public Demo::IGame
 {
 public:
 	void Init();
+	bool IsDone() const noexcept;
 	void Update();
 	void Exit();
 
@@ -38,5 +39,5 @@ public:
 	void OnKeyUp(int keycode) override;
 
 private:
-	bool m_MouseActive, m_RenderLightVolumes;
+	bool m_MouseActive, m_RenderLightVolumes, m_IsDone = false;
 };

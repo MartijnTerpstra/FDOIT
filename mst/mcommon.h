@@ -54,8 +54,9 @@ private:
 template<typename T>
 inline void zeromem(T& val)
 {
-	static_assert(!std::is_pointer<T>::value, "T = pointer");
-	static_assert(std::is_pod<T>::value, "T = not pod");
+	static_assert(!std::is_pointer_v<T>);
+	static_assert(std::is_standard_layout_v<T>);
+	static_assert(std::is_trivial_v<T>);
 
 	memset(&val, 0, sizeof(T));
 }
@@ -64,8 +65,9 @@ inline void zeromem(T& val)
 template<typename T>
 inline void copymem(T& dst, const T& src)
 {
-	static_assert(!std::is_pointer<T>::value, "T = pointer");
-	static_assert(std::is_pod<T>::value, "T = not pod");
+	static_assert(!std::is_pointer_v<T>);
+	static_assert(std::is_standard_layout_v<T>);
+	static_assert(std::is_trivial_v<T>);
 
 	memcpy(&dst, &src, sizeof(T));
 }

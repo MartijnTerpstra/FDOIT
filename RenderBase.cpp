@@ -173,8 +173,14 @@ void RenderBase::InitStatics(const com_ptr<ID3D11Device>& device)
 
 void RenderBase::ReleaseStatics()
 {
-	s_RTVs[0] = nullptr;
-	s_RTVs[1] = nullptr;
+	for (auto& obj : s_RTVs)
+	{
+		obj = nullptr;
+	}
+	for (auto& obj : s_SRVs)
+	{
+		obj = nullptr;
+	}
 	s_DSV = nullptr;
 
 	s_LightingBuffer.Reset();

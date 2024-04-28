@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+ShaderHeaders/
+ShaderObjects/
+
 # User-specific files
 *.rsuser
 *.suo
@@ -64,7 +67,7 @@ artifacts/
 # StyleCop
 StyleCopReport.xml
 
-# Files built by Visual Studio
+# Files built by Visuas_RTVsl Studio
 *_i.c
 *_p.c
 *_h.h

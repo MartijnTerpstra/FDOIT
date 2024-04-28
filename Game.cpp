@@ -144,6 +144,11 @@ void Game::Init()
 	
 }
 
+bool Game::IsDone() const noexcept
+{
+	return m_IsDone;
+}
+
 void Game::Update()
 {
 	UpdateInput();
@@ -360,11 +365,11 @@ void Game::OnKeyDown(int keycode, bool repeating)
 	case VK_F5:
 		if(Common::IsKeyDown(VK_SHIFT) && !repeating)
 		{
-			exit(0);
+			m_IsDone = true;
 		}
 		break;
 	case VK_ESCAPE:
-		exit(0);
+		m_IsDone = true;
 		break;
 	}
 }

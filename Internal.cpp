@@ -120,7 +120,7 @@ void Internal::Run()
 		QueryPerformanceFrequency(&freq);
 		QueryPerformanceCounter(&start);
 
-		while(1)
+		while(!m_Game->IsDone())
 		{
 			QueryPerformanceCounter(&end);
 			g_TimeStep = float(double(end.QuadPart - start.QuadPart) / double(freq.QuadPart));

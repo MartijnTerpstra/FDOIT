@@ -56,6 +56,7 @@ public:
 	virtual void OnResize(uint2 new_size) {}
 
 	virtual void Init() = 0;
+	[[nodiscard]] virtual bool IsDone() const noexcept = 0;
 	virtual void Update() = 0;
 	virtual void Exit() = 0;
 };

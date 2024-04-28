@@ -85,7 +85,10 @@ private:
 	template<typename Type>
 	void GetDataImpl(Type& out_obj, std::false_type)
 	{
-		static_assert(!std::is_pointer<Type>::value, "T may not be a pointer");
+		static_assert(!std::is_pointer_v<Type>);
+		static_assert(std::is_standard_layout_v<Type>);
+		static_assert(std::is_trivial_v<Type>);
+
 		GetMemory(&out_obj, sizeof(Type));
 	}
 
@@ -98,8 +101,10 @@ private:
 	template<typename Type>
 	void AddDataImpl(const Type& obj, std::false_type)
 	{
-		static_assert(std::is_pod<Type>::value, "T is not plain old data");
-		static_assert(!std::is_pointer<Type>::value, "T may not be a pointer");
+		static_assert(!std::is_pointer_v<Type>);
+		static_assert(std::is_standard_layout_v<Type>);
+		static_assert(std::is_trivial_v<Type>);
+
 		AddMemory(&obj, sizeof(Type));
 	}
 

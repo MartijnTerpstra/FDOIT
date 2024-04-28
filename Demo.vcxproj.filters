@@ -418,6 +418,7 @@
     <None Include="HQ.hlsli">
       <Filter>Renderer\RenderHQ\HLSL</Filter>
     </None>
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Camera">
